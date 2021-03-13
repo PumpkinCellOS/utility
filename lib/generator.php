@@ -17,7 +17,7 @@ class PCUGenerator
 <html>
     <head>
         <meta charset="utf-8">
-        <title><?php if(strlen($this->title) == 0) echo "PumpkinCell.net"; else echo $this->title . "| PumpkinCell.net" ?></title>
+        <title><?php if(strlen($this->title) == 0) echo "PumpkinCell.net"; else echo $this->title . " | PumpkinCell.net" ?></title>
         <link rel="stylesheet" href="/style.css"/>
         <?php 
             foreach($this->stylesheets as $stylesheet)
