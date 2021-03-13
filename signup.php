@@ -7,7 +7,7 @@ $generator->start_content();
     <div class="background-tile">
         <!-- TODO: Use custom elements! -->
         <div class="background-tile-padding text-align-center">
-            <h3>Sign Up</h3>
+            <h3>Sign up to get all free PumpkinCell services</h3>
             <form method="POST" action="/api/login.php" onsubmit="return validate(this)">
                 <input type="hidden" name="command" value="create-user"></input>
                 <input type="email" name="userName" placeholder="E-mail address"></input><br>

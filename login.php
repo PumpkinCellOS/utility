@@ -6,7 +6,7 @@ $generator->start_content();
     <h2>PumpkinCell.net Account</h2>
     <div class="background-tile">
         <div class="background-tile-padding text-align-center">
-            <h3>Log In</h3>
+            <h3>Welcome back! Please log in.</h3>
             <form method="POST" action="/api/login.php">
                 <input type="hidden" name="command" value="auth-user"></input>
                 <input type="text" name="userName" placeholder="Username"></input><br>
