@@ -20,6 +20,13 @@
                         <input type="password" name="password2" placeholder="Retype password"></input><br>
                         <input type="submit" value="Create Account"></input>
                     </form>
+                    <p>By creating an account, you agree to <a href="/terms.php#use">terms of use</a> and <a href="/terms.php#privacy">privacy policy</a>.</p>
+                    <p><b>Note that email address is not really required for now :)</b></p>
+                </div>
+            </div>
+            <div id="footer-wrapper">
+                <div id="footer">
+                    <a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;(c) 2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms of Use</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy Policy</a>
                 </div>
             </div>
         </div>
