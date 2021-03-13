@@ -16,6 +16,7 @@ $generator->start_content();
                 <input type="password" name="password2" placeholder="Retype password"></input><br>
                 <input type="submit" value="Create Account"></input>
             </form>
+            <p>Already have an account? <a href="/login.php">Log in</a> here.</p>
             <p>By creating an account, you agree to <a href="/terms.php#use">terms of use</a> and <a href="/terms.php#privacy">privacy policy</a>.</p>
             <p><b>Note that email address is not really required for now :)</b></p>
         </div>
