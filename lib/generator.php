@@ -4,7 +4,7 @@ class PCUGenerator
     public array $stylesheets = [];
     public array $scripts = [];
 
-    public function __construct(string $title, string $head_suffix = "", string $body_suffix = "")
+    public function __construct(string $title = "", string $head_suffix = "", string $body_suffix = "")
     {
         $this->title = $title;
         $this->head_suffix = $head_suffix;
@@ -17,7 +17,7 @@ class PCUGenerator
 <html>
     <head>
         <meta charset="utf-8">
-        <title><?php echo $this->title ?> | PumpkinCell.net</title>
+        <title><?php if(strlen($this->title) == 0) echo "PumpkinCell.net"; else echo $this->title . "| PumpkinCell.net" ?></title>
         <link rel="stylesheet" href="/style.css"/>
         <?php 
             foreach($this->stylesheets as $stylesheet)

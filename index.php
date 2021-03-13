@@ -1,171 +1,156 @@
 <?php
+require("lib/generator.php");
 require("lib/pcu.php");
 $login = pcu_is_logged_in();
 $userData = $_SESSION["userData"];
+$generator = new PCUGenerator();
+$generator->start();
 ?>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>PumpkinCell.net</title>
-        <link rel="stylesheet" href="/style.css"/>
-    </head>
-    <body ondragstart="return false;" ondrop="return false;">
-        <div id="drag" style="display: none">
-        </div>
-        <h1><a href="/" class="title-link"><img src="/res/pumpkin2.png" style="height: 50px;"/></a><iframe width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/timer.html?embed=1&mode=3"></iframe></h1>
-        <div id="content">
-            <h2>PumpkinCell.net</h2>
-            <div class="app-list" id="pcu-app-list">
-            </div>
-            <h2>Utilities</h2>
-            <div class="app-list" id="utility-app-list">
-            </div>
-            <h2>Links</h2>
-            <div class="app-list" id="link-app-list">
-            </div>
-            <div id="footer-wrapper">
-                <div id="footer">
-                    <a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;(c) 2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms of Use</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy Policy</a>
-                </div>
-            </div>
-        </div>
-        <script>
-        /*
-        -- Entry format --
-        ```
-            {
-            "icon": "<Component icon (HTML special character notation, without starting '&')>",
-            "displayName": "<Display name of component>",
-            "path": "<Link path (e.g. timer.html)>",
-            "settings": [
-                {
-                "keyName": "<Form name (in URL)>",
-                "displayName": "<Option name displayed in form>",
-                "type": "<Input type (same as in HTML forms)"
-                },...
-            ]
-            }
-        ```
-        */
-        var e_drag = document.getElementById("drag");
-        
-        function swapLocations(elementX, elementY)
+<h2>PumpkinCell.net</h2>
+<div class="app-list" id="pcu-app-list">
+</div>
+<h2>Utilities</h2>
+<div class="app-list" id="utility-app-list">
+</div>
+<h2>Links</h2>
+<div class="app-list" id="link-app-list">
+</div>
+<script>
+/*
+-- Entry format --
+```
+    {
+    "icon": "<Component icon (HTML special character notation, without starting '&')>",
+    "displayName": "<Display name of component>",
+    "path": "<Link path (e.g. timer.html)>",
+    "settings": [
         {
-            var parentY = elementY.parentNode;
-            var nextY = elementY.nextSibling;
-            if(nextY === elementX)
-            {
-                parentY.insertBefore(elementX, elementY);
-            }
-            else
-            {
-                elementX.parentNode.insertBefore(elementY, elementX);
-                if(nextY)
-                {
-                    parentY.insertBefore(elementX, nextY);
-                }
-                else
-                {
-                    parentY.appendChild(elementX);
-                }
-            }
-        } 
-        
-        function generateUtilityEntry(entry) {
-        var icon = entry.icon;
-        var displayName = entry.displayName;
-        var path = entry.path;
-        var settings = entry.settings;
-        
-        var list_name = displayName;
-        if(icon != undefined && icon.length > 0)
-            list_name = "&" + icon + "; " + list_name;
-            
-        var colorHTML = ""
-        if(entry.color == undefined || entry.color.length == 0)
-            colorHTML = "";
-        else
-            colorHTML = "style='background-color: " + entry.color + "'";
-            
-        if(entry.state != undefined)
-        {
-            list_name += "<span class='app-spec app-tile-" + entry.state +"'>" + entry.state + "</span>";
-        }
-            
-        var list_link = path;
-            
-        var html = '<a is="tlf-resizable-tile" noblank="' + entry.noblank + '" color="' + entry.color + '" href="';
-        html += list_link + '">' + list_name + '</a>';
-        
-        return html;
-        }
+        "keyName": "<Form name (in URL)>",
+        "displayName": "<Option name displayed in form>",
+        "type": "<Input type (same as in HTML forms)"
+        },...
+    ]
+    }
+```
+*/
+var e_drag = document.getElementById("drag");
 
-        function assignEvents(objectId)
+function swapLocations(elementX, elementY)
+{
+    var parentY = elementY.parentNode;
+    var nextY = elementY.nextSibling;
+    if(nextY === elementX)
+    {
+        parentY.insertBefore(elementX, elementY);
+    }
+    else
+    {
+        elementX.parentNode.insertBefore(elementY, elementX);
+        if(nextY)
         {
-            // TODO: Drag
+            parentY.insertBefore(elementX, nextY);
         }
-        
-        function generateEntries(objectId, array)
+        else
         {
-        var el_app_list = document.getElementById(objectId);
-        el_app_list.innerHTML = "";
-        array.forEach(function(entry) {
-            el_app_list.innerHTML += generateUtilityEntry(entry);
-            var units = entry.units;
-            if(units == undefined)
-            units = 1;
-            el_app_list.lastChild.style.width = (units * 25) + "%";
-        });
-        assignEvents(objectId);
+            parentY.appendChild(elementX);
         }
-        
-        function swapEntries(arrId, list, ix1, ix2)
-        {
-        var tmp = list[ix1];
-        list[ix1] = list[ix2];
-        list[ix2] = tmp;
-        generateEntries(arrId, list);
-        }
-        
-        const pcuEntries = [
-            <?php if($login) { ?>
-            {"icon": "#128274", "state": "beta", "displayName": "Log out (<?php echo $userData["userName"]; ?>)", "noblank": true, "color": "#775555", "units": 1, "path": "/api/login.php?command=remove-session"},
-            {"icon": "#128100", "state": "alpha", "displayName": "Profile", "noblank": true, "color": "#557733", "units": 1, "path": "/profile.php?uid=<?php echo $userData["id"]; ?>"},
-            <?php } else { ?>
-            {"icon": "#128275", "state": "beta", "displayName": "Log in", "noblank": true, "color": "#557755", "units": 2, "path": "/login.php"},
-            {"displayName": "Sign up", "state": "beta", "noblank": true, "color": "#555577", "units": 2, "path": "signup.php"},
-            <?php } if(!pcu_role_less($userData["role"], "admin")) { ?>
-            {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "state": "beta", "path": "/u/admin"},
-            <?php } ?>
-        ];
-        
-        const utilityEntries = [
-            <?php if(!pcu_role_less($userData["role"], "member")) { ?>
-            {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
-            <?php } ?>
-            {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
-            {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/timer.html"},
-            {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/timer-gui.html"},
-            {"icon": "#128308", "units": 1, "color": "#555577", "displayName": "Twitch Overlay", "path": "/u/twitch-redirect.html"},
-            {"icon": "#128394", "units": 1, "color": "#653939", "displayName": "HW Planner", "path": "/u/hw-planner"},
-            {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
-            {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
-            {"icon": "#11123",  "units": 1, "color": "#667766", "displayName": "Files", "path": "/u/files"},
-        ]; 
-        
-        const linkEntries = [
-            {"displayName": "GitHub", "color": "#825f4b", "units": 1, "path": "https://github.com/sppmacd"},
-            {"displayName": "Twitch", "color": "#555577", "units": 1, "path": "https://twitch.tv/pumpkin_cell"},
-            {"displayName": "YouTube", "color": "#aa4444", "units": 1, "path": "https://youtube.com/sppmacd"},
-            {"icon": "#127968", "units": 1, "color": "#435d74", "displayName": "Home Assistant", "path": "http://192.168.1.2:8123"},
-            {"icon": "#129517", "units": 1, "color": "#42434f", "displayName": "ZTE (Router+AP)", "path": "http://192.168.1.1"},
-            {"icon": "",        "units": 1, "color": "#864e39", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
-        ];
-        
-        generateEntries("pcu-app-list", pcuEntries);
-        generateEntries("utility-app-list", utilityEntries);
-        generateEntries("link-app-list", linkEntries);
-        </script>
-        <script src="tilify.js"></script>
-    </body>
-</html>
+    }
+} 
+
+function generateUtilityEntry(entry) {
+var icon = entry.icon;
+var displayName = entry.displayName;
+var path = entry.path;
+var settings = entry.settings;
+
+var list_name = displayName;
+if(icon != undefined && icon.length > 0)
+    list_name = "&" + icon + "; " + list_name;
+    
+var colorHTML = ""
+if(entry.color == undefined || entry.color.length == 0)
+    colorHTML = "";
+else
+    colorHTML = "style='background-color: " + entry.color + "'";
+    
+if(entry.state != undefined)
+{
+    list_name += "<span class='app-spec app-tile-" + entry.state +"'>" + entry.state + "</span>";
+}
+    
+var list_link = path;
+    
+var html = '<a is="tlf-resizable-tile" noblank="' + entry.noblank + '" color="' + entry.color + '" href="';
+html += list_link + '">' + list_name + '</a>';
+
+return html;
+}
+
+function assignEvents(objectId)
+{
+    // TODO: Drag
+}
+
+function generateEntries(objectId, array)
+{
+var el_app_list = document.getElementById(objectId);
+el_app_list.innerHTML = "";
+array.forEach(function(entry) {
+    el_app_list.innerHTML += generateUtilityEntry(entry);
+    var units = entry.units;
+    if(units == undefined)
+    units = 1;
+    el_app_list.lastChild.style.width = (units * 25) + "%";
+});
+assignEvents(objectId);
+}
+
+function swapEntries(arrId, list, ix1, ix2)
+{
+var tmp = list[ix1];
+list[ix1] = list[ix2];
+list[ix2] = tmp;
+generateEntries(arrId, list);
+}
+
+const pcuEntries = [
+    <?php if($login) { ?>
+    {"icon": "#128274", "state": "beta", "displayName": "Log out (<?php echo $userData["userName"]; ?>)", "noblank": true, "color": "#775555", "units": 1, "path": "/api/login.php?command=remove-session"},
+    {"icon": "#128100", "state": "alpha", "displayName": "Profile", "noblank": true, "color": "#557733", "units": 1, "path": "/profile.php?uid=<?php echo $userData["id"]; ?>"},
+    <?php } else { ?>
+    {"icon": "#128275", "state": "beta", "displayName": "Log in", "noblank": true, "color": "#557755", "units": 2, "path": "/login.php"},
+    {"displayName": "Sign up", "state": "beta", "noblank": true, "color": "#555577", "units": 2, "path": "signup.php"},
+    <?php } if(!pcu_role_less($userData["role"], "admin")) { ?>
+    {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "state": "beta", "path": "/u/admin"},
+    <?php } ?>
+];
+
+const utilityEntries = [
+    <?php if(!pcu_role_less($userData["role"], "member")) { ?>
+    {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
+    <?php } ?>
+    {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
+    {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/timer.html"},
+    {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/timer-gui.html"},
+    {"icon": "#128308", "units": 1, "color": "#555577", "displayName": "Twitch Overlay", "path": "/u/twitch-redirect.html"},
+    {"icon": "#128394", "units": 1, "color": "#653939", "displayName": "HW Planner", "path": "/u/hw-planner"},
+    {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
+    {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
+    {"icon": "#11123",  "units": 1, "color": "#667766", "displayName": "Files", "path": "/u/files"},
+]; 
+
+const linkEntries = [
+    {"displayName": "GitHub", "color": "#825f4b", "units": 1, "path": "https://github.com/sppmacd"},
+    {"displayName": "Twitch", "color": "#555577", "units": 1, "path": "https://twitch.tv/pumpkin_cell"},
+    {"displayName": "YouTube", "color": "#aa4444", "units": 1, "path": "https://youtube.com/sppmacd"},
+    {"icon": "#127968", "units": 1, "color": "#435d74", "displayName": "Home Assistant", "path": "http://192.168.1.2:8123"},
+    {"icon": "#129517", "units": 1, "color": "#42434f", "displayName": "ZTE (Router+AP)", "path": "http://192.168.1.1"},
+    {"icon": "",        "units": 1, "color": "#864e39", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
+];
+
+generateEntries("pcu-app-list", pcuEntries);
+generateEntries("utility-app-list", utilityEntries);
+generateEntries("link-app-list", linkEntries);
+</script>
+<?php
+$generator->finish();
