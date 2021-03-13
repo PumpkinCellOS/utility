@@ -4,58 +4,62 @@
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="/style.css"/>
     <style>
-    	@font-face {
-        font-family: goodtimes;
-        src: url(/res/good_times_rg.ttf);
-    	}
+        @font-face {
+            font-family: goodtimes;
+            src: url(/res/good_times_rg.ttf);
+        }
     	
-      #render {
-        border: 2px solid #00ff00;
-        padding: 50px;
-        margin: 20px;
-        color: white;
-        font-family: "goodtimes";
-      }
+        #render {
+            border: 2px solid #00ff00;
+            padding: 50px;
+            margin: 20px;
+            color: white;
+            font-family: "goodtimes";
+        }
 
-      #last-follower-box, #x-followed-box {
-        background-color: rgba(0, 0, 0, 0.5);
-        text-align: center;
-        border-radius: 6px;
-        width: 400px;
-        margin: 10px;
-        padding: 5px;
-        font-size: 12px;
-      }
-      
-      #x-followed-box {
-        background-color: rgba(0, 64, 0, 0.5);
-      }
+        #last-follower-box, #x-followed-box {
+            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            border-radius: 6px;
+            width: 400px;
+            margin: 10px;
+            padding: 5px;
+            font-size: 12px;
+        }
+        
+        #x-followed-box {
+            background-color: rgba(0, 64, 0, 0.5);
+        }
 
-      #last-follower-name, #x-followed-name {
-        font-weight: bold;
-        color: #ffbbbb;
-      }
-      
-      #x-followed-box {
-        transition: opacity 0.25s;
-      }
+        #last-follower-name, #x-followed-name {
+            font-weight: bold;
+            color: #ffbbbb;
+        }
+        
+        #x-followed-box {
+            transition: opacity 0.25s;
+        }
     </style>
   </head>
   <body>
     <h1><a href="/" class="title-link"><img src="/res/pumpkin2.png" style="height: 50px"/></a><iframe width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/timer.html?embed=1&mode=3"></iframe></h1>
     
     <div id="content">
-      <h2>Twitch Overlay</h2>
-      
-      <div id="link" style="display: none">
-        <form id="userdata">
-          <label for="username">Username</label><input type="text" name="username"></input>
-          <input type="button" onclick="generateLink(document.forms[0].username.value)" value="Generate"></input>
-        </form>
-        <p>Paste that link into OBS:
-          <button href="#" id="obs-link" target="_blank">(Wait for link to be generated...)</button>
-        </p>
-      </div>
+        <h2>Twitch Overlay</h2>
+        
+        <div id="link" style="display: none">
+            <div class="background-tile">
+                <div class="background-tile-padding text-align-center">
+                    <form id="userdata">
+                        <input type="text" name="username" placeholder="Twitch username"></input>
+                        <input type="button" onclick="generateLink(document.forms[0].username.value)" value="Generate"></input>
+                    </form>
+                        <p>Paste that link into OBS:
+                        <button href="#" id="obs-link" target="_blank">(Wait for link to be generated...)</button>
+                    </p>
+                </div>
+            </div>
+        </div>
       
       <div id="render">
     
