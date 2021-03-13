@@ -1,0 +1,85 @@
+div.app-list {
+    box-sizing: border-box;
+    margin: 10px;
+}
+
+div.small {
+    height: 50px;
+}
+
+div.resizable-tile {
+    align-items: center;
+    background-color: #444444;
+    color: #bbbbbb;
+    display: flex;
+    font-size: 180%;
+    height: calc(100% - 10px);
+    justify-content: center;
+    margin: 5px;
+    outline: 2px solid #333333;
+    transition: transform 0.05s, background-color 0.05s;
+}
+
+div.resizable-tile:hover {
+    background-color: #555555;
+    transform: scale(1.02, 1.02);
+    transition: transform 0.15s, background-color 0.15s;
+}
+
+.button-tile {
+    cursor: pointer;
+    font-size: 15pt !important;
+}
+
+[is=tlf-resizable-tile],
+[is=tlf-button-tile] {
+    display: inline-block;
+    font-weight: bold;
+    overflow: hidden;
+}
+
+[is=tlf-resizable-tile]:hover,
+[is=tlf-button-tile]:hover {
+    text-decoration: none !important;
+}
+
+[is=tlf-button-tile] {
+    height: 100%;
+}
+
+[is=tlf-resizable-tile]
+{
+    height: 150px;
+}
+
+div.background-tile {
+    background-color: #444444;
+    color: #bbbbbb;
+    margin: 15px;
+    width: calc(100% - 30px);  
+}
+
+div.background-tile-padding {
+    display: inline-block;
+    margin: 20px;
+    width: calc(100% - 40px);
+}
+
+.data {
+    font-family: sans-serif;
+    font-size: 10pt;
+    overflow-y: auto;
+    text-align: center;
+}
+
+.data-table {
+    background-color: #585858;
+    border-radius: 10px;
+}
+
+.data-table, .topic {
+    display: inline-block;
+    font-size: 12pt;
+    margin: 13px;
+    padding: 20px;
+}

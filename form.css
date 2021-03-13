@@ -1,0 +1,40 @@
+button, input[type="submit"], input[type="button"], input[type="checkbox"] {
+    background-color: #777777;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: #dddddd;
+    font-family: "Courier New";
+    font-size: 12pt;
+    margin: 5px;
+    padding: 7px;
+    transition: background-color 0.1s, border-color 0.1s;
+}
+
+button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+    border: 1px solid white;
+    background-color: #888888;
+    transition: background-color 0.1s, border-color 0.1s;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="time"],
+input[type="email"],
+select {
+    display: inline-block;
+    height: 35px;
+    margin: 5px;
+    width: 300px;
+}
+
+button, input[type="submit"], input[type="button"] {
+}
+
+input[type="submit"], input[type="button"] {
+    width: 300px;
+}
+
+input[type="checkbox"] {
+}

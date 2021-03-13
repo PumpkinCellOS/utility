@@ -1,0 +1,537 @@
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <title>Timer Overlay | PumpkinCell.net</title>
+    <link rel="stylesheet" href="../style.css"/>
+    <style type="text/css">
+      body {
+        background-color: rgba(0,0,0,0) !important;
+    	  overflow: hidden;
+      }
+    	@font-face {
+        font-family: CursedTimerUlil-Aznm;
+        src: url(/res/CursedTimerUlil-Aznm.ttf);
+    	}
+    	#timer-timer {
+    	  color: white;
+    	  height: 50px;
+    	  font-family: "CursedTimerUlil-Aznm";
+    	  font-size: 35px;
+    	  font-weight: bold;
+    	  letter-spacing: 2px;
+    	  overflow: hidden;
+    	  padding: 6px 0 0 0;
+    	  text-align: center;
+    	  text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
+    	  width: 395px;
+    	}
+    	#timer-progress {
+    	  display: block;
+    	  height: 50px;
+    	  background-color: RGBA(17, 224, 136, 0.5);
+    	  position: relative;
+    	  top: -50px;
+    	  z-index: -1;
+    	  width: 0%;
+    	  border-radius: 10px;
+    	}
+    	#timer-progress-background {
+    	  display: block;
+    	  height: 50px;
+    	  background-color: RGBA(224, 68, 17, 0.5);
+    	  position: relative;
+    	  top: -100px;
+    	  z-index: -2;
+    	  width: 100%;
+    	  border-radius: 10px;
+    	}
+    	@keyframes timer-animated-separator {
+    	  0% {opacity: 100%;}
+    	  50% {opacity: 0%;}
+    	  100% {opacity: 100%;}
+    	}
+    	@keyframes timer-blink {
+    	}
+    	.timer-animated-separator {
+    	  animation-name: timer-animated-separator;
+    	  animation-duration: 1s;
+    	  animation-iteration-count: infinite;
+    	  animation-timing-function: steps(1, start);
+    	}
+    	.timer-blink {
+    	  animation-name: timer-blink;
+    	  animation-duration: 1s;
+    	  animation-iteration-count: infinite;
+    	  animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
+    	}
+    	.timer-component {
+    	  background-color: transparent;
+    	  border: none;
+    	  color: white;
+    	  font-family: "CursedTimerUlil-Aznm";
+    	  font-size: 40px;
+    	  font-weight: bold;
+    	  text-align: center;
+    	  text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
+    	  width: 100px;
+    	}
+    	.timer-input {
+    	  width: 50px;
+    	}
+    </style>
+  </head>
+  <body>
+    <!-- Dummy inputs -->
+    <div style="display: none">
+        <input class="timer-input" type="number" id="_1_timer-input-hours" value="0">
+        </input>
+        <input class="timer-input" type="number" id="_1_timer-input-minutes" value="0">
+        </input>
+        <input class="timer-input" type="number" id="_1_timer-input-seconds" value="0">
+        </input>
+        <input class="timer-input" type="number" id="_1_timer-input-precount" value="0">
+        </input>
+    </div>
+  
+    <!-- Timer -->
+      <div id="timer-timer">
+      <span class="timer-component" id="_1_timer-hours">00</span><span class="timer-animated-separator">:</span><span class="timer-component" id="_1_timer-minutes">00</span><span class="timer-animated-separator">:</span><span class="timer-component" id="_1_timer-seconds">00</span><span class="timer-animated-separator" id="_1_timer-separator-seconds">.</span><span class="timer-component" id="_1_timer-mseconds">000</span>
+      <div id="timer-progress"></div><div id="timer-progress-background"></div>
+      <audio src="finish.wav" id="timer-finish-sound"></audio>
+      </div>
+      
+    <!-- Script -->
+      <script>
+				window.addEventListener("obsSourceActiveChanged", function(event) {
+          console.log("obsSourceActiveChanged");
+				});
+				
+        const TM_NONE = 0, TM_TIMER = 1, TM_COUNTDOWN = 2, TM_REALTIME = 3;
+        const ADM_SLAVE = 0, ADM_MASTER = 1, ADM_NONE = 2;
+        var _1_eHours = document.getElementById("_1_timer-hours");
+        var _1_eMinutes = document.getElementById("_1_timer-minutes");
+        var _1_eSeconds = document.getElementById("_1_timer-seconds");
+        var _1_eMSeconds = document.getElementById("_1_timer-mseconds");
+        var _1_eTimeInputHours = document.getElementById("_1_timer-input-hours");
+        var _1_eTimeInputMinutes = document.getElementById("_1_timer-input-minutes");
+        var _1_eTimeInputSeconds = document.getElementById("_1_timer-input-seconds");
+        var _1_eTimeInputPrecount = document.getElementById("_1_timer-input-precount");
+        var _1_timer = document.getElementById("timer-timer");
+        var _1_eprogress = document.getElementById("timer-progress");
+        var _1_eprogress_background = document.getElementById("timer-progress-background");
+        var _1_eSecondsSeparator = document.getElementById("_1_timer-separator-seconds");
+        var _1_startTime = (new Date()).getTime();
+        var _1_realStartTime = (new Date()).getTime();
+        var _1_finishTime = (new Date()).getTime(); //for countdown
+        var _1_timerRunning = false;
+        var _1_timerMode = TM_NONE;
+        var _1_interval = null;
+        var _1_syncInterval = null;
+        var _1_currentTime = (new Date()).getTime();
+        var _1_serverTime = 0;
+        var _1_pauseTime = (new Date()).getTime();
+        var _1_diff = 0;
+        var _1_timeInput = 0;
+        var _1_paused = false;
+        var _1_adminMode = ADM_NONE;
+        var _1_lastServerUpdate = 0;
+        var _1_lastServerUpdateByLocalTime = 0;
+        var edbg = document.getElementById("debug");
+        var _1_etimer_mode = document.getElementById("_1_timer-mode");
+        var _1_etimerFinishSound = document.getElementById("timer-finish-sound");
+        /*var _1_eMsgBox = document.getElementById("msgbox");
+        _1_eMsgBox.style.display = "none";*/
+        var _1_eMsgBoxMessage = document.getElementById("msgbox-message");
+				_1_timer.style.color = "white";
+		
+			  function _1_networkFailed(message)
+			  {
+				  /*_1_eMsgBoxMessage.innerHTML = "Connection to server failed: <i>" + message + "</i>";
+				  _1_eMsgBox.style.display = "block";*/
+				  _1_adminMode = ADM_NONE;
+				  _1_etimer_mode.innerHTML = "<span style='color: red'>No Sync <b>(Server connection failed)</b></span>";
+				  if(_1_syncInterval)
+					  clearInterval(_1_syncInterval);
+			  }
+        
+        function _1_requestJSON(path, callback)
+        {
+          console.log("requesting: " + path);
+          var xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function() 
+          {
+            if(xhr.readyState == XMLHttpRequest.DONE)
+            {
+              if(xhr.status == 200)
+              {
+                console.log("request succeeded: " + callback(xhr.responseText));
+              }
+            }
+          };
+					xhr.onerror = function()
+					{
+						console.log("request failed: " + xhr.status);
+						_1_networkFailed("request: " + xhr.status);
+					};
+          xhr.open("POST", path);
+          xhr.send(); //slave
+        }
+        
+        function _1_saveJSON(path, data)
+        {
+          console.log("saving: " + path);
+          var xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function(event) 
+          {
+            if(event.readyState == XMLHttpRequest.DONE)
+            {
+              if(xhr.status == 200)
+                console.log("request succeeded");
+            }
+          };
+					xhr.onerror = function()
+					{
+						console.log("save failed: " + xhr.status);
+						_1_networkFailed("save: " + xhr.status);
+					};
+          xhr.open("PUT", path);
+          xhr.send(data); //master
+        }
+        
+        function _1_saveDataToServer()
+        {
+          if(_1_adminMode == ADM_MASTER)
+          {
+            var data = {};
+            data.startTime = _1_startTime;
+            data.realStartTime = _1_realStartTime;
+            data.finishTime = _1_finishTime;
+            data.timerRunning = _1_timerRunning;
+            data.timerMode = _1_timerMode;
+            data.timeInput = _1_timeInput;
+            data.paused = _1_paused;
+            data.currentTime = _1_currentTime;
+            data.pauseTime = _1_pauseTime;
+            data.timeStamp = (new Date()).getTime();
+            _1_saveJSON("/api/timer-get-data.php", JSON.stringify(data));
+            edbg.innerText = JSON.stringify(data);
+          }
+        }
+        function _1_loadDataFromServer()
+        {
+          _1_requestJSON("/api/timer-get-data.php", 
+            function(res)
+            {
+              var resD = JSON.parse(res);
+              console.log("Data received: " + res);
+              var data = resD.data;
+              if(_1_lastServerUpdate < data.timeStamp)
+              {
+                _1_startTime= data.startTime;
+                _1_realStartTime = data.realStartTime;
+                _1_finishTime = data.finishTime;
+                _1_timerRunning = data.timerRunning;
+                _1_timeInput = data.timeInput;
+                _1_serverTime = data.currentTime;
+                _1_pauseTime = data.pauseTime;
+                _1_paused = data.paused;
+                var tmpMode = _1_timerMode;
+                _1_timerMode = data.timerMode;
+                
+                if(tmpMode != TM_TIMER && data.timerMode == TM_TIMER || tmpMode != TM_COUNTDOWN && data.timerMode == TM_COUNTDOWN || tmpMode != TM_REALTIME && data.timerMode == TM_REALTIME)
+                  startTimerUpdate();
+                if(tmpMode == TM_TIMER && data.timerMode != TM_TIMER || tmpMode == TM_COUNTDOWN && data.timerMode != TM_COUNTDOWN || tmpMode == TM_REALTIME && data.timerMode != TM_REALTIME)
+                {
+                  clearInterval(_1_interval);
+                  //_1_etimerFinishSound.play();
+                }
+                
+                _1_lastServerUpdate = data.timeStamp;
+                _1_lastServerUpdateByLocalTime = (new Date()).getTime();
+                
+                edbg.innerText = JSON.stringify(data);
+              }
+              return "success";
+          });
+        }
+        
+        function precountModeDisplay()
+        {
+            if(_1_eMSeconds.style.display != "none")
+            {
+              _1_eHours.style.display = "none";
+              _1_eMinutes.style.display = "none";
+              _1_eMSeconds.style.display = "none";
+              var animatedSeparators = document.getElementsByClassName("timer-animated-separator");
+              for(var as = 0; as < animatedSeparators.length; as++)
+                animatedSeparators[as].style.display = "none";
+            }
+        }
+        
+        function timerModeDisplay()
+        {
+            if(_1_eMSeconds.style.display != "inline")
+            {
+              _1_eHours.style.display = "inline";
+              _1_eMinutes.style.display = "inline";
+              _1_eMSeconds.style.display = "inline";
+              var animatedSeparators = document.getElementsByClassName("timer-animated-separator");
+              for(var as = 0; as < animatedSeparators.length; as++)
+                animatedSeparators[as].style.display = "inline";
+            }
+        }
+        
+        function _1_updateTimerDisplay()
+        {
+          // Realtime clock.
+          if(_1_timerMode == TM_REALTIME)
+          {
+            // Simply display _1_currentTime.
+            timerModeDisplay();
+            _1_eMSeconds.style.display = "none";
+            var date = new Date(_1_currentTime);
+            _1_eMSeconds.innerHTML = "000";
+            _1_eSeconds.innerHTML = (date.getSeconds()).toString().padStart(2, "0");
+            _1_eMinutes.innerHTML = (date.getMinutes()).toString().padStart(2, "0");
+            _1_eHours.innerHTML = (date.getHours()).toString().padStart(2, "0");
+            _1_eprogress.style.display = "none";
+            _1_eprogress_background.style.display = "none";
+            _1_eSecondsSeparator.style.display = "none";
+          }
+          else
+            {
+            // Other timer modes.
+            if(_1_startTime > _1_currentTime)
+            {
+              //precount mode!
+              precountModeDisplay();
+              var diff = ((_1_timerMode == TM_NONE) ? 0 : (_1_startTime - _1_currentTime));
+              _1_diff = diff;
+              diff /= 1000;
+              diff = Math.floor(diff);
+              _1_eSeconds.innerHTML = "— " + (diff % 60 + 1).toString() + " —";
+            }
+            else
+            {
+              timerModeDisplay();
+              
+              var diff = ((_1_timerMode == TM_COUNTDOWN) ? (_1_finishTime - _1_currentTime) : ((_1_timerMode == TM_TIMER) ? (_1_currentTime - _1_startTime) : 0));
+              _1_diff = diff;
+              _1_eMSeconds.innerHTML = (diff % 1000).toString().padStart(3, "0");
+              diff /= 1000;
+              diff = Math.floor(diff);
+              _1_eSeconds.innerHTML = (diff % 60).toString().padStart(2, "0");
+              diff /= 60;
+              diff = Math.floor(diff);
+              _1_eMinutes.innerHTML = (diff % 60).toString().padStart(2, "0");
+              diff /= 60;
+              diff = Math.floor(diff);
+              _1_eHours.innerHTML = diff.toString().padStart(2, "0");
+            }
+            
+            if(_1_eMinutes.innerHTML < 1)
+            {
+              _1_eprogress_background.classList.add("timer-blink");
+              //_1_eprogress.classList.add("timer-blink");
+            }
+            else
+            {
+              _1_eprogress_background.classList.remove("timer-blink");
+              //_1_eprogress.classList.remove("timer-blink");
+            }
+            if(_1_timerMode == TM_COUNTDOWN)
+            {
+              _1_eprogress.style.display = "block";
+              _1_eprogress_background.style.display = "block";
+              _1_eprogress.style.width = ((_1_diff) / (_1_timeInput) * 100) + "%";
+            }
+            else
+            {
+              _1_eprogress.style.display = "none";
+              _1_eprogress_background.style.display = "none";
+            }
+          }
+        }
+        function _1_doUpdate()
+        {
+          if((_1_timerRunning && !_1_paused) || _1_timerMode == TM_REALTIME)
+          {
+            if(_1_adminMode != ADM_SLAVE)
+              _1_currentTime = (new Date()).getTime();
+            else
+              _1_currentTime = ((new Date()).getTime() - _1_lastServerUpdateByLocalTime) + _1_serverTime;
+              
+            if(_1_timerMode == TM_COUNTDOWN && _1_currentTime >= _1_finishTime)
+            {
+              _1_etimerFinishSound.play();
+              _1_stopTimer();
+              _1_currentTime = _1_finishTime;
+            }
+            _1_updateTimerDisplay();
+          }
+        }
+        
+        function startTimerUpdate()
+        {
+          _1_interval = setInterval(_1_doUpdate, 75);
+        }
+        
+        function _1_startTimer()
+        {
+          if(_1_adminMode != ADM_SLAVE)
+          {
+            _1_currentTime = (new Date()).getTime();
+            _1_startTime = _1_currentTime;
+            _1_realStartTime = _1_startTime;
+            _1_timer.style.color = "red";
+            _1_timerMode = TM_TIMER;
+            _1_timerRunning = true;
+            _1_paused = false;
+            startTimerUpdate();
+            _1_saveDataToServer();
+          }
+        }
+        function _1_stopTimer()
+        {
+          if(_1_adminMode != ADM_SLAVE)
+          {
+            _1_timer.style.color = "white";
+            _1_timerRunning = false;
+            _1_paused = false;
+            clearInterval(_1_interval);
+            _1_updateTimerDisplay();
+            _1_saveDataToServer();
+          }
+        }
+        function _1_toggleTimer()
+        {
+          if(_1_adminMode != ADM_SLAVE)
+          {
+            _1_timerRunning ? _1_stopTimer() : _1_startTimer();
+          }
+        }
+        function _1_runCountDown()
+        {
+          if(_1_adminMode != ADM_SLAVE)
+          {
+            _1_currentTime = (new Date()).getTime();
+            _1_startTime = _1_currentTime + _1_eTimeInputPrecount.value * 1000;
+            _1_realStartTime = _1_startTime;
+            _1_finishTime = _1_startTime + (_1_eTimeInputHours.value * 3600000 + _1_eTimeInputMinutes.value * 60000 + _1_eTimeInputSeconds.value * 1000);
+            _1_timeInput = _1_finishTime - _1_startTime;
+            _1_timer.style.color = "yellow";
+            _1_timerMode = TM_COUNTDOWN;
+            _1_timerRunning = true;
+            _1_paused = false;
+            startTimerUpdate();
+            _1_saveDataToServer();
+          }
+        }
+        function _1_pause()
+        {
+          if(_1_timerRunning && _1_adminMode != ADM_SLAVE)
+          {
+            if(_1_paused)
+            {
+              if(_1_timerMode == TM_COUNTDOWN)
+              {
+                _1_finishTime += Number((new Date()).getTime() - Number(_1_pauseTime));
+              }
+              else
+              {
+                _1_startTime += Number((new Date()).getTime() - Number(_1_pauseTime));
+              }
+              _1_paused = false;
+            }
+            else
+            {
+              _1_pauseTime = (new Date()).getTime();
+              _1_paused = true;
+            }
+            _1_saveDataToServer();
+          }
+        }
+        function getParam(name)
+        {
+          var url = new URL(window.location);
+          var v = url.searchParams.get(name);
+          return (v === undefined || v === null) ? "" : v;
+        }
+        function _1_isURLQuery()
+        {
+          return getParam("mode") != "" || getParam("admin") != "";
+        }
+        function _1_loadFromURL()
+        {
+          console.log("URL query present");
+          
+          _1_eTimeInputHours.value = getParam("h");
+          _1_eTimeInputMinutes.value = getParam("m");
+          _1_eTimeInputSeconds.value = getParam("s");
+          _1_eTimeInputPrecount.value = getParam("p");
+          _1_timerMode = Number(getParam("mode"));
+          
+          _1_adminMode = getParam("admin");
+          if(_1_adminMode == "")
+            _1_adminMode = 2;
+            
+          console.log("Timer mode: " + _1_timerMode);
+          console.log("Admin mode: " + _1_adminMode);
+          
+          /*switch(_1_adminMode)
+          {
+            case ADM_MASTER: _1_etimer_mode.innerHTML = "<span style='color: red'>Master Mode (Write)</span>"; break;
+            case ADM_SLAVE: _1_etimer_mode.innerHTML = "Slave Mode (Read)"; break;
+						case ADM_NONE: break;
+            default: _1_etimer_mode.innerHTML = "Unknown Mode (" + _1_adminMode + " : " + typeof _1_adminMode + ")"; break;
+          }*/
+          
+          if(_1_adminMode != ADM_SLAVE)
+          { 
+            switch(_1_timerMode)
+            {
+              case TM_TIMER:
+                console.log("Starting timer");
+                _1_startTimer();
+                break;
+              case TM_COUNTDOWN:
+                console.log("Starting countdown");
+                _1_runCountDown();
+                break;
+              case TM_REALTIME:
+                console.log("Starting realtime clock");
+                startTimerUpdate();
+                break;
+              default:
+                break;
+            }
+          }
+        }
+        
+        ////////////////
+        // LOAD TIMER //
+        ////////////////
+        
+        console.log("Starting TMG Timer Utility");
+        if(_1_isURLQuery())
+        {
+          _1_loadFromURL();
+        }
+       
+        if(_1_adminMode == ADM_SLAVE)
+        {  
+          console.log("Admin Mode is Slave, setting up loading from server");
+          _1_syncInterval = setInterval(_1_loadDataFromServer, 1000);
+        }
+        else if(_1_adminMode == ADM_MASTER)
+        {
+          _1_saveDataToServer();
+        }
+        
+        document.addEventListener("toggleTimer", function() { _1_toggleTimer() });
+        document.addEventListener("runCountDown", function() { _1_runCountDown() });
+        document.addEventListener("pause", function() { _1_pause() });
+        document.addEventListener("submitopts", function(evt) { console.log("submitopts"); window.location.href = evt.newURL; });
+      </script>
+  </body>
+</html>

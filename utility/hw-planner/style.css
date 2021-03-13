@@ -1,0 +1,219 @@
+body {
+    background-color: #333333;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.fullscreen-form {
+    background-color: rgba(1, 1, 1, 0.7);
+    height: 100%;
+    overflow: auto;
+    position: fixed;
+    text-align: center;
+    width: 100%;
+}
+
+#loading {
+    background-color: #555555;
+    bottom: 0px;
+    color: #bbbbbb;
+    font-size: 30px;
+    height: 100px;
+    position: fixed;
+    right: 0px;
+    text-align: center;
+    width: 100px;
+    z-index: 10;
+}
+
+#loading-text {
+}
+
+.added {
+    background-color: #888888;
+    transition: background-color 2s;
+}
+
+.code {
+    font-family: monospace;
+    font-size: 14pt;
+}
+
+
+.col-sub {
+    font-weight: bold;
+    max-width: 30px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+
+.description {
+    font-size: 9pt;
+}
+
+.error-code {
+    color: #ffbb88;
+    display: inline-block;
+    font-size: 13pt;
+    margin: 40px 0px 40px 0px;
+}
+
+
+.hwt-sz {
+    color: #cccccc;
+}
+.hwt-bz {
+    color: #77ccff;
+}
+.hwt-ss {
+    color: yellow;
+}
+.hwt-bs {
+    color: #ffaaaa;
+}
+.hwt-i {
+    color: #44ff44;
+}
+.hwt-in {
+    color: white;
+}
+
+.imp-verybig {
+    background-color: #aa4444 !important;
+    color: #ffbbbb;
+}
+
+.imp-big {
+    background-color: #aa5533 !important;
+    color: #eeddbb;
+}
+
+.imp-medium {
+    background-color: #888833 !important;
+    color: #ffffbb;
+}
+
+.imp-small {
+    background-color: #338833 !important;
+    color: #bbffbb;
+}
+
+.imp-none {
+    background-color: #888888 !important;
+    color: #eeeeee;
+}
+
+.label {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+}
+
+
+.exe-value {
+    color: #ffdddd;
+    font-family: "Courier New", "monospace";
+}
+
+
+.modify-button {
+    
+}
+
+
+.status-u {
+    color: white;
+}
+.status-i {
+    color: #aaddff;
+}
+.status-n {
+    color: #ffaaaa;
+}
+.status-x {
+    background-color: #ff6666;
+}
+.status-e {
+    color: #99bb99;
+}
+.status-p {
+    color: #ccffcc;
+}
+.status-v {
+    color: #44ff44;
+}
+.status-f {
+    color: #ffffaa;
+}
+
+
+.tf-r {
+}
+.tf-x {
+    color: #ffaaaa;
+}
+.tf-n {
+    color: #aaffaa;
+}
+
+
+.time-imp-small, .time-imp-medium, .time-imp-big, .time-imp-verybig {
+    font-weight: bold;
+}
+
+.time-imp-small {
+    color: #bbffbb;
+}
+
+.time-imp-medium {
+    color: #ffffbb;
+}
+
+.time-imp-big {
+    color: #ffaa77;
+}
+
+.time-imp-verybig {
+    color: #ff6060;
+}
+
+
+.topic-label {
+    /*background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid white;*/
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 90%;
+    margin: 0px 8px 5px 0px;
+    padding: 3px 8px 3px 8px;
+    text-transform: uppercase;
+}
+
+.column {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    width: 50%;
+}
+
+
+.stat-entry {
+    text-align: left;
+}
+.stat-key, .stat-value {
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 10px;
+    width: 50%;
+}
+
+.stat-key {
+    border-right: 1px solid white;
+    text-align: right;
+}
+
+.rqlog-time {
+    min-width: 200px;
+}

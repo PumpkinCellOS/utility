@@ -1,0 +1,341 @@
+var g_data = {
+    "dayrange": [1, 5],
+    "tunit": [
+        [07,10, 07,55],
+        [08,00, 08,45],
+        [08,50, 09,35],
+        [09,50, 10,35],
+        [10,40, 11,25],
+        [11,30, 12,15],
+        [12,30, 13,15],
+        [13,20, 14,05],
+        [14,10, 14,55],
+        [15,00, 15,45]
+    ],
+    "lessons": [
+        {"sub": "SIE", "class": 36,  "tunit": 3, "tday": 1},
+        {"sub": ">>>", "class": "*", "tunit": 4, "tday": 1, "type": "window"},
+        {"sub": "WFI", "class": "*", "tunit": 5, "tday": 1},
+        {"sub": "<<<", "class": "*", "tunit": 6, "tday": 1, "type": "window"},
+        {"sub": "NIE", "class": 34,  "tunit": 7, "tday": 1},
+        {"sub": "NIE", "class": 34,  "tunit": 8, "tday": 1},
+        
+        {"sub": "POL", "class": 23,  "tunit": 2, "tday": 2},
+        {"sub": "POL", "class": 23,  "tunit": 3, "tday": 2},
+        {"sub": "ANG", "class": 20,  "tunit": 4, "tday": 2},
+        {"sub": "SYS", "class": 36,  "tunit": 5, "tday": 2},
+        {"sub": "PSY", "class": 56,  "tunit": 6, "tday": 2},
+        {"sub": "MAT", "class": 37,  "tunit": 7, "tday": 2},
+        {"sub": "MAT", "class": 37,  "tunit": 8, "tday": 2},
+        {"sub": "PPO", "class": 51,  "tunit": 9, "tday": 2},
+        
+        {"sub": "PUT", "class": 62,  "tunit": 1, "tday": 3},
+        {"sub": "PUT", "class": 62,  "tunit": 2, "tday": 3},
+        {"sub": "PRO", "class": 32,  "tunit": 3, "tday": 3},
+        {"sub": "PPR", "class": 33,  "tunit": 4, "tday": 3},
+        {"sub": "HIS", "class": 38,  "tunit": 5, "tday": 3},
+        {"sub": "SIE", "class": 31,  "tunit": 6, "tday": 3},
+        {"sub": "UTK", "class": 22,  "tunit": 7, "tday": 3},
+        {"sub": "MAT", "class": 37,  "tunit": 8, "tday": 3},
+        {"sub": "GWC", "class": 37,  "tunit": 9, "tday": 3},
+        
+        {"sub": "ANG", "class": 20,  "tunit": 2, "tday": 4},
+        {"sub": "JIN", "class": 32,  "tunit": 3, "tday": 4},
+        {"sub": "MAT", "class": 0,   "tunit": 4, "tday": 4},
+        {"sub": "POL", "class": 23,  "tunit": 5, "tday": 4},
+        {"sub": ">>>", "class": "*", "tunit": 6, "tday": 4, "type": "window"},
+        {"sub": "WFI", "class": "*", "tunit": 7, "tday": 4},
+        {"sub": "WFI", "class": "*", "tunit": 8, "tday": 4},
+        {"sub": "<<<", "class": "*", "tunit": 9, "tday": 4, "type": "window"},
+        
+        {"sub": "PSY", "class": 41,  "tunit": 0, "tday": 5},
+        {"sub": "PSI", "class": 43,  "tunit": 1, "tday": 5},
+        {"sub": "PSI", "class": 43,  "tunit": 2, "tday": 5},
+        {"sub": "INF", "class": 58,  "tunit": 3, "tday": 5},
+        {"sub": "PRO", "class": 28,  "tunit": 4, "tday": 5},
+        {"sub": "UTK", "class": 36,  "tunit": 5, "tday": 5},
+        {"sub": "SYS", "class": 57,  "tunit": 6, "tday": 5},
+        {"sub": "INF", "class": 57,  "tunit": 7, "tday": 5},
+        {"sub": "NI*", "class": 34,  "tunit": 8, "tday": 5, "type": "optional"},
+        {"sub": "NI*", "class": 34,  "tunit": 9, "tday": 5, "type": "optional"}
+    ],
+};
+
+function addSlashes(str)
+{
+    return (str + '').replace(/[\\']/g, '\\$&').replace(/\u0000/g, '\\0');
+}
+
+function dateNoTime(date)
+{
+    var time = date.getTime();
+    return new Date(time - (time % 86400000));
+}
+
+function dateNoTimeString(date)
+{
+    return date.getFullYear().toString().padStart(2, "0") + "-"
+        + (date.getMonth() + 1).toString().padStart(2, "0") + "-"
+        + date.getDate().toString().padStart(2, "0");
+}
+
+function currentDateNoTime()
+{
+    return dateNoTime(new Date);
+}
+
+function constructMinutes(h, m)
+{
+    if(m === undefined)
+        return h[0]*60+h[1];
+    return h*60+m;
+}
+
+function getUnitDB(data)
+{
+    return data.range ?? g_data.tunit;
+}
+
+function getLessonTimeRange(data)
+{
+    return getUnitDB(data)[data.tunit ?? 0];
+}
+
+function generateBlockTextHWTitle(hw)
+{
+    var inner = "";
+    
+    inner += addSlashes(hw.topic);
+    
+    return inner;
+}
+
+function generateBlockText(data, hwPlannerData)
+{
+    var inner = "<b>" + data.sub + "</b>&nbsp;" + data.class;
+    if(hwPlannerData.length == 1)
+    {
+        inner += "&nbsp;<a class='tlt-topic-label' title='" + generateBlockTextHWTitle(hwPlannerData[0]) + "'>" + generateLabel(hwPlannerData[0].topicLabel) + "</a>";
+    }
+    else if(hwPlannerData.length > 1)
+    {
+        var title = "";
+        for(var hw of hwPlannerData)
+        {
+            title += "* " + generateBlockTextHWTitle(hw) + "\n";
+        }
+        inner += `<a class='tlt-topic-label' title='${title}'>&nbsp;(...)</a>`
+    }
+    return inner;
+}
+
+const SCALE = 1;
+const SPACING = 20;
+
+var g_currentLesson = null;
+var g_weekOffset = 0;
+var g_startDay = null;
+var g_endDay = null;
+
+function generateCurrentLabelText()
+{
+    console.log("Generating current label text");
+    if(!g_currentLesson)
+        return "No lesson!";
+    var time = getLessonTimeRange(g_currentLesson);
+    var inner = "";
+    
+    var current = new Date();
+    var leftMinutes = (constructMinutes(time[2], time[3])
+                    - constructMinutes(current.getHours(), current.getMinutes()));
+    var totalMinutes = (constructMinutes(time.slice(2)) - constructMinutes(time));
+    var elapsedMinutes = totalMinutes - leftMinutes;
+    
+    inner += current.toString();
+    inner += elapsedMinutes + " min elapsed (" + Math.round((elapsedMinutes * 100 / totalMinutes), 1) + "%)<br>";
+    inner += leftMinutes + " min left (" + Math.round((leftMinutes * 100 / totalMinutes), 1) + "%)<br>";
+    return inner;
+}
+
+function generateCurrent()
+{
+    if(g_weekOffset != 0)
+        return "";
+    
+    var current = new Date();
+    
+    var top = ((current.getHours() - g_data.tunit[0][0]) * 60 + current.getMinutes()) * SCALE;
+    var left_pc = 100 * ((current.getDay() - g_data.dayrange[0]) / (g_data.dayrange[1] - g_data.dayrange[0] + 1));
+    var left_spacing = 0;
+    var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1) * 100;
+    var width_spacing = 0;
+    
+    var inner = "";
+    
+    var label_html = 
+    `<div id="tlt-current">
+    </div>`;
+    label_html += "<div id='tlt-current-label'>" + generateCurrentLabelText() + "</div>";
+    
+    inner += 
+    `<div id="tlt-current-box" style="left: calc(${left_pc}% + ${left_spacing}px); top: ${top}px; width: calc(${width_pc}% - ${width_spacing}px);">
+    ${label_html}</div>`;
+    
+    return inner;
+}
+
+function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
+{
+    var hws = [];
+    
+    // start and end of the week
+    for(var tid in hwPlannerData)
+    {
+        var hw = hwPlannerData[tid];
+        var untilTime = new Date(hw.untilTime + " " + hw.untilTimeT);
+        var untilMinutes = constructMinutes(untilTime.getHours(), untilTime.getMinutes());
+        var untilDay = untilTime.getDate();
+        var lsnMinutesStart = constructMinutes(unit);
+        var lsnMinutesEnd = constructMinutes(unit.slice(2));
+        
+        if(untilMinutes >= lsnMinutesStart && untilMinutes <= lsnMinutesEnd
+           && untilTime >= g_startDay && untilTime <= g_endDay
+            && tday == untilTime.getDay()
+        )
+        {
+            console.log(hw);
+            hws.push(hw);
+        }
+    }
+    return hws;
+}
+
+function generateBlock(data, hwPlannerData)
+{
+    var inner = "";
+    var tunitdb = getUnitDB(data);
+    
+    var unit = getLessonTimeRange(data);
+    
+    var hws = findHWPlannerHWsForRange(unit, data.tday, hwPlannerData);
+    
+    var startdate = new Date();
+    startdate.setHours(unit[0]);
+    startdate.setMinutes(unit[1]);
+    var enddate = new Date(startdate.getTime());
+    enddate.setHours(unit[2]);
+    enddate.setMinutes(unit[3]);
+    
+    var left_pc = 100 * ((data.tday - g_data.dayrange[0]) / (g_data.dayrange[1] - g_data.dayrange[0] + 1));
+    var left_spacing = SPACING / 2;
+    var top = ((startdate.getHours() - g_data.tunit[0][0]) * 60 + startdate.getMinutes()) * SCALE;
+    var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1) * 100;
+    var width_spacing = SPACING;
+    var height = (enddate - startdate) * SCALE / 60000;
+    
+    var text = generateBlockText(data, hws);
+    var type = "tt-" + (data.type ?? "lesson");
+    
+    var currentDate = new Date();
+    var currentMinutes = constructMinutes(currentDate.getHours(), currentDate.getMinutes());
+    var startMinutes = constructMinutes(startdate.getHours(), startdate.getMinutes());
+    var endMinutes = constructMinutes(enddate.getHours(), enddate.getMinutes());
+    
+    var b1 = currentDate.getDay() == data.tday;
+    var b2 = currentMinutes >= startMinutes;
+    var b3 = currentMinutes <= endMinutes;
+    
+    if(b1 && b2 && b3 && g_weekOffset == 0)
+    {
+        type += " tt-current";
+        g_currentLesson = data;
+    }
+    
+    inner += 
+    `<div class="tlt-block ${type}" style="left: calc(${left_pc}% + ${left_spacing}px); top: ${top}px; width: calc(${width_pc}% - ${width_spacing}px); height: ${height}px">
+        <div class="tlt-inner">
+            ${text}
+        </div>
+    </div>`;
+    
+    return inner;
+}
+
+function generateTlt(data)
+{
+    console.log("HW Planner Data:", data);
+    
+    // configure
+    var current = new Date();
+    g_startDay = new Date(current.getTime() - (current.getDay() - g_data.dayrange[0] - g_weekOffset * 7) * 86400000);
+    g_startDay.setHours(0);
+    g_startDay.setMinutes(0);
+    g_startDay.setSeconds(0);
+    g_endDay = new Date(current.getTime() - (current.getDay() - g_data.dayrange[1] - g_weekOffset * 7) * 86400000);
+    g_endDay.setHours(23);
+    g_endDay.setMinutes(59);
+    g_endDay.setSeconds(59);
+    
+    var inner = "";
+    g_currentLesson = null;
+    for(var lsn of g_data.lessons)
+    {
+        inner += generateBlock(lsn, data);
+    }
+    
+    console.log(g_currentLesson);
+    inner += generateCurrent();
+    document.getElementById("container").innerHTML = inner;
+    
+    var diffMinutes = constructMinutes(g_data.tunit[g_data.tunit.length - 1].slice(2)) - constructMinutes(g_data.tunit[0]);
+    document.getElementById("container-wrapper").style.height = ((diffMinutes * SCALE) + 10) + "px";
+    
+    var currentBox = document.getElementById("tlt-current-box");
+    if(currentBox)
+    {
+        currentBox.addEventListener("mouseenter", function() {
+            document.getElementById("tlt-current-label").style.opacity = "100%";
+        });
+        currentBox.addEventListener("mouseleave", function() {
+            document.getElementById("tlt-current-label").style.opacity = "0%";
+        });
+    }
+    
+    var dateBox = document.getElementById("current-date");
+    dateBox.innerHTML = dateNoTimeString(g_startDay) + "<br>" + dateNoTimeString(g_endDay);
+}
+
+function loadHWPlannerData()
+{
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/u/hw-planner/api.php?c=get-data&q=hws+done");
+    xhr.onreadystatechange = function() {
+        if(this.readyState == XMLHttpRequest.DONE)
+        {
+            if(this.status == 200)
+                generateTlt(JSON.parse(this.responseText).data);
+            else
+                generateTlt(null);
+        }
+    }
+    xhr.send();
+}
+
+function generate()
+{
+    console.log("Generating...");
+    loadHWPlannerData();
+}
+
+function changeWeekOffset(value)
+{
+    g_weekOffset = value;
+    generate();
+}
+
+function main()
+{
+    generate();
+    setInterval(generate, 30000);
+}
+main();
