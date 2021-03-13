@@ -1,6 +1,9 @@
 <?php
 class PCUGenerator
 {
+    public array $stylesheets = [];
+    public array $scripts = [];
+
     public function __construct(string $title, string $head_suffix = "", string $body_suffix = "")
     {
         $this->title = $title;
@@ -16,7 +19,11 @@ class PCUGenerator
         <meta charset="utf-8">
         <title><?php echo $this->title ?> | PumpkinCell.net</title>
         <link rel="stylesheet" href="/style.css"/>
-        <?php echo $this->head_suffix ?>
+        <?php 
+            foreach($this->stylesheets as $stylesheet)
+                echo "<link rel='stylesheet' href=$stylesheet>";
+            echo $this->head_suffix;
+        ?>
     </head>
     <body>
         <!-- TODO: Use custom elements -->
@@ -34,7 +41,11 @@ class PCUGenerator
             </div>
         </div>
         <script src="tilify.js"></script>
-        <?php echo $this->body_suffix ?>
+        <?php
+            foreach($this->scripts as $script)
+                echo "<script src=$script>";
+            echo $this->body_suffix
+        ?>
     </body>
 </html><?php
     }
