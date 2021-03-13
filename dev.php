@@ -1,7 +1,7 @@
 <?php
 require_once("lib/generator.php");
 $generator = new PCUGenerator("Development");
-$generator->start();
+$generator->start_content();
 ?>
 <h2>Development</h2>
 

@@ -4,7 +4,7 @@ require("lib/pcu.php");
 $login = pcu_is_logged_in();
 $userData = $_SESSION["userData"];
 $generator = new PCUGenerator();
-$generator->start();
+$generator->start_content();
 ?>
 <h2>PumpkinCell.net</h2>
 <div class="app-list" id="pcu-app-list">
