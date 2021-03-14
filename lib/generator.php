@@ -51,7 +51,7 @@ class PCUGenerator
                         <!-- TODO: Use custom elements -->
                         <div id="footer-wrapper">
                             <div id="footer">
-                                Copyright&nbsp;©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms of Use</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy Policy</a>&nbsp;&#8226;&nbsp;This site uses cookies, but ONLY for keeping you logged-in. Otherwise, not. Please check in developer tools.
+                                Copyright&nbsp;©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms of Use</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy Policy</a>&nbsp;&#8226;&nbsp;<a href="https://github.com/PumpkinCellOS/utility">GitHub</a>&nbsp;&#8226;&nbsp;This site uses cookies, but ONLY for keeping you logged-in. Otherwise, not. Please check in developer tools.
                             </div>
                         </div>
                     </div>
