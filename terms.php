@@ -5,7 +5,7 @@ $generator->start_content();
 ?>
 <h2 id="terms">PumpkinCell.net Legal Information</h2>
 <div class="background-tile">
-    <div class="background-tile-padding">
+    <div class="background-tile-big-padding">
         <h3>Go to:</h3>
         <ul>
             <li><a href="#terms">Terms of use</a></li>
@@ -28,7 +28,7 @@ $generator->start_content();
         <p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
         <h4>Account</h4>
         <p><a href="/signup.php">Creating an account</a> is also <b>free</b>. When you create a PumpkinCell.net account, you must give your username and password. The username is used for logging in. Note that e-mail address is not supported, so we don't have any way to authorize sign-ups. If you forgot a password, <a href="mailto:sppmacd@pm.me">get in touch</a> with me.</p>
-        <p><b>TODO:</b> It's not uploaded to gh for now, since I'm not sure if there are no passwords hardcoded.</p>
+        <p><b>TODO:</b> It's not uploaded to gh for now, since I'm not sure if there are no passwords hardcoded. If you want to get the code, just write to me.</p>
         <h3 id="privacy">Privacy Policy</h3>
         <h4>Summary</h4>
         <p>We <b>really</b> value your privacy, not like another sites. So, we don't store any data about you <i>except</i> when you are logged in.</p>
