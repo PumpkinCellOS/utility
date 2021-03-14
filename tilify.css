@@ -65,6 +65,13 @@ div.background-tile-padding {
     width: calc(100% - 40px);
 }
 
+div.background-tile-big-padding {
+    display: inline-block;
+    margin: 20px 20% 20px 20%;
+    text-align: justify;
+    width: calc(60% - 40px);
+}
+
 .data {
     font-family: sans-serif;
     font-size: 10pt;
