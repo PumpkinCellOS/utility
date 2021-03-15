@@ -35,6 +35,13 @@ h4 {
     font-size: 20px;
 }
 
+pre {
+    border: 1px solid #bbbbbb;
+    max-width: 100%;
+    overflow-x: scroll;
+    padding: 5px;
+}
+
 ul {
     list-style-type: square;
 }
