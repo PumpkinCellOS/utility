@@ -79,6 +79,12 @@ function dateNoTimeString(date)
         + date.getDate().toString().padStart(2, "0");
 }
 
+function dateString(date)
+{
+    return dateNoTimeString(date) + " " + date.getHours().toString().padStart(2, "0") + ":"
+        + date.getMinutes().toString().padStart(2, "0");
+}
+
 function currentDateNoTime()
 {
     return dateNoTime(new Date);
@@ -151,7 +157,7 @@ function generateCurrentLabelText()
     var totalMinutes = (constructMinutes(time.slice(2)) - constructMinutes(time));
     var elapsedMinutes = totalMinutes - leftMinutes;
     
-    inner += current.toString();
+    inner += dateString(current) + "<br>";
     inner += elapsedMinutes + " min elapsed (" + Math.round((elapsedMinutes * 100 / totalMinutes), 1) + "%)<br>";
     inner += leftMinutes + " min left (" + Math.round((leftMinutes * 100 / totalMinutes), 1) + "%)<br>";
     return inner;
