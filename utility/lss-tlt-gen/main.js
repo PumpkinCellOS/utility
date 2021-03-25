@@ -59,6 +59,14 @@ var g_data = {
         {"sub": "NI*", "class": 34,  "tunit": 8, "tday": 5, "type": "optional"},
         {"sub": "NI*", "class": 34,  "tunit": 9, "tday": 5, "type": "optional"}
     ],
+    // TODO
+    "freeDays": [
+        {"date": ["2021-04-01", "2021-04-06"], "reason": "Wielkanoc"},
+        {"date": "2021-05-03", "reason": "Święto Konstytucji 3 Maja"},
+        {"date": ["2021-05-04", "2021-05-06"], "reason": "Matury"},
+        {"date": ["2021-06-03", "2021-06-04"], "reason": "Boże Ciało"},
+        {"date": ["2021-06-25", "2021-09-01"], "reason": "Wakacje"}
+    ]
 };
 
 function addSlashes(str)
@@ -97,6 +105,22 @@ function constructMinutes(h, m)
     return h*60+m;
 }
 
+function isFreeDay(date)
+{
+    console.log(date);
+    var freeDays = g_data.freeDays;
+    for(var fdd of freeDays)
+    {
+        var dates = fdd.date;
+        console.log(dates);
+        if((dates instanceof Array && dateNoTime(date) >= new Date(dates[0]) && dateNoTime(date) <= new Date(dates[1] + " 23:59:59")) ||
+           (dateNoTime(date) >= new Date(dates) && dateNoTime(date) <= new Date(dates + " 23:59:59"))
+        )
+            return fdd.reason;
+    }
+    return false;
+}
+
 function getUnitDB(data)
 {
     return data.range ?? g_data.tunit;
@@ -111,7 +135,9 @@ function generateBlockTextHWTitle(hw)
 {
     var inner = "";
     
-    inner += addSlashes(hw.topic);
+    inner += generateTopicDisplay(hw, false);
+    inner += "\n";
+    inner += generateStatus(hw.status);
     
     return inner;
 }
@@ -119,19 +145,22 @@ function generateBlockTextHWTitle(hw)
 function generateBlockText(data, hwPlannerData)
 {
     var inner = "<b>" + data.sub + "</b>&nbsp;" + data.class;
+    var title = "";
     if(hwPlannerData.length == 1)
     {
-        inner += "&nbsp;<a class='tlt-topic-label' title='" + generateBlockTextHWTitle(hwPlannerData[0]) + "'>" + generateLabel(hwPlannerData[0].topicLabel) + "</a>";
+        title = generateBlockTextHWTitle(hwPlannerData[0]);
+        inner += `&nbsp;<a class="tlt-topic-label" tid=${hwPlannerData[0].tid}>` + generateLabel(hwPlannerData[0].topicLabel) + "</a>";
     }
     else if(hwPlannerData.length > 1)
     {
-        var title = "";
         for(var hw of hwPlannerData)
         {
-            title += "* " + generateBlockTextHWTitle(hw) + "\n";
+            title += "* " + generateBlockTextHWTitle(hw) + "<br>";
         }
-        inner += `<a class='tlt-topic-label' title='${title}'>&nbsp;(...)</a>`
+        inner += `<a class="tlt-topic-label" tid=${hwPlannerData[0].tid}>&nbsp;` + generateLabel("...") + `</a>`;
     }
+    if(hwPlannerData[0] !== undefined)
+        inner += `<div class="tlt-hw-dscr" id="tlt-hw-dscr-${hwPlannerData[0].tid}">${title}</div>`;
     return inner;
 }
 
@@ -218,6 +247,10 @@ function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
 
 function generateBlock(data, hwPlannerData)
 {
+    var realDayDate = new Date(g_startDay.getTime() + data.tday * 86400000);
+    if(isFreeDay(realDayDate))
+        return "";
+    
     var inner = "";
     var tunitdb = getUnitDB(data);
     
@@ -309,6 +342,18 @@ function generateTlt(data)
     
     var dateBox = document.getElementById("current-date");
     dateBox.innerHTML = dateNoTimeString(g_startDay) + "<br>" + dateNoTimeString(g_endDay);
+    
+    for(var element of document.getElementsByClassName("tlt-topic-label"))
+    {
+        element.addEventListener("mouseenter", function() {
+            var el2 = document.getElementById(`tlt-hw-dscr-${this.getAttribute("tid")}`);
+            el2.style.display = "block";
+        });
+        element.addEventListener("mouseleave", function() {
+            var el2 = document.getElementById(`tlt-hw-dscr-${this.getAttribute("tid")}`);
+            el2.style.display = "none";
+        });
+    }
 }
 
 function loadHWPlannerData()

@@ -21,6 +21,7 @@ class PCUGenerator
                     <meta charset="utf-8">
                     <title><?php if(strlen($this->title) == 0) echo "PumpkinCell.net"; else echo $this->title . " | PumpkinCell.net" ?></title>
                     <link rel="stylesheet" href="/style.css"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
                     <?php 
                         foreach($this->stylesheets as $stylesheet)
                             echo "<link rel='stylesheet' href=$stylesheet>";
@@ -51,7 +52,7 @@ class PCUGenerator
                         <!-- TODO: Use custom elements -->
                         <div id="footer-wrapper">
                             <div id="footer">
-                                Copyright&nbsp;©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms of Use</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy Policy</a>&nbsp;&#8226;&nbsp;<a href="https://github.com/PumpkinCellOS/utility">GitHub</a>&nbsp;&#8226;&nbsp;This site uses cookies, but ONLY for keeping you logged-in. Otherwise, not. Please check in developer tools.
+                                ©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy</a> &nbsp;&#8226;&nbsp;<a href="https://github.com/PumpkinCellOS/utility">GitHub</a>
                             </div>
                         </div>
                     </div>

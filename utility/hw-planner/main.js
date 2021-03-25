@@ -24,6 +24,11 @@ var LABELS =
     "Inne":                {imp: "none"}
 };
 
+function escapeHTML(str)
+{
+    return new Option(str).innerHTML;
+}
+
 function loadLabels(data)
 {
     for(var label of data.data)
@@ -32,7 +37,7 @@ function loadLabels(data)
     }
 
     // Add topic labels to combo boxes
-    var task_cbbs = [document.forms["modify"]["topicLabel"], document.forms["add-new"]["topicLabel"]];
+    var task_cbbs = [document.forms["topic-editor"]["topicLabel"]];
     for(var cbb of task_cbbs)
     {
         for(var optionIx in LABELS)
@@ -170,12 +175,12 @@ function generateTopicDisplay(data, fancy = true)
     var html = "";
     
     // Topic + topic label
-    var topic = data.topic;
-    var topicLabel = data.topicLabel;
+    var topic = escapeHTML(data.topic);
+    var topicLabel = escapeHTML(data.topicLabel);
     
     if(data.topicFormat == 'N')
     {
-        topic = exe_stringify_hr(exe_parse(data.topic));
+        topic = exe_stringify_hr(exe_parse(topic));
     }
     
     if(data.optional == "1")
@@ -186,7 +191,7 @@ function generateTopicDisplay(data, fancy = true)
     
     if(data.description && data.description.length > 0)
     {
-        topic += "&nbsp;<a class='description' title='" + data.description + "'>(...)</a>"
+        topic += "&nbsp;<a class='description' title='" + escapeHTML(data.description) + "'>(...)</a>"
     }
     
     if(data.topicFormat == 'N' && fancy)
@@ -202,6 +207,7 @@ function generateTopicDisplay(data, fancy = true)
         case "s": topic = "<span class='hwt-ss'>" + topic + "</span>"; break;
         case "S": topic = "<span class='hwt-bs'>" + topic + "</span>"; break;
         case "I": topic = "<span class='hwt-i'>" + topic + "</span>"; break;
+        default: topic = "<span class='hwt-sz'>" + topic + "</span>"; break;
     }
     
     if(topicLabel.length == 0)
@@ -290,28 +296,20 @@ function sortLabel(label)
     }
 }
 
+function statusIsDone(status)
+{
+    return status == "P" || status == "V" || status == "X";
+}
+
+function statusIsEvaluating(status)
+{
+    return status == "E";
+}
+
 function shouldDisplayAsterisk(data, daysLeft)
 {
-    var impSort = 0;
-    var tlArray = data.topicLabel.split(",");
-    for(tl of tlArray)
-        impSort += Math.max(impSort, sortLabel(LABELS[tl]));
-    
-    var notDone = data.status != "P" && data.status != "V" && data.status != "X" && data.status != "E";
-    
-    switch(impSort)
-    {
-        case 0:
-            return false;
-        case 1:
-            return daysLeft <= 1 && notDone;
-        case 2:
-            return daysLeft <= 2 && notDone;
-        case 3:
-            return daysLeft <= 3 && notDone;
-        case 4:
-            return daysLeft <= 14 && notDone;
-    }
+    var notDone = !statusIsDone(data.status) && !statusIsEvaluating(data.status);
+    return notDone && daysLeft < LABELS[data.topicLabel].preparationTime / 2;
 }
 
 function generateTurnInTime(data)
@@ -339,6 +337,7 @@ function generateTurnInTime(data)
         daysLeftStr += "Today";
         if(hoursLeft < 24 && hoursLeft > 0)
             daysLeftStr += ", " + hoursLeft + " " + nhours + " left";
+
         if(hoursLeft < 0)
             daysLeftStr = "<span class='time-imp-verybig'>" + daysLeftStr + "</span>";
         else
@@ -386,6 +385,9 @@ function generateEntry(data)
     
     // Add time
     var minutesAgo = Math.floor((new Date() - new Date(data.addTime)) / 60000);
+    var daysBefore = Math.ceil((new Date(data.untilTime) - new Date(data.addTime)) / 86400000);
+    var preparationTime = LABELS[data.topicLabel].preparationTime;
+    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='time-imp-verybig'>(too late, need " + preparationTime + " days)</span>") : "";
     var daysAgoStr = (
         minutesAgo > 24*60 ?
             Math.ceil(minutesAgo / 24 / 60) + "&nbsp;day(s)&nbsp;ago" :
@@ -394,96 +396,134 @@ function generateEntry(data)
                     Math.ceil(minutesAgo / 60) + "&nbsp;hour(s)&nbsp;ago" :
                     (
                         minutesAgo >= 1 ?
-                        minutesAgo + "&nbsp;minute(s)&nbsp;ago"  :
+                        minutesAgo + "&nbsp;minute(s)&nbsp;ago" :
                         "Recently"
                     )
             )
     );
+    daysAgoStr += daysBeforeStr;
+    
     html += "<td><b>" + daysAgoStr + "</b><br><span class='description'>" + data.addTime + "</span> </td>";
     html += "<td>" + generateTurnInTime(data) + "<br><span class='description'>" + data.untilTime + " <b>" + data.untilTimeT + "</b></span> </td>";
-    html += "<td>" + generateStatus(data.status) + "</td>";
+    
+    var evalTime = LABELS[data.topicLabel].evaluationTime;
+    var evalDays = Math.ceil((new Date() - new Date(data.untilTime)) / 86400000);
+    var evalDaysStr = (evalDays > evalTime && statusIsEvaluating(data.status)) ? "<br><span class='description time-imp-verybig'>(expired after " + evalTime + " days)</span>" : "";
+    html += "<td>" + generateStatus(data.status) + evalDaysStr + "</td>";
+    
     html += "<td><button class='modify-button' onclick='modifyEntry(this.parentNode.parentNode.firstChild.innerText)'>Modify</button>";
     html += "</td>";
     
     return html;
 }
 
-function loadAddFormData(form)
+function loadFormData(form)
 {
     var data = {};
+    data.tid =         form["tid"].value;
     data.sub =         form["sub"].value;
-    data.type =        "z";
     data.untilTime =   form["untilDate"].value
     data.untilTimeT =  form["untilTime"].value
     data.topicFormat = form["topicFormat"].checked ? "N" : "R";
     data.topic =       form["topic"].value;
     data.topicLabel =  form["topicLabel"].value;
+    data.status =      form["status"].value;
     data.optional =    form["optional"].checked;
+    data.description = form["description"].value;
     return data;
 }
 
 function updateTopicDisplay()
 {
     var obj = document.getElementById("topic-display");
-    var data = loadAddFormData(document.forms["add-new"]);
+    var data = loadFormData(document.forms["topic-editor"]);
     obj.innerHTML = generateTopicDisplay(data);
 }
 
-function submitAddNew(form)
+function validateAndLoadData(form)
 {
-    var data = loadAddFormData(form);
+    var data = loadFormData(form);
     
     if(data.sub.length != 3)
     {
-        document.getElementById("form-add-new-error").innerText = "Subject must be 3 characters long";
-        return false;
+        document.getElementById("topic-editor-error").innerText = "Subject must be 3 characters long";
+        return null;
     }
     if(data.untilTime.length == 0)
     {
-        document.getElementById("form-add-new-error").innerText = "Specify turn-in date";
-        return false;
+        document.getElementById("topic-editor-error").innerText = "Specify turn-in date";
+        return null;
     }
     if(data.topic.length < 3)
     {
-        document.getElementById("form-add-new-error").innerText = "Topic must be at least 3 characters long";
-        return false;
+        document.getElementById("topic-editor-error").innerText = "Topic must be at least 3 characters long";
+        return null;
     }
-    
-    var _data = {};
-    _data.data = data;
-    apiCall("add-hw", JSON.stringify(_data), function() {
-        document.getElementById('form-add-new').style.display = 'none';
-        requestLoading(g_showDones);
-    });
+    return data;
 }
 
-function submitModify(form)
+function submitTopicEditor(form)
 {
-    var data = {};
-    data.tid =         form["tid"].value;
-    data.sub =         form["sub"].value;
-    data.type =        "z";
-    data.untilTime =   form["untilDate"].value
-    data.untilTimeT =  form["untilTime"].value
-    data.topicFormat = form["topicFormat"].value;
-    data.topic =       form["topic"].value;
-    data.topicLabel =  form["topicLabel"].value;
-    data.status =      form["status"].value;
-    data.optional =    form["optional"].checked;
-    data.description = form["description"].value;
-    
-    if(data.sub.length != 3)
-        return false;
-    if(data.untilTime.length == 0)
-        return false;
-    if(data.topic.length < 3)
-        return false;
+    console.log("submitTopicEditor")
     
     var _data = {};
-    _data.data = data;
-    apiCall("modify-hw", JSON.stringify(_data), function() { 
-        requestLoading(g_showDones);
-    });
+    _data.data = validateAndLoadData(form);
+    if(_data.data === null)
+    {
+        console.log("failed to validate data :(");
+        return;
+    }
+    
+    switch(form["mode"].value)
+    {
+        case "modify":
+            apiCall("modify-hw", JSON.stringify(_data), function() { 
+                requestLoading(g_showDones);
+            });
+            break;
+        case "add":
+            apiCall("add-hw", JSON.stringify(_data), function() { 
+                requestLoading(g_showDones);
+            });
+            break;
+        default:
+            console.log("invalid mode");
+            break;
+    }
+    closeTopicEditor();
+}
+
+function closeTopicEditor()
+{
+    var editor = document.getElementById("form-topic-editor");
+    editor.style.display = "none";
+}
+
+function openTopicEditor(mode, tid)
+{
+    var editor = document.getElementById("form-topic-editor");
+    editor.style.display = "";
+    var form = editor.firstElementChild;
+    form["mode"].value = mode;
+    
+    switch(mode)
+    {
+        case "add":
+            form["status"].style.display = "none";
+            form["delete"].style.display = "none";
+            break;
+        case "modify":
+            form["status"].style.display = "";
+            form["delete"].style.display = "";
+            form["tid"].value = tid;
+            loadEntryToForm(form, tid);
+            break;
+        default:
+            console.log("invalid mode " + mode);
+            break;
+    }
+    
+    updateTopicDisplay();
 }
 
 function submitModifyStatus(tid, value)
@@ -535,23 +575,17 @@ function loadEntryToForm(form, tid)
     form["sub"].value =         entry.sub;
     form["untilTime"].value =   entry.untilTimeT;
     form["untilDate"].value =   entry.untilTime;
-    var topicFormat = entry.topicFormat;
-    if(topicFormat == "X")
-        topicFormat = "N";
-    form["topicFormat"].value = topicFormat;
+    form["topicFormat"].checked = (entry.topicFormat == "N");
     form["topic"].value =       entry.topic;
     form["topicLabel"].value =  entry.topicLabel;
     form["status"].value =      entry.status;
-    form["optional"].checked =  (entry.optional == 1 ? true : false);
+    form["optional"].checked =  (entry.optional == 1);
     form["description"].value = entry.description;
 }
 
 function modifyEntry(tid)
 {
-    var form = document.forms["modify"];
-    form["tid"].value = tid;
-    document.getElementById("form-modify").style.display = "block";
-    loadEntryToForm(form, tid);
+    openTopicEditor("modify", tid);
 }
 
 function deleteEntry(tid)

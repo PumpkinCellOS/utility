@@ -23,9 +23,23 @@
 
 .tlt-topic-label:hover {
     color: #777777;
-    cursor: pointer;
+    cursor: help;
     font-size: 70%;
     text-decoration: none;
+}
+
+.tlt-hw-dscr {
+    background-color: #666666;
+    border-radius: 3px;
+    color: white;
+    display: none;
+    font-size: 11pt;
+    opacity: 90%;
+    padding: 10px;
+    pointer-events: none;
+    position: absolute;
+    transition: opacity 0.1s;
+    z-index: 100;
 }
 
 #tlt-current-box {

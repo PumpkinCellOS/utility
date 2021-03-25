@@ -35,6 +35,7 @@ div.resizable-tile:hover {
 [is=tlf-button-tile] {
     display: inline-block;
     font-weight: bold;
+    min-width: 100px;
     overflow: hidden;
 }
 

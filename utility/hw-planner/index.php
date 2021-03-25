@@ -7,11 +7,14 @@ $generator->stylesheets = ["style.css"];
 $generator->start_pre_content();
 ?>
     <div id="loading"><span id="loading-text">Loading...</span></div>
-    <div id="form-add-new" class="fullscreen-form" style="display: none">
-        <form action="#" onsubmit="submitAddNew(this); return false" name="add-new">
+    <div id="form-topic-editor" class="fullscreen-form" style="display: none">
+    
+        <form action="#" onsubmit="submitTopicEditor(this); return false" name="topic-editor">
             <h3 style="text-align: center">Add Object</h3>
             <div style="height: calc(100% - 200px)">
                 <div class="column">
+                    <input type="hidden" name="tid"></input>
+                    <input type="hidden" name="mode"></input>
                     <label for="sub">Subject</label><br>
                     <input type="text" name="sub" placeholder="3-Character Subject Identifier" oninput="updateTopicDisplay()"></input><br>
                     <label for="topic">Topic</label><br>
@@ -23,46 +26,29 @@ $generator->start_pre_content();
                     <input type="checkbox" name="topicFormat" oninput="updateTopicDisplay()"><label for="topicFormat">Exercise list</label><br>
                     <label for="untilTime">Until time</label><br>
                     </select><input type="date" name="untilDate" oninput="updateTopicDisplay()"><br>
-                    </select><input type="time" name="untilTime" oninput="updateTopicDisplay()"><br>
+                    </select><input type="time" step="60" name="untilTime" oninput="updateTopicDisplay()"><br>
+                    <select name="status" onchange="submitModifyStatus(document.forms['topic-editor']['tid'].value, this.value); closeTopicEditor()">
+                        <option value="?">Further information needed</option>
+                        <option value="N">Not started</option>
+                        <option value="ip50%">In progress</option>
+                        <option value="E">Evaluation pending</option>
+                        <option value="P">Preparation done</option>
+                        <option value="V">Done</option>
+                        <option value="X">Canceled</option>
+                    </select><br>
                     <div id="topic-display" class="topic"></div><br>
                 </div><div class="column">
                     <textarea name="description" placeholder="Enter detailed description..." style="display: block;"></textarea><br>
                 </div>
             </div>
             <div style="text-align: center">
-                <input type="submit" value="Add entry" onclick="document.getElementById('form-modify').style.display = 'none'"></input>
-                <input type="button" value="Cancel" onclick="document.getElementById('form-add-new').style.display='none';"></input><br>
-                <span id="form-add-new-error"></span>
+                <input type="submit" style="background-color: #448844" value="OK"></input>
+                <input type="button" style="background-color: #888844" value="Cancel" onclick="closeTopicEditor()"></input>
+                <input type="button" style="background-color: #884444" name="delete" value="Delete" onclick="deleteEntry(document.forms['topic-editor']['tid'].value); closeTopicEditor()"></input><br>
+                <span id="topic-editor-error"></span>
             </div>
         </form>
-    </div>
-    <div id="form-modify" class="fullscreen-form" style="display: none;">
-        <form action="#" style="padding: 15px;" onsubmit="submitModify(this); return false" name="modify">
-            <h3 style="text-align: center">Modify Object</h3>
-            <input type="hidden" name="tid">
-            </input><input type="text" name="sub" placeholder="Subject">
-            </input><input type="date" name="untilDate">
-            </select><input type="time" name="untilTime">
-            <input type="checkbox" name="optional"></input><label for="optional">Optional</label><br>
-            </input><select name="topicFormat">
-                <option value="R">Raw</option>
-                <option value="N">Exercise list</option>
-            </select><input type="text" name="topic" placeholder="Topic">
-            </input><select name="topicLabel">
-            </select><select name="status" onchange="submitModifyStatus(this.parentNode['tid'].value, this.value); document.getElementById('form-modify').style.display = 'none'">
-                <option value="?">Further information needed</option>
-                <option value="ip50%">In progress</option>
-                <option value="E">Evaluation pending</option>
-                <option value="P">Preparation done</option>
-                <option value="V">Done</option>
-                <option value="X">Canceled</option>
-                <option value="N">Not started</option>
-            </select><br><textarea name="description" placeholder="Enter detailed description..." style="width: 30%; height: 300px"></textarea><br>
-            <input type="submit" value="Save and quit" onclick="document.getElementById('form-modify').style.display = 'none'" style="background-color: #779977">
-            </input><input type="button" value="Cancel" onclick="document.getElementById('form-modify').style.display = 'none'">
-            </input><input type="button" value="Delete" onclick="deleteEntry(this.parentNode['tid'].value); document.getElementById('form-modify').style.display = 'none'" style="background-color: #997777">
-            </input>
-        </form>
+        
     </div>
     <div id="form-filters" class="fullscreen-form" style="display: none; text-align: left">
         <form action="#" style="padding: 15px;" onsubmit="submitFilters(this); return false" name="filters">
@@ -125,7 +111,7 @@ $generator->start_content();
 ?>
     <h2>HW Planner</h2>
     <div id="controls" class="small app-list">
-        <a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('form-add-new').style.display='block'; updateTopicDisplay(); return false;">
+        <a is="tlf-button-tile" style="width: 16.666%" onclick="openTopicEditor('add'); return false;">
             Add object
         </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('form-filters').style.display='block'; updateTopicDisplay(); return false;">
             Filters
