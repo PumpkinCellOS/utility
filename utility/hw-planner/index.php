@@ -53,35 +53,35 @@ $generator->start_pre_content();
     <div id="form-filters" class="fullscreen-form" style="display: none; text-align: left">
         <form action="#" style="padding: 15px;" onsubmit="submitFilters(this); return false" name="filters">
             <h3 style="text-align: center">{form.filters.name}</h3>
-            <h4>Status</h4>
-            <input type="checkbox" name="status-f"/><label>Further information needed</label><br>
-            <input type="checkbox" name="status-ip"/><label>In progress</label><br>
-            <input type="checkbox" name="status-e"/><label>Evaluation pending</label><br>
-            <input type="checkbox" name="status-p"/><label>Preparation done</label><br>
-            <input type="checkbox" name="status-v"/><label>Done</label><br>
-            <input type="checkbox" name="status-x"/><label>Canceled</label><br>
-            <input type="checkbox" name="status-n"/><label>Not started</label><br>
-            <h4>Turn in</h4>
+            <h4>{form.editor.status}</h4>
+            <input type="checkbox" name="status-f"/><label>{status.f}</label><br>
+            <input type="checkbox" name="status-ip"/><label>{status.i}</label><br>
+            <input type="checkbox" name="status-e"/><label>{status.e}</label><br>
+            <input type="checkbox" name="status-p"/><label>{status.p}</label><br>
+            <input type="checkbox" name="status-v"/><label>{status.v}</label><br>
+            <input type="checkbox" name="status-x"/><label>{status.x}</label><br>
+            <input type="checkbox" name="status-n"/><label>{status.n}</label><br>
+            <h4>{form.editor.turnInTime}</h4>
             <select name="turn-in-mode">
-                <option value=">">at least</option>
-                <option value="<">at most</option>
-                <option value="=">exactly</option>
+                <option value=">">{cmp.least}</option>
+                <option value="<">{cmp.most}</option>
+                <option value="=">{cmp.exact}</option>
             </select><input type="number" name="turn-in"/><select name="turn-in-unit">
-                <option value="h">hours</option>
-                <option value="d">days</option>
+                <option value="h">{time.hours}</option>
+                <option value="d">{time.days}</option>
             </select><select name="turn-in-sign">
-                <option value="+">left</option>
-                <option value="-">ago</option>
+                <option value="h">{time.left}()</option>
+                <option value="d">{time.ago}()</option>
             </select><br>
-            <h4>Added</h4>
+            <h4>{form.filters.addTime}</h4>
             <select name="added-mode">
                 <option value=">">at least</option>
                 <option value="<">at most</option>
                 <option value="=">exactly</option>
             </select><input type="number" name="added"/>
             <select name="added-unit">
-                <option value="h">{time.nhours.p}</option>
-                <option value="d">{time.nday.p}</option>
+                <option value="h">{time.hours}</option>
+                <option value="d">{time.days}</option>
             </select>ago<br>
             <h4>Topic</h4>
             <input type="checkbox" name="exercise-list"/><label>{generic.isExerciseList}</label><br>
@@ -112,17 +112,17 @@ $generator->start_content();
     <h2>HW Planner</h2>
     <div id="controls" class="small app-list">
         <a is="tlf-button-tile" style="width: 16.666%" onclick="openTopicEditor('add'); return false;">
-            Add object
+            {controls.addObject}
         </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('form-filters').style.display='block'; updateTopicDisplay(); return false;">
-            Filters
+            {controls.filters}
         </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('statistics').style.display='block'; calcStatistics(); return false;">
-            Statistics
+            {controls.statistics}
         </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('request-log').style.display='block'; generateRequestLog(); return false;">
-            Request log
+            {controls.requestLog}
         </a><a is="tlf-button-tile" style="width: 16.666%">
-            <input type="checkbox" name="showDones" onclick="g_showDones = this.checked; requestLoading()" onload="onclick()"></input><span class="label">Show all</span>
+            <input type="checkbox" name="showDones" onclick="g_showDones = this.checked; requestLoading()" onload="onclick()"></input><span class="label">{controls.showAll}</span>
         </a><a is="tlf-button-tile" style="width: 16.666%" href="/u/lss-tlt-gen">
-            LSS TLT Gen
+            {controls.lssTltGen}
         </a>
         <!-- TODO: filters -->
     </div>

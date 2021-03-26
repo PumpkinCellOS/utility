@@ -333,7 +333,7 @@ function generateTlt(data)
     if(currentBox)
     {
         currentBox.addEventListener("mouseenter", function() {
-            document.getElementById("tlt-current-label").style.opacity = "100%";
+            document.getElementById("tlt-current-label").style.opacity = "90%";
         });
         currentBox.addEventListener("mouseleave", function() {
             document.getElementById("tlt-current-label").style.opacity = "0%";

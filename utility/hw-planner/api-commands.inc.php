@@ -34,7 +34,7 @@ function cmd_add_hw($json, $uid, $data)
 {
     if(!isset($data))
     {
-        pcu_cmd_error($json, "You must specify data");
+        pcu_cmd_error($json, "{error.noData}");
         return;
     }
     
@@ -84,7 +84,7 @@ function cmd_get_data($json, $uid, $query, $sort)
 {
     if(!isset($query))
     {
-        pcu_cmd_error($json, "Query not specified");
+        pcu_cmd_error($json, "{error.noQuery}");
         return;
     }
     
@@ -108,7 +108,7 @@ function cmd_get_data($json, $uid, $query, $sort)
     $result = $conn->query($sql);
     if(!$result)
     {
-        cmd_error($json, "SQL query failed ($sql): " . mysqli_errno($conn) . ": " . mysqli_error($conn));
+        cmd_error($json, "{error.sql}(" . mysqli_errno($conn) . "," . mysqli_error($conn) . ")");
         return;
     }
     
@@ -155,7 +155,7 @@ function cmd_modify_hw($json, $uid, $data)
 {
     if(!isset($data))
     {
-        pcu_cmd_error($json, "You must specify data");
+        pcu_cmd_error($json, "{error.noData}");
         return;
     }
     
@@ -180,7 +180,7 @@ function cmd_modify_hw($json, $uid, $data)
             topic='$_topic', topicLabel='$_topicLabel', status='$_status', description='$_description',
             optional='$_optional' where tid='$tid' and userId='$uid'"))
     {
-        cmd_error($json, "Query failed: " . mysqli_errno($conn) . ": " . mysqli_error($conn));
+        cmd_error($json, "{error.sql}(" . mysqli_errno($conn) . "," . mysqli_error($conn) . ")");
         return;
     }
     
@@ -212,7 +212,7 @@ function cmd_modify_details($json, $uid, $data)
 {
     if(!isset($data))
     {
-        pcu_cmd_error($json, "You must specify data");
+        pcu_cmd_error($json, "{error.noData}");
         return;
     }
     
@@ -220,7 +220,7 @@ function cmd_modify_details($json, $uid, $data)
     if(!$conn)
         return;
     
-    pcu_cmd_error("Not implemented");
+    pcu_cmd_error("{error.todo}");
     $conn->close();
 }
 
@@ -233,7 +233,7 @@ function cmd_modify_turn_in_time($json, $uid, $data)
 {
     if(!isset($data))
     {
-        pcu_cmd_error($json, "You must specify data");
+        pcu_cmd_error($json, "{error.noData}");
         return;
     }
     
@@ -241,7 +241,7 @@ function cmd_modify_turn_in_time($json, $uid, $data)
     if(!$conn)
         return;
     
-    pcu_cmd_error("Not implemented");
+    pcu_cmd_error("{error.todo}");
     $conn->close();
 }
 
@@ -255,7 +255,7 @@ function cmd_modify_status($json, $uid, $data)
 {
     if(!isset($data->status))
     {
-        pcu_cmd_error($json, "You must specify status");
+        pcu_cmd_error($json, "{error.noDataCustom}(status)");
         return;
     }
     
@@ -269,14 +269,14 @@ function cmd_modify_status($json, $uid, $data)
     $hw = hwplanner_get_hw($conn, $uid, $_tid);
     if(!$hw)
     {
-        pcu_cmd_error($json, "Invalid TID: $_tid");
+        pcu_cmd_error($json, "{error.invalidArgument}(tid, $_tid)");
         return;
     }
     
     if(!$conn->query("update hws set
             status='$_status' where tid='$_tid' and userId='$uid'"))
     {
-        cmd_error($json, "Query failed: " . mysqli_errno($conn) . ": " . mysqli_error($conn));
+        cmd_error($json, "{error.sql}(" . mysqli_errno($conn) . "," . mysqli_error($conn) . ")");
         return;
     }
     
@@ -301,7 +301,7 @@ function cmd_remove_hw($json, $uid, $tid)
 {
     if(!isset($tid))
     {
-        pcu_cmd_error($json, "You must specify TID");
+        pcu_cmd_error($json, "{error.noDataCustom}(TID)");
         return;
     }
     
@@ -315,14 +315,14 @@ function cmd_remove_hw($json, $uid, $tid)
     
     if(!$conn->query("delete from hws where tid='$tid' and userId='$uid'"))
     {
-        cmd_error($json, "Query failed: " . mysqli_errno($conn) . ": " . mysqli_error($conn));
+        cmd_error($json, "{error.sql}(" . mysqli_errno($conn) . "," . mysqli_error($conn) . ")");
         return;
     }  
     
     hwplanner_add_request_log($conn, $uid, "remove-hw", array(
         "tid" => $tid,
         "name" => $topic,
-        "reason" => "Generic user request"
+        "reason" => "{remove.reason.generic}"
     ));
     
     $conn->close();

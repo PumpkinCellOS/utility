@@ -32,7 +32,7 @@ switch($command)
     case "get-labels": cmd_get_labels($json, $uid); break;
     case "get-request-log": cmd_get_request_log($json, $uid); break;
     case "version": break;
-    default: cmd_error($json, "Invalid command!"); break;
+    default: cmd_error($json, "{error.noCmd}"); break;
 }
 
 echo json_encode($json);

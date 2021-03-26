@@ -1,7 +1,7 @@
 <?php
 require_once("../../lib/generator.php");
 $generator = new PCUGenerator("Lesson Table Generator");
-$generator->scripts = ["../hw-planner/exe-parser.js", "../hw-planner/exe-stringify.js", "../hw-planner/main.js", "main.js"];
+$generator->scripts = ["../hw-planner/lang.js", "../hw-planner/exe-parser.js", "../hw-planner/exe-stringify.js", "../hw-planner/main.js", "main.js"];
 $generator->stylesheets = ["style.css", "../hw-planner/style.css"];
 
 $generator->start_content();

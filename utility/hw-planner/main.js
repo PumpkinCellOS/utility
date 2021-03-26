@@ -3,6 +3,175 @@
     Sppmacd (c) 2020 - 2021
 */
 
+var LANG_en_US = 
+{
+    label: {
+        none: {
+            display: "(No label)"
+        },
+        noLabel: "No label",
+        optional: {
+            display: "Optional"
+        }
+    },
+    error: {
+        unknown: "Unknown error"
+    },
+    status: {
+        u: "Unknown",
+        i: "In progress ({1})",
+        n: "Not started",
+        x: "Canceled",
+        e: "Evaluation pending",
+        p: "Preparation done",
+        v: "Done",
+        f: "Further information needed"
+    },
+    dataTable: {
+        subject: "Subject",
+        topic: "Topic",
+        added: "Add time",
+        turnIn: "Turn-in time",
+        status: "Status",
+        modify: "Modify"
+    },
+    time: {
+        today: "Today",
+        tommorow: "Tommorow",
+        ago: "{1} {2} ago",
+        left: "{1} {2} left",
+        nday: (value) => value == 1 ? "day" : "days",
+        nhour: (value) => value == 1 ? "hour" : "hours",
+        nminute: (value) => value == 1 ? "minute" : "minutes"
+    },
+    exe: {
+        book: "Book",
+        chapter: "Chapter",
+        page: "Page",
+        point: "p.",
+        topic: "Topic",
+        ex: "Ex."
+    },
+    form: {
+        editor: {
+            name: "Topic Editor",
+            subject: "Subject",
+            topic: "Topic",
+            topicLabel: "Label",
+            turnInTime: "Turn-in time"
+        },
+        filters: {
+            name: "Filters"
+        }
+    },
+    generic: {
+        description: {
+            have: "Has description"
+        },
+        isExerciseList: "Is exercise list",
+        optional: "Optional"
+    },
+    controls: {
+        addObject: "Add object",
+        filters: "Filters",
+        statistics: "Statistics",
+        requestLog: "Request log",
+        showAll: "Show all",
+        lssTltGen: "LSS TLT Gen"
+    },
+    request: {
+        time: "Request time"
+    },
+    progress: {
+    },
+    todo: "[TODO]"
+};
+
+var LANG_pl_PL = 
+{
+    label: {
+        none: {
+            display: "(Brak etykiety)"
+        },
+        noLabel: "Brak etykiety"
+    },
+    serverError: {
+        unknown: "Nieznany błąd"
+    },
+    status: {
+        u: "Nieznany",
+        i: "W trakcie ({1})",
+        n: "Nie rozpoczęty",
+        x: "Anulowany",
+        e: "Oczekuje na ocenę",
+        p: "Przygotowany",
+        d: "Zrobiony",
+        f: "Wymaga dodatkowych informacji"
+    },
+    dataTable: {
+        subject: "Przedmiot",
+        topic: "Temat",
+        added: "Dodano",
+        turnIn: "Zwrot",
+        status: "Status",
+        modify: "Zmień"
+    },
+    time: {
+        today: "Dzisiaj",
+        tommorow: "Jutro",
+        ago: "{1} {2} temu",
+        left: "Zostało {1} {2}",
+        nday: (value) => value[0] == 1 ? "dzień" : "dni",
+        nhour: (value) => value[0] == 1 ? "godzina" : ((value[0] < 10 || value[0] > 20) && value[0] % 10 < 5 && value[0] % 10 > 1) ? "godziny" : "godzin",
+        nminute: (value) => value[0] == 1 ? "minuta" : ((value[0] < 10 || value[0] > 20) && value[0] % 10 < 5 && value[0] % 10 > 1) ? "minuty" : "minut"
+    },
+    progress: {
+        generating: "Generowanie...",
+        loading: "Ładowanie..."
+    },
+    exe: {
+        book: "Książka",
+        chapter: "Rozdział",
+        page: "Strona",
+        point: "p.",
+        topic: "Temat",
+        ex: "Ćw."
+    },
+    form: {
+        editor: {
+            name: "Edytor zadań",
+            subject: "Przedmiot",
+            topic: "Temat",
+            topicLabel: "Etykieta (typ zadania)",
+            turnInTime: "Data i godzina zwrotu"
+        },
+        filters: {
+            name: "Filtry"
+        }
+    },
+    generic: {
+        description: {
+            have: "Ma opis"
+        },
+        isExerciseList: "Jest listą zadań",
+        optional: "Dla chętnych"
+    },
+    controls: {
+        addObject: "Dodaj obiekt",
+        filters: "Filtry",
+        statistics: "Statystyki",
+        requestLog: "Dziennik zmian",
+        showAll: "Pokaż wszystkie",
+        lssTltGen: "LSS TLT Gen"
+    },
+    todo: "[TODO]"
+};
+
+I18n.LANG = LANG_pl_PL;
+I18n.FALLBACK_LANG = LANG_en_US;
+I18n.debugFallback = true;
+I18n.translatePage();
+
 const API_COMMANDS = {
     "add-hw": {"method": "POST"},
     "get-data": {"method": "GET"},
@@ -94,7 +263,7 @@ function api_doXHR(xhr, args, method, callback)
                 var response = JSON.parse(this.responseText);
                 var serverMessage = response.message;
                 if(serverMessage === undefined)
-                    serverMessage = L("serverError.unknown");
+                    serverMessage = L("error.server");
                 var msg = serverMessage + " (" + this.status + ")";
                 console.log(msg);
                 errorLoading(msg);
@@ -238,7 +407,7 @@ function generateStatusNonRich(data_status)
     // Status
     var status = `<span class='status-u'>${L("status.u")}</span>`;
     if(data_status.startsWith("ip"))
-        status = `<span class='status-i'>In&nbsp;progress&nbsp;(` + data_status.substring(2) + `)</span>`;
+        status = `<span class='status-i'>${L("status.i", data_status.substring(2))}</span>`;
     else if(data_status == "N")
         status = `<span class='status-n'>${L("status.n")}</span>`;
     else if(data_status == "X")
@@ -265,7 +434,7 @@ function generateStatus(data_status, useRichFormat = true)
     // Status
     var status = `<span class='status-u'>${L("status.u")}</span>`;
     if(data_status.startsWith("ip"))
-        status = `<span class='status-i'>&#9851;&nbsp;In&nbsp;progress...&nbsp;(` + data_status.substring(2) + `)</span>`;
+        status = `<span class='status-i'>&#9851;&nbsp;${L("status.i", data_status.substring(2))}</span>`;
     else if(data_status == "N")
         status = `<span class='status-n'>&#9889;&nbsp;${L("status.n")}</span>`;
     else if(data_status == "X")
@@ -321,15 +490,15 @@ function generateTurnInTime(data)
     var daysLeft = Math.floor((new Date(udays) - new Date()) / 86400000) + 1;
     
     var timeStr = data.untilTimeT == "00:00:00" ? "" : ",&nbsp;" + hoursLeft + "&nbsp;h";
-    var nday = (Math.abs(daysLeft) == 1) ? L("time.nday.s") : L("time.nday.p");
-    var nhours = (Math.abs(hoursLeft) == 1) ? L("time.nhour.s") : L("time.nhour.p");
+    var nday = L("time.nday", Math.abs(daysLeft));
+    var nhours = L("time.nhour", Math.abs(hoursLeft));
     var daysLeftStr = "";
     
     var asterisk = shouldDisplayAsterisk(data, daysLeft);
     
     if(daysLeft < 0)
     {
-        daysLeftStr += L("time.daysAgo", -daysLeft, nday);
+        daysLeftStr += L("time.ago", -daysLeft, nday);
         daysLeftStr = "<span class='time-imp-verybig'>" + daysLeftStr + "</span>";
     }
     else if(daysLeft == 0)
@@ -347,12 +516,12 @@ function generateTurnInTime(data)
     {
         daysLeftStr += L("time.tommorow");
         if(hoursLeft < 24)
-            daysLeftStr += ", " + L("time.hoursLeft", hoursLeft, nhours);
+            daysLeftStr += ", " + L("time.left", hoursLeft, nhours);
         daysLeftStr = "<span class='time-imp-medium'>" + daysLeftStr + "</span>";
     }
     else
     {
-        daysLeftStr += L("time.daysLeft", daysLeft, nday);
+        daysLeftStr += L("time.left", daysLeft, nday);
         // TODO: Do it only for imp >= medium!
         if(asterisk)
             daysLeftStr = "<span class='time-imp-medium'>" + daysLeftStr + "</span>";
@@ -387,16 +556,20 @@ function generateEntry(data)
     var minutesAgo = Math.floor((new Date() - new Date(data.addTime)) / 60000);
     var daysBefore = Math.ceil((new Date(data.untilTime) - new Date(data.addTime)) / 86400000);
     var preparationTime = LABELS[data.topicLabel].preparationTime;
-    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='time-imp-verybig'>(" + T("time.tooLate", preparationTime) + ")</span>") : "";
+    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='time-imp-verybig'>(" + L("time.tooLate", preparationTime) + ")</span>") : "";
+    
+    var days = Math.ceil(minutesAgo / 24 / 60);
+    var hours = Math.ceil(minutesAgo / 60)
+    
     var daysAgoStr = (
         minutesAgo > 24*60 ?
-            ("time.daysAgo", "day(s)", Math.ceil(minutesAgo / 24 / 60))  :
+            L("time.ago", days, L("time.nday", days))  :
             (
                 minutesAgo >= 60 ?
-                    L("time.hoursAgo", "hour(s)", Math.ceil(minutesAgo / 60)) :
+                    L("time.ago", hours, L("time.nhour", hours)) :
                     (
                         minutesAgo >= 1 ?
-                        L("time.minutesAgo", minutesAgo) :
+                        L("time.ago", minutesAgo, L("time.nminute", minutesAgo)) :
                         L("time.recently")
                     )
             )
@@ -449,17 +622,17 @@ function validateAndLoadData(form)
     
     if(data.sub.length != 3)
     {
-        document.getElementById("topic-editor-error").innerText = "Subject must be 3 characters long";
+        document.getElementById("topic-editor-error").innerText = L("error.client.subjectTooShort");
         return null;
     }
     if(data.untilTime.length == 0)
     {
-        document.getElementById("topic-editor-error").innerText = "Specify turn-in date";
+        document.getElementById("topic-editor-error").innerText = L("error.client.noTurnInTime");
         return null;
     }
     if(data.topic.length < 3)
     {
-        document.getElementById("topic-editor-error").innerText = "Topic must be at least 3 characters long";
+        document.getElementById("topic-editor-error").innerText = L("error.client.topicTooShort");
         return null;
     }
     return data;
@@ -725,7 +898,7 @@ function generateStatistics(stats)
     wrapStatList("subject", stats.hwsSubject);
     
     // Time
-    inner += header("Turn-in time");
+    inner += header(L("field.turnInTime"));
     inner += "<div>"
     inner += wrapStat("Expired", stats.tiExpired)
     inner += wrapStat("Expire soon", stats.tiSoon);
@@ -744,9 +917,9 @@ function log_Command(name, args)
         case "modify-hw":
             var hw = g_hws[args.tid];
             if(hw)
-                return `modified ${g_hws[args.tid].sub}'s '${args.topic}'`;
+                return L("request.modify.normal", g_hws[args.tid].sub, args.topic);
             else
-                return `modified '${args.topic}' (deleted)`;
+                return L("request.modify.delete", args.topic);
         case "add-label": return "added label ...";
         case "remove-label": return "removed label ...";
         case "pcu-register": return "registered on PCU ...";
@@ -760,7 +933,7 @@ function log_Command(name, args)
                 return `modified status of <i>'${args.name}'</i> (deleted):`;
         case "modify-turn-in-time": return "modified turn-in-time of ...";
         case "modify-details": return "modified details of ...";
-        default: return "did unknown action: " + name;
+        default: return L("request.unknown", name);
     }
 }
 
@@ -893,7 +1066,7 @@ function loadData(data)
 {
     g_hws = data.data;
     if(g_hws === undefined)
-        errorLoading(L("serverError.dataTable"));
+        errorLoading(L("error.client.loadFailed"));
     
     generateDataTable();
     
