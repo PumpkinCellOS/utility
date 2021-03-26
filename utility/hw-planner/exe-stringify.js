@@ -12,12 +12,12 @@ function exe_type_str(type)
 {
     switch(type)
     {
-        case "B": return "Book";
-        case "C": return "Chapter";
-        case "P": return "Page";
-        case "p": return "point";
-        case "T": return "Topic";
-        case "x": return "ex.";
+        case "B": return L("exe.book");
+        case "C": return L("exe.chapter");
+        case "P": return L("exe.page");
+        case "p": return L("exe.point");
+        case "T": return L("exe.topic");
+        case "x": return L("exe.ex");
         case null:
         case undefined:
             return "???";

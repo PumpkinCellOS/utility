@@ -19,9 +19,9 @@ const API_COMMANDS = {
 // TODO: Make it configurable
 var LABELS = 
 {
-    "":                    {imp: "none", display: "(No label)"},
-    "Dla chętnych":        {imp: "none", allowSelect: false},
-    "Inne":                {imp: "none"}
+    "":          {imp: "none", display: L("label.none.display")},
+    "Optional":  {imp: "none", allowSelect: false},
+    "Another":   {imp: "none"}
 };
 
 function escapeHTML(str)
@@ -94,7 +94,7 @@ function api_doXHR(xhr, args, method, callback)
                 var response = JSON.parse(this.responseText);
                 var serverMessage = response.message;
                 if(serverMessage === undefined)
-                    serverMessage = "Unknown error";
+                    serverMessage = L("serverError.unknown");
                 var msg = serverMessage + " (" + this.status + ")";
                 console.log(msg);
                 errorLoading(msg);
@@ -151,7 +151,7 @@ var loadSteps = 0;
 function generateLabel(tl)
 {
     if(tl.length == 0)
-        return "No label";
+        return L(label.noLabel);
     
     var topicLabelHTML = "";
     var label = LABELS[tl];
@@ -186,7 +186,7 @@ function generateTopicDisplay(data, fancy = true)
     if(data.optional == "1")
     {
         topic = "*" + topic;
-        topicLabel += ",Dla chętnych";
+        topicLabel += `,${L("label.optional.display")}`;
     }
     
     if(data.description && data.description.length > 0)
@@ -236,21 +236,21 @@ function generateTopicDisplay(data, fancy = true)
 function generateStatusNonRich(data_status)
 {
     // Status
-    var status = "<span class='status-u'>Unknown</span>";
+    var status = `<span class='status-u'>${L("status.u")}</span>`;
     if(data_status.startsWith("ip"))
-        status = "<span class='status-i'>In&nbsp;progress&nbsp;(" + data_status.substring(2) + ")</span>";
+        status = `<span class='status-i'>In&nbsp;progress&nbsp;(` + data_status.substring(2) + `)</span>`;
     else if(data_status == "N")
-        status = "<span class='status-n'>Not&nbsp;started</span>";
+        status = `<span class='status-n'>${L("status.n")}</span>`;
     else if(data_status == "X")
-        status = "<span class='status-x'>Canceled</span>";
+        status = `<span class='status-x'>${L("status.x")}</span>`;
     else if(data_status == "P")
-        status = "<span class='status-p'>Preparation&nbsp;done</span>";
+        status = `<span class='status-p'>${L("status.p")}</span>`;
     else if(data_status == "E")
-        status = "<span class='status-e'>Evaluation&nbsp;pending</span>";
+        status = `<span class='status-e'>${L("status.e")}</span>`;
     else if(data_status == "V")
-        status = "<span class='status-v'>Done</span>";
+        status = `<span class='status-v'>${L("status.d")}</span>`;
     else if(data_status == "?")
-        status = "<span class='status-f'>Further&nbsp;information&nbsp;needed</span>";
+        status = `<span class='status-f'>${L("status.f")}</span`;
     return status;
 }
 
@@ -263,21 +263,21 @@ function generateStatus(data_status, useRichFormat = true)
         return generateStatusNonRich(data_status);
     
     // Status
-    var status = "<span class='status-u'>Unknown</span>";
+    var status = `<span class='status-u'>${L("status.u")}</span>`;
     if(data_status.startsWith("ip"))
-        status = "<span class='status-i'>&#9851;&nbsp;In&nbsp;progress...&nbsp;(" + data_status.substring(2) + ")</span>";
+        status = `<span class='status-i'>&#9851;&nbsp;In&nbsp;progress...&nbsp;(` + data_status.substring(2) + `)</span>`;
     else if(data_status == "N")
-        status = "<span class='status-n'>&#9889;&nbsp;Not&nbsp;started</span>";
+        status = `<span class='status-n'>&#9889;&nbsp;${L("status.n")}</span>`;
     else if(data_status == "X")
-        status = "<span class='status-x'>&#128683;&nbsp;Canceled</span>";
+        status = `<span class='status-x'>&#128683;&nbsp;${L("status.x")}</span>`;
     else if(data_status == "P")
-        status = "<span class='status-p'>&#128994;&nbsp;Preparation&nbsp;done</span>";
+        status = `<span class='status-p'>&#128994;&nbsp;${L("status.p")}</span>`;
     else if(data_status == "E")
-        status = "<span class='status-e'>&#128394;&nbsp;Evaluation&nbsp;pending...</span>";
+        status = `<span class='status-e'>&#128394;&nbsp;${L("status.e")}</span>`;
     else if(data_status == "V")
-        status = "<span class='status-v'>&#10004;&nbsp;Done</span>";
+        status = `<span class='status-v'>&#10004;&nbsp;${L("status.v")}</span>`;
     else if(data_status == "?")
-        status = "<span class='status-f'>&#10068;&nbsp;Further&nbsp;information&nbsp;needed</span>";
+        status = `<span class='status-f'>&#10068;&nbsp;${L("status.f")}</span>`;
     return status;
 }
 
@@ -321,22 +321,22 @@ function generateTurnInTime(data)
     var daysLeft = Math.floor((new Date(udays) - new Date()) / 86400000) + 1;
     
     var timeStr = data.untilTimeT == "00:00:00" ? "" : ",&nbsp;" + hoursLeft + "&nbsp;h";
-    var nday = (Math.abs(daysLeft) == 1) ? "day" : "days";
-    var nhours = (Math.abs(hoursLeft) == 1) ? "hour" : "hours";
+    var nday = (Math.abs(daysLeft) == 1) ? L("time.nday.s") : L("time.nday.p");
+    var nhours = (Math.abs(hoursLeft) == 1) ? L("time.nhour.s") : L("time.nhour.p");
     var daysLeftStr = "";
     
     var asterisk = shouldDisplayAsterisk(data, daysLeft);
     
     if(daysLeft < 0)
     {
-        daysLeftStr += -daysLeft + " " + nday + " ago";
+        daysLeftStr += L("time.daysAgo", -daysLeft, nday);
         daysLeftStr = "<span class='time-imp-verybig'>" + daysLeftStr + "</span>";
     }
     else if(daysLeft == 0)
     {
-        daysLeftStr += "Today";
+        daysLeftStr += L("time.today");
         if(hoursLeft < 24 && hoursLeft > 0)
-            daysLeftStr += ", " + hoursLeft + " " + nhours + " left";
+            daysLeftStr += ", " + L("time.hoursLeft", hoursLeft, nhours);
 
         if(hoursLeft < 0)
             daysLeftStr = "<span class='time-imp-verybig'>" + daysLeftStr + "</span>";
@@ -345,14 +345,14 @@ function generateTurnInTime(data)
     }
     else if(daysLeft == 1)
     {
-        daysLeftStr += "Tommorow";
+        daysLeftStr += L("time.tommorow");
         if(hoursLeft < 24)
-            daysLeftStr += ", " + hoursLeft + " " + nhours + " left";
+            daysLeftStr += ", " + L("time.hoursLeft", hoursLeft, nhours);
         daysLeftStr = "<span class='time-imp-medium'>" + daysLeftStr + "</span>";
     }
     else
     {
-        daysLeftStr += daysLeft + " " + nday + " left";
+        daysLeftStr += L("time.daysLeft", daysLeft, nday);
         // TODO: Do it only for imp >= medium!
         if(asterisk)
             daysLeftStr = "<span class='time-imp-medium'>" + daysLeftStr + "</span>";
@@ -365,7 +365,7 @@ function generateTurnInTime(data)
     {
         daysLeftStr = "&#9888;&nbsp;" + daysLeftStr;
         if(hoursLeft < 0)
-            daysLeftStr += " <span class='time-imp-verybig'>(expired!)</span>";
+            daysLeftStr += " <span class='time-imp-verybig'>" + L("time.expired") + "</span>";
     }
     
     return daysLeftStr;
@@ -387,17 +387,17 @@ function generateEntry(data)
     var minutesAgo = Math.floor((new Date() - new Date(data.addTime)) / 60000);
     var daysBefore = Math.ceil((new Date(data.untilTime) - new Date(data.addTime)) / 86400000);
     var preparationTime = LABELS[data.topicLabel].preparationTime;
-    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='time-imp-verybig'>(too late, need " + preparationTime + " days)</span>") : "";
+    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='time-imp-verybig'>(" + T("time.tooLate", preparationTime) + ")</span>") : "";
     var daysAgoStr = (
         minutesAgo > 24*60 ?
-            Math.ceil(minutesAgo / 24 / 60) + "&nbsp;day(s)&nbsp;ago" :
+            ("time.daysAgo", "day(s)", Math.ceil(minutesAgo / 24 / 60))  :
             (
                 minutesAgo >= 60 ?
-                    Math.ceil(minutesAgo / 60) + "&nbsp;hour(s)&nbsp;ago" :
+                    L("time.hoursAgo", "hour(s)", Math.ceil(minutesAgo / 60)) :
                     (
                         minutesAgo >= 1 ?
-                        minutesAgo + "&nbsp;minute(s)&nbsp;ago" :
-                        "Recently"
+                        L("time.minutesAgo", minutesAgo) :
+                        L("time.recently")
                     )
             )
     );
@@ -408,10 +408,13 @@ function generateEntry(data)
     
     var evalTime = LABELS[data.topicLabel].evaluationTime;
     var evalDays = Math.ceil((new Date() - new Date(data.untilTime)) / 86400000);
-    var evalDaysStr = (evalDays > evalTime && statusIsEvaluating(data.status)) ? "<br><span class='description time-imp-verybig'>(expired after " + evalTime + " days)</span>" : "";
-    html += "<td>" + generateStatus(data.status) + evalDaysStr + "</td>";
+    var evalDaysStr = (evalDays > evalTime && statusIsEvaluating(data.status))
+        ? "<span class='status-n'>&#128394;&nbsp;Evaluation pending...</span><br><span class='description'>(Expired after " + evalTime + " days)</span>" 
+        : generateStatus(data.status);
+
+    html += "<td>" + evalDaysStr + "</td>";
     
-    html += "<td><button class='modify-button' onclick='modifyEntry(this.parentNode.parentNode.firstChild.innerText)'>Modify</button>";
+    html += `<td><button class='modify-button' onclick='modifyEntry(this.parentNode.parentNode.firstChild.innerText)'>${L("dataTable.modify")}</button>`;
     html += "</td>";
     
     return html;
@@ -631,7 +634,7 @@ function generateDataTable()
     
     if(g_hws.length == 0)
     {
-        inner += "<div class='data-table'>Nothing to display!</div>";
+        inner += `<div class='data-table'>${L("dataTable.nothing")}</div>`;
         divData.innerHTML = inner;
         return;
     }
@@ -648,9 +651,9 @@ function generateDataTable()
             subSort = " &#9660;&nbsp;";
     }
         
-    inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + "Sub.</td>";
+    inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + `${L("dataTable.subject")}</td>`;
     
-    inner += "<td>Topic</td><td>Added</td>";
+    inner += `<td>${L("dataTable.topic")}</td><td>${L("dataTable.added")}</td>`;
     
     var dateSort = "";
     if(g_sortBy == "date")
@@ -661,7 +664,7 @@ function generateDataTable()
             dateSort = " &#9660;&nbsp;";
     }
         
-    inner += "<td onclick='toggleSortMode(\"date\")'>" + dateSort + "Turn&nbsp;in</td>";
+    inner += "<td onclick='toggleSortMode(\"date\")'>" + dateSort + `${L("dataTable.turnIn")}</td>`;
     
     var statusSort = "";
     if(g_sortBy == "status")
@@ -671,7 +674,7 @@ function generateDataTable()
         else
             statusSort = "&#9660;&nbsp;";
     }
-    inner += "<td onclick='toggleSortMode(\"status\")'>" + statusSort + "Status</td>";
+    inner += "<td onclick='toggleSortMode(\"status\")'>" + statusSort + `${L("dataTable.status")}</td>`;
     
     inner += "</thead><tbody>";
     
@@ -798,7 +801,7 @@ function log_generateCommandData(command, args)
 function generateRequestLogEntry(log)
 {
     var user = "...";
-    var inner = "<a class='user-link' title='Loading user data...'>" + user + "</a>";
+    var inner = `<a class='user-link' title='${L("progress.user")}'>` + user + "</a>";
     inner += " <b>" + log_Command(log.command, log.args) + "</b>";
     inner += " -- " + log_generateCommandData(log.command, log.args);
     return inner;
@@ -806,7 +809,7 @@ function generateRequestLogEntry(log)
 
 function generateRequestLog()
 {
-    var inner = "<table class='data-table'><thead><td>Time</td><td>Action</td></thead><tbody>";
+    var inner = `<table class='data-table'><thead><td>${L("request.time")}</td><td>Action</td></thead><tbody>`;
     for(var log of g_requestLog)
     {
         inner += "<tr data-userId='" + log.userId + "'><td class='rqlog-time'>" + log.time + "</td><td class='rqlog-data'>" + generateRequestLogEntry(log) + "</td></tr>";
@@ -822,7 +825,7 @@ function generateRequestLog()
 function calcStatistics()
 {
     var element = document.getElementById("statistics-container");
-    element.innerHTML = "Generating...";
+    element.innerHTML = L("progress.generating");
     
     // calculate
     var stats = {}
@@ -890,7 +893,7 @@ function loadData(data)
 {
     g_hws = data.data;
     if(g_hws === undefined)
-        errorLoading("Couldn't load data table");
+        errorLoading(L("serverError.dataTable"));
     
     generateDataTable();
     

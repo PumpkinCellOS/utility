@@ -1,40 +1,40 @@
 <?php
 require_once("../../lib/generator.php");
 $generator = new PCUGenerator("HW Planner", "", "<script>hwplanner_main()</script>");
-$generator->scripts = ["exe-parser.js", "exe-stringify.js", "main.js"];
+$generator->scripts = ["lang.js", "exe-parser.js", "exe-stringify.js", "main.js"];
 $generator->stylesheets = ["style.css"];
 
 $generator->start_pre_content();
 ?>
-    <div id="loading"><span id="loading-text">Loading...</span></div>
+    <div id="loading"><span id="loading-text">{progress.loading}</span></div>
     <div id="form-topic-editor" class="fullscreen-form" style="display: none">
     
         <form action="#" onsubmit="submitTopicEditor(this); return false" name="topic-editor">
-            <h3 style="text-align: center">Add Object</h3>
+            <h3 style="text-align: center">{form.editor.name}</h3>
             <div style="height: calc(100% - 200px)">
                 <div class="column">
                     <input type="hidden" name="tid"></input>
                     <input type="hidden" name="mode"></input>
-                    <label for="sub">Subject</label><br>
+                    <label for="sub">{form.editor.subject}</label><br>
                     <input type="text" name="sub" placeholder="3-Character Subject Identifier" oninput="updateTopicDisplay()"></input><br>
-                    <label for="topic">Topic</label><br>
+                    <label for="topic">{form.editor.topic}</label><br>
                     <input type="text" name="topic" placeholder="Topic" oninput="updateTopicDisplay()"></input><br>
                     <input type="checkbox" name="optional" oninput="updateTopicDisplay()"></input><label for="optional">Optional</label><br>
-                    <label for="topicLabel">Topic label</label><br>
+                    <label for="topicLabel">{form.editor.topicLabel}</label><br>
                     <select name="topicLabel" onchange="updateTopicDisplay()">
                     </select><br>
-                    <input type="checkbox" name="topicFormat" oninput="updateTopicDisplay()"><label for="topicFormat">Exercise list</label><br>
-                    <label for="untilTime">Until time</label><br>
+                    <input type="checkbox" name="topicFormat" oninput="updateTopicDisplay()"><label for="topicFormat">{generic.isExerciseList}</label><br>
+                    <label for="untilTime">{form.editor.turnInTime}</label><br>
                     </select><input type="date" name="untilDate" oninput="updateTopicDisplay()"><br>
                     </select><input type="time" step="60" name="untilTime" oninput="updateTopicDisplay()"><br>
                     <select name="status" onchange="submitModifyStatus(document.forms['topic-editor']['tid'].value, this.value); closeTopicEditor()">
-                        <option value="?">Further information needed</option>
-                        <option value="N">Not started</option>
-                        <option value="ip50%">In progress</option>
-                        <option value="E">Evaluation pending</option>
-                        <option value="P">Preparation done</option>
-                        <option value="V">Done</option>
-                        <option value="X">Canceled</option>
+                        <option value="?">{status.f}</option>
+                        <option value="N">{status.n}</option>
+                        <option value="ip50%">{status.i}</option>
+                        <option value="E">{status.e}</option>
+                        <option value="P">{status.p}</option>
+                        <option value="V">{status.v}</option>
+                        <option value="X">{status.x}</option>
                     </select><br>
                     <div id="topic-display" class="topic"></div><br>
                 </div><div class="column">
@@ -52,7 +52,7 @@ $generator->start_pre_content();
     </div>
     <div id="form-filters" class="fullscreen-form" style="display: none; text-align: left">
         <form action="#" style="padding: 15px;" onsubmit="submitFilters(this); return false" name="filters">
-            <h3 style="text-align: center">Filters</h3>
+            <h3 style="text-align: center">{form.filters.name}</h3>
             <h4>Status</h4>
             <input type="checkbox" name="status-f"/><label>Further information needed</label><br>
             <input type="checkbox" name="status-ip"/><label>In progress</label><br>
@@ -80,17 +80,17 @@ $generator->start_pre_content();
                 <option value="=">exactly</option>
             </select><input type="number" name="added"/>
             <select name="added-unit">
-                <option value="h">hours</option>
-                <option value="d">days</option>
+                <option value="h">{time.nhours.p}</option>
+                <option value="d">{time.nday.p}</option>
             </select>ago<br>
             <h4>Topic</h4>
-            <input type="checkbox" name="exercise-list"/><label>Exercise list</label><br>
-            <input type="checkbox" name="optional"/><label>Optional</label><br>
-            <input type="checkbox" name="description"/><label>Has description</label><br>
+            <input type="checkbox" name="exercise-list"/><label>{generic.isExerciseList}</label><br>
+            <input type="checkbox" name="optional"/><label>{generic.optional}</label><br>
+            <input type="checkbox" name="description"/><label>{generic.description.have}</label><br>
             <h4>Label</h4>
-            <input type="checkbox" name="label-"/><label>TODO</label><br>
+            <input type="checkbox" name="label-"/><label>{todo}</label><br>
             <h4>Subject</h4>
-            <input type="checkbox" name="sub-"/><label>TODO</label><br>
+            <input type="checkbox" name="sub-"/><label>{todo}</label><br>
             <input type="submit" value="Save" onclick="document.getElementById('form-filters').style.display = 'none'" style="background-color: #779977">
         </form>
     </div>
