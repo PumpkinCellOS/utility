@@ -18,22 +18,15 @@ var LANG_en_US =
         unknown: "Unknown error"
     },
     status: {
-        u: "Unknown",
+        e: "Evaluation pending",
+        f: "Further information needed",
         i: "In progress ({1})",
         n: "Not started",
-        x: "Canceled",
-        e: "Evaluation pending",
         p: "Preparation done",
+        u: "Unknown",
         v: "Done",
-        f: "Further information needed"
-    },
-    dataTable: {
-        subject: "Subject",
-        topic: "Topic",
-        added: "Add time",
-        turnIn: "Turn-in time",
-        status: "Status",
-        modify: "Modify"
+        x: "Canceled",
+        expiredAfter: "Expired after {1} days",
     },
     time: {
         today: "Today",
@@ -54,35 +47,35 @@ var LANG_en_US =
     },
     form: {
         editor: {
-            name: "Topic Editor",
-            subject: "Subject",
-            topic: "Topic",
-            topicLabel: "Label",
-            turnInTime: "Turn-in time"
+            name: "Topic editor"
         },
         filters: {
             name: "Filters"
         }
     },
-    generic: {
+    field: {
         description: {
-            have: "Has description"
+            has: "Has description",
+            placeholder: "Enter detailed description..."
         },
+        
+        addTime: "Add time",
         isExerciseList: "Is exercise list",
-        optional: "Optional"
+        optional: "Optional",
+        subject: "Subject",
+        topic: "Topic",
+        topicLabel: "Label (task type)",
+        turnInTime: "Turn-in time",
+        status: "Status"
     },
     controls: {
         addObject: "Add object",
         filters: "Filters",
-        statistics: "Statistics",
+        lssTltGen: "LSS TLT Gen",
+        modify: "Modify",
         requestLog: "Request log",
         showAll: "Show all",
-        lssTltGen: "LSS TLT Gen"
-    },
-    request: {
-        time: "Request time"
-    },
-    progress: {
+        statistics: "Statistics"
     },
     todo: "[TODO]"
 };
@@ -99,22 +92,15 @@ var LANG_pl_PL =
         unknown: "Nieznany błąd"
     },
     status: {
-        u: "Nieznany",
+        e: "Oczekuje na ocenę",
+        f: "Wymaga dodatkowych informacji",
         i: "W trakcie ({1})",
         n: "Nie rozpoczęty",
-        x: "Anulowany",
-        e: "Oczekuje na ocenę",
         p: "Przygotowany",
-        d: "Zrobiony",
-        f: "Wymaga dodatkowych informacji"
-    },
-    dataTable: {
-        subject: "Przedmiot",
-        topic: "Temat",
-        added: "Dodano",
-        turnIn: "Zwrot",
-        status: "Status",
-        modify: "Zmień"
+        u: "Nieznany",
+        v: "Zrobiony",
+        x: "Anulowany",
+        expiredAfter: "Wygasło po {1} dniach",
     },
     time: {
         today: "Dzisiaj",
@@ -139,22 +125,23 @@ var LANG_pl_PL =
     },
     form: {
         editor: {
-            name: "Edytor zadań",
-            subject: "Przedmiot",
-            topic: "Temat",
-            topicLabel: "Etykieta (typ zadania)",
-            turnInTime: "Data i godzina zwrotu"
+            name: "Edytor zadań"
         },
         filters: {
             name: "Filtry"
         }
     },
-    generic: {
+    field: {
         description: {
-            have: "Ma opis"
+            has: "Ma opis",
+            placeholder: "Podaj dokładny opis zadania..."
         },
         isExerciseList: "Jest listą zadań",
-        optional: "Dla chętnych"
+        optional: "Dla chętnych",
+        subject: "Przedmiot",
+        topic: "Temat",
+        topicLabel: "Etykieta (typ zadania)",
+        turnInTime: "Data i godzina zwrotu"
     },
     controls: {
         addObject: "Dodaj obiekt",
@@ -582,12 +569,12 @@ function generateEntry(data)
     var evalTime = LABELS[data.topicLabel].evaluationTime;
     var evalDays = Math.ceil((new Date() - new Date(data.untilTime)) / 86400000);
     var evalDaysStr = (evalDays > evalTime && statusIsEvaluating(data.status))
-        ? "<span class='status-n'>&#128394;&nbsp;Evaluation pending...</span><br><span class='description'>(Expired after " + evalTime + " days)</span>" 
+        ? "<span class='status-n'>&#128394;&nbsp;" + L("status.e") + "</span><br><span class='description'>(" + L("status.expiredAfter", evalTime) + ")</span>" 
         : generateStatus(data.status);
 
     html += "<td>" + evalDaysStr + "</td>";
     
-    html += `<td><button class='modify-button' onclick='modifyEntry(this.parentNode.parentNode.firstChild.innerText)'>${L("dataTable.modify")}</button>`;
+    html += `<td><button class='modify-button' onclick='modifyEntry(this.parentNode.parentNode.firstChild.innerText)'>${L("controls.modify")}</button>`;
     html += "</td>";
     
     return html;
@@ -824,9 +811,9 @@ function generateDataTable()
             subSort = " &#9660;&nbsp;";
     }
         
-    inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + `${L("dataTable.subject")}</td>`;
+    inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + `${L("field.subject")}</td>`;
     
-    inner += `<td>${L("dataTable.topic")}</td><td>${L("dataTable.added")}</td>`;
+    inner += `<td>${L("field.topic")}</td><td>${L("field.addTime")}</td>`;
     
     var dateSort = "";
     if(g_sortBy == "date")
@@ -837,7 +824,7 @@ function generateDataTable()
             dateSort = " &#9660;&nbsp;";
     }
         
-    inner += "<td onclick='toggleSortMode(\"date\")'>" + dateSort + `${L("dataTable.turnIn")}</td>`;
+    inner += "<td onclick='toggleSortMode(\"date\")'>" + dateSort + `${L("field.turnInTime")}</td>`;
     
     var statusSort = "";
     if(g_sortBy == "status")
@@ -847,7 +834,7 @@ function generateDataTable()
         else
             statusSort = "&#9660;&nbsp;";
     }
-    inner += "<td onclick='toggleSortMode(\"status\")'>" + statusSort + `${L("dataTable.status")}</td>`;
+    inner += "<td onclick='toggleSortMode(\"status\")'>" + statusSort + `${L("field.status")}</td>`;
     
     inner += "</thead><tbody>";
     

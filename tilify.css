@@ -1,3 +1,13 @@
+body {
+    --tlf-bg-red:   #884444;
+    --tlf-bg-green: #448844;
+    --tlf-bg-blue:  #444488;
+    
+    --tlf-bg-cyan:    #448888;
+    --tlf-bg-magenta: #884488;
+    --tlf-bg-yellow:  #888844;
+}
+
 div.app-list {
     box-sizing: border-box;
     margin: 10px;
