@@ -28,7 +28,7 @@ var I18n = {
                     {
                         console.debug(`I18n: Using fallback language for '${key}'`);
                     }
-                    return this.translate(this.FALLBACK_LANG, key, args);
+                    return this.translate(this.FALLBACK_LANG, key, args) + (this.debugFallback ? " (i18n fallback)" : "");
                 }
                 currentVal = currentNew;
                 lastKey = k;

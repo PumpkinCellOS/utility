@@ -19,7 +19,7 @@ $generator->start_pre_content();
                     <input type="text" name="sub" placeholder="3-Character Subject Identifier" oninput="updateTopicDisplay()"></input><br>
                     <label for="topic">{field.topic}</label><br>
                     <input type="text" name="topic" placeholder="Topic" oninput="updateTopicDisplay()"></input><br>
-                    <input type="checkbox" name="optional" oninput="updateTopicDisplay()"></input><label for="optional">Optional</label><br>
+                    <input type="checkbox" name="optional" oninput="updateTopicDisplay()"></input><label for="optional">{field.optional}</label><br>
                     <label for="topicLabel">{field.topicLabel}</label><br>
                     <select name="topicLabel" onchange="updateTopicDisplay()">
                     </select><br>
@@ -102,13 +102,13 @@ $generator->start_pre_content();
         </form>
     </div>
     <div id="statistics" class="fullscreen-form" style="display: none">
-        <h3>Statistics</h3>
+        <h3>{form.statistics.name}</h3>
         <div id="statistics-container">
         </div>
         <input type="button" value="OK" onclick="document.getElementById('statistics').style.display = 'none'" style="background-color:  var(--tlf-bg-green)">
     </div>
     <div id="request-log" class="fullscreen-form" style="display: none">
-        <h3>Request log</h3>
+        <h3>{form.requestLog.name}</h3>
         <div id="request-log-container" class="background-tile">
         </div>
         <input type="button" value="OK" onclick="document.getElementById('request-log').style.display = 'none'" style="background-color: var(--tlf-bg-green)">

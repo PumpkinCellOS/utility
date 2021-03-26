@@ -20,7 +20,7 @@ var LANG_en_US =
     status: {
         e: "Evaluation pending",
         f: "Further information needed",
-        i: "In progress ({1})",
+        i: "In progress",
         n: "Not started",
         p: "Preparation done",
         u: "Unknown",
@@ -50,7 +50,8 @@ var LANG_en_US =
             name: "Topic editor"
         },
         filters: {
-            name: "Filters"
+            name: "Filters",
+            todo: "Filters section is currently disabled."
         }
     },
     field: {
@@ -94,7 +95,7 @@ var LANG_pl_PL =
     status: {
         e: "Oczekuje na ocenę",
         f: "Wymaga dodatkowych informacji",
-        i: "W trakcie ({1})",
+        i: "W trakcie",
         n: "Nie rozpoczęty",
         p: "Przygotowany",
         u: "Nieznany",
@@ -128,7 +129,8 @@ var LANG_pl_PL =
             name: "Edytor zadań"
         },
         filters: {
-            name: "Filtry"
+            name: "Filtry",
+            todo: "Sekcja filtrów jest aktualnie wyłączona."
         }
     },
     field: {
@@ -136,20 +138,23 @@ var LANG_pl_PL =
             has: "Ma opis",
             placeholder: "Podaj dokładny opis zadania..."
         },
+        addTime: "Dodano",
         isExerciseList: "Jest listą zadań",
         optional: "Dla chętnych",
+        status: "Status",
         subject: "Przedmiot",
         topic: "Temat",
         topicLabel: "Etykieta (typ zadania)",
-        turnInTime: "Data i godzina zwrotu"
+        turnInTime: "Zwrot"
     },
     controls: {
         addObject: "Dodaj obiekt",
         filters: "Filtry",
-        statistics: "Statystyki",
+        lssTltGen: "LSS TLT Gen",
+        modify: "Zmień",
         requestLog: "Dziennik zmian",
         showAll: "Pokaż wszystkie",
-        lssTltGen: "LSS TLT Gen"
+        statistics: "Statystyki",
     },
     todo: "[TODO]"
 };
