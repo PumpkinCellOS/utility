@@ -1,6 +1,6 @@
 <?php
 
-require_once("../lib/generator.php");
+require_once("../lib/pcu.php");
 
 $status = $_SERVER["REDIRECT_STATUS"];
 
@@ -59,19 +59,6 @@ $status_reason = array(
   510 => 'Not Extended'
 );
 
-$generator = new PCUGenerator($status);
-$generator->start_content();
-
-?>
-<h2>ERROR :(</h2>
-<div class="background-tile" style="background-color: var(--tlf-bg-red)">
-    <div class="background-tile-padding">
-        <p>Sorry, but we couldn't handle your request.</p>
-        <p>Error code: <b>HTTP <?php echo $status . ": " . $status_reason[$status]; ?></b>.</p>
-    </div>
-</div>
-<?php
-
-$generator->finish();
+pcu_page_error("HTTP " . $status . ": " . $status_reason[$status], $status);
 
 ?>
