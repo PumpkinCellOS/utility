@@ -1,5 +1,7 @@
 <?php
 
+require_once("generator.php");
+
 function pcu_cmd_fatal($msg, int $responseCode = 400)
 {
     $json = new stdClass();
@@ -14,6 +16,31 @@ function pcu_cmd_error($json, $msg, int $responseCode = 400)
     http_response_code($responseCode);
     $json->message = $msg;
     error_log("\nERROR: HTTP $responseCode: $msg\n");
+}
+
+function pcu_page_error(string $message = "Unknown error", int $responseCode = 400)
+{
+    http_response_code($responseCode);
+    $generator = new PCUGenerator($message);
+    $generator->start_content();
+
+    ?>
+    <h2>ERROR :(</h2>
+    <div class="background-tile" style="background-color: var(--tlf-bg-red)">
+        <div class="background-tile-padding">
+            <p>Sorry, but we couldn't handle your request.</p>
+            <p>Error code: <b>PCU: <?php echo $message; ?></b>.</p>
+        </div>
+    </div>
+    <?php
+
+    $generator->finish();
+    exit;
+}
+
+function pcu_allow_insecure_operations()
+{
+    return substr($_SERVER['REMOTE_ADDR'],0,7) == "172.27." || substr($_SERVER['REMOTE_ADDR'],0,8) == "192.168." || $_SERVER['REMOTE_ADDR'] == "127.0.0.1";
 }
 
 $PCU_PATH = realpath(__DIR__ . "/..");
@@ -38,6 +65,11 @@ function pcu_cmd_info($json, $msg)
 
 function pcu_cmd_connect_db($json, $db)
 {
+    if(!pcu_allow_insecure_operations())
+    {
+        pcu_page_error("You are using a non-private IP. Denying database operations");
+    }
+
     $conn = new mysqli("localhost", "sppmacd", pcu_mysql_password(), $db);
     if($conn->connect_error) {
         $passwd = pcu_mysql_password();
@@ -76,7 +108,7 @@ function pcu_mksession($json, $data)
     session_start();
     if($data["passwordExpired"])
     {
-        pcu_cmd_fatal("Password expired. Ask admin for assistance");
+        pcu_page_error("Password expired. Ask admin for assistance", 400);
         return;
     }
     if(pcu_is_logged_in_as($data["userName"]))
@@ -91,7 +123,7 @@ function pcu_require_login()
 {
     if(!pcu_is_logged_in())
     {
-        pcu_cmd_fatal("A login is required to access this resource");
+        pcu_page_error("A login is required to access this resource", 400);
     }
     return $_SESSION["userData"];
 }
@@ -110,7 +142,7 @@ function pcu_require_role($roleName)
 {
     $login = pcu_require_login();
     if(pcu_role_less($_SESSION["userData"]["role"], $roleName))
-        pcu_cmd_fatal("You must be a(n) $roleName to access this resource");
+        pcu_page_error("You must be a(n) $roleName to access this resource");
     return $login;
 }
 

@@ -1,6 +1,5 @@
 <?php
-require("lib/generator.php");
-require("lib/pcu.php");
+require_once("lib/generator.php");
 $login = pcu_is_logged_in();
 $userData = $_SESSION["userData"];
 $generator = new PCUGenerator();
@@ -143,9 +142,7 @@ const linkEntries = [
     {"displayName": "GitHub", "color": "#825f4b", "units": 1, "path": "https://github.com/sppmacd"},
     {"displayName": "Twitch", "color": "#555577", "units": 1, "path": "https://twitch.tv/pumpkin_cell"},
     {"displayName": "YouTube", "color": "#aa4444", "units": 1, "path": "https://youtube.com/sppmacd"},
-    {"icon": "#127968", "units": 1, "color": "#435d74", "displayName": "Home Assistant", "path": "http://192.168.1.2:8123"},
-    {"icon": "#129517", "units": 1, "color": "#42434f", "displayName": "ZTE (Router+AP)", "path": "http://192.168.1.1"},
-    {"icon": "",        "units": 1, "color": "#864e39", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
+    {"icon": "",   "units": 1, "color": "#864e39", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
 ];
 
 generateEntries("pcu-app-list", pcuEntries);

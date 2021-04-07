@@ -1,4 +1,7 @@
 <?php
+
+require_once("pcu.php");
+
 class PCUGenerator
 {
     public array $stylesheets = [];
@@ -42,7 +45,17 @@ class PCUGenerator
             <!-- TODO: Use custom elements -->
             <h1><a href="/" class="title-link"><img src="/res/pumpkin2.png" style="height: 50px"/></a><iframe width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/timer.html?embed=1&mode=3"></iframe></h1>
             <div id="content">
+                <?php
+                if(!pcu_allow_insecure_operations())
+                {
+                    ?>
+                        <div class="background-tile" style="background-color: var(--tlf-bg-red)">
+                            <div class="background-tile-padding">
+                                You are using a non-private IP (<?php echo $_SERVER['REMOTE_ADDR']; ?>)! Some potentially harmful features (e.g. login) will be disabled due to security issues.
+                            </div>
+                        </div>
         <?php
+                }
     }
     
     public function finish()

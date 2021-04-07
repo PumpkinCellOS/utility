@@ -1,0 +1,16 @@
+# PHP
+<FilesMatch \.php$>
+    SetHandler "proxy:unix:/var/run/php/php8.0-fpm.sock|fcgi://localhost"
+</FilesMatch>
+
+php_value upload_max_filesize 1G
+php_value post_max_size 1G
+php_value max_input_time 300
+php_value max_execution_time 300
+
+# Errors
+ErrorDocument 400 /errors/err.php
+ErrorDocument 401 /errors/err.php
+ErrorDocument 402 /errors/err.php
+ErrorDocument 403 /errors/err.php
+ErrorDocument 404 /errors/err.php

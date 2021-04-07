@@ -61,11 +61,18 @@ var g_data = {
     ],
     // TODO
     "freeDays": [
-        {"date": ["2021-04-01", "2021-04-06"], "reason": "Wielkanoc"},
-        {"date": "2021-05-03", "reason": "Święto Konstytucji 3 Maja"},
+        {"date": ["2021-04-01", "2021-04-02"], "reason": "Przerwa świąteczna"},
+        {"date": ["2021-04-03", "2021-04-04"], "reason": "Wielkanoc"},
+        {"date": "2021-04-05", "reason": "Pon. Wielkanocny"},
+        {"date": "2021-04-06", "reason": "Przerwa świąteczna"},
+        {"date": "2021-05-03", "reason": "Święto Konstytucji"},
         {"date": ["2021-05-04", "2021-05-06"], "reason": "Matury"},
         {"date": ["2021-06-03", "2021-06-04"], "reason": "Boże Ciało"},
-        {"date": ["2021-06-25", "2021-09-01"], "reason": "Wakacje"}
+        {"date": ["2021-06-25", "2021-09-01"], "reason": "Wakacje"},
+        {"date": "2021-12-23", "reason": "Przerwa świąteczna"},
+        {"date": ["2021-12-24", "2021-12-26"], "reason": "Boże Narodzenie"},
+        {"date": ["2021-12-27", "2021-12-31"], "reason": "Przerwa świąteczna"},
+        {"date": "2022-01-01", "reason": "Nowy Rok"},
     ]
 };
 
@@ -105,7 +112,7 @@ function constructMinutes(h, m)
     return h*60+m;
 }
 
-function isFreeDay(date)
+function findFreeDay(date)
 {
     console.log(date);
     var freeDays = g_data.freeDays;
@@ -116,9 +123,9 @@ function isFreeDay(date)
         if((dates instanceof Array && dateNoTime(date) >= new Date(dates[0]) && dateNoTime(date) <= new Date(dates[1] + " 23:59:59")) ||
            (dateNoTime(date) >= new Date(dates) && dateNoTime(date) <= new Date(dates + " 23:59:59"))
         )
-            return fdd.reason;
+            return fdd;
     }
-    return false;
+    return null;
 }
 
 function getUnitDB(data)
@@ -248,8 +255,7 @@ function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
 function generateBlock(data, hwPlannerData)
 {
     var realDayDate = new Date(g_startDay.getTime() + data.tday * 86400000);
-    if(isFreeDay(realDayDate))
-        return "";
+    var freeDay = findFreeDay(realDayDate);
     
     var inner = "";
     var tunitdb = getUnitDB(data);
@@ -272,8 +278,13 @@ function generateBlock(data, hwPlannerData)
     var width_spacing = SPACING;
     var height = (enddate - startdate) * SCALE / 60000;
     
-    var text = generateBlockText(data, hws);
-    var type = "tt-" + (data.type ?? "lesson");
+    var text;
+    if(freeDay)
+        text = freeDay.reason;
+    else
+        text = generateBlockText(data, hws);
+
+    var type = "tt-" + (freeDay ? "free" : (data.type ?? "lesson"));
     
     var currentDate = new Date();
     var currentMinutes = constructMinutes(currentDate.getHours(), currentDate.getMinutes());
@@ -283,7 +294,7 @@ function generateBlock(data, hwPlannerData)
     var b1 = currentDate.getDay() == data.tday;
     var b2 = currentMinutes >= startMinutes;
     var b3 = currentMinutes <= endMinutes;
-    
+
     if(b1 && b2 && b3 && g_weekOffset == 0)
     {
         type += " tt-current";

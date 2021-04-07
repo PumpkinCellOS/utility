@@ -82,6 +82,12 @@
     --color: #99dd99;
 }
 
+.tt-free {
+    --color: #99dd99;
+    font-size: 10pt !important;
+    opacity: 20%;
+}
+
 .tt-window {
     --color: #dd9999;
 }

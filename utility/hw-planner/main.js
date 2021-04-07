@@ -3,6 +3,10 @@
     Sppmacd (c) 2020 - 2021
 */
 
+/*require("./exe-parser.js");
+require("./exe-stringify.js");
+require("./lang.js");*/
+
 var LANG_en_US = 
 {
     label: {
@@ -35,7 +39,16 @@ var LANG_en_US =
         left: "{1} {2} left",
         nday: (value) => value == 1 ? "day" : "days",
         nhour: (value) => value == 1 ? "hour" : "hours",
-        nminute: (value) => value == 1 ? "minute" : "minutes"
+        nminute: (value) => value == 1 ? "minute" : "minutes",
+        tooLate: "Too late, need {1} day(s)",
+        hours: "hours",
+        days: "days",
+        recently: "Recently",
+    },
+    progress: {
+        user: "Loading user data...",
+        loading: "Loading...",
+        generating: "Generating...",
     },
     exe: {
         book: "Book",
@@ -52,6 +65,12 @@ var LANG_en_US =
         filters: {
             name: "Filters",
             todo: "Filters section is currently disabled."
+        },
+        requestLog: {
+            name: "Request log"
+        },
+        statistics: {
+            name: "Statistics"
         }
     },
     field: {
@@ -78,6 +97,18 @@ var LANG_en_US =
         showAll: "Show all",
         statistics: "Statistics"
     },
+    request: {
+        time: "Request time",
+        modify: {
+            delete: "modified {1} (deleted)",
+            normal: "modified {2} of {1}"
+        }
+    },
+    cmp: {
+        least: "is less than",
+        most: "is more than",
+        exact: "is equal to"
+    },
     todo: "[TODO]"
 };
 
@@ -87,9 +118,12 @@ var LANG_pl_PL =
         none: {
             display: "(Brak etykiety)"
         },
+        optional: {
+            display: "Dla chętnych",
+        },
         noLabel: "Brak etykiety"
     },
-    serverError: {
+    error: {
         unknown: "Nieznany błąd"
     },
     status: {
@@ -110,11 +144,16 @@ var LANG_pl_PL =
         left: "Zostało {1} {2}",
         nday: (value) => value[0] == 1 ? "dzień" : "dni",
         nhour: (value) => value[0] == 1 ? "godzina" : ((value[0] < 10 || value[0] > 20) && value[0] % 10 < 5 && value[0] % 10 > 1) ? "godziny" : "godzin",
-        nminute: (value) => value[0] == 1 ? "minuta" : ((value[0] < 10 || value[0] > 20) && value[0] % 10 < 5 && value[0] % 10 > 1) ? "minuty" : "minut"
+        nminute: (value) => value[0] == 1 ? "minuta" : ((value[0] < 10 || value[0] > 20) && value[0] % 10 < 5 && value[0] % 10 > 1) ? "minuty" : "minut",
+        tooLate: "Za późno, wymaga {1} dni",
+        hours: "godzin",
+        days: "dni",
+        recently: "Przed chwilą",
     },
     progress: {
         generating: "Generowanie...",
-        loading: "Ładowanie..."
+        loading: "Ładowanie...",
+        user: "Ładowanie danych użytkownika...",
     },
     exe: {
         book: "Książka",
@@ -131,7 +170,13 @@ var LANG_pl_PL =
         filters: {
             name: "Filtry",
             todo: "Sekcja filtrów jest aktualnie wyłączona."
-        }
+        },
+        requestLog: {
+            name: "Dziennik zmian"
+        },
+        statistics: {
+            name: "Statystyki"
+        },
     },
     field: {
         description: {
@@ -155,6 +200,18 @@ var LANG_pl_PL =
         requestLog: "Dziennik zmian",
         showAll: "Pokaż wszystkie",
         statistics: "Statystyki",
+    },
+    request: {
+        time: "Czas żądania",
+        modify: {
+            delete: "zmodyfikował {1} (usunięte)",
+            normal: "zmodyfikował {2} z przedmiotu {1}"
+        }
+    },
+    cmp: {
+        least: "jest mniejszy od",
+        most: "jest większy od",
+        exact: "jest równy"
     },
     todo: "[TODO]"
 };
@@ -497,7 +554,7 @@ function generateTurnInTime(data)
     {
         daysLeftStr += L("time.today");
         if(hoursLeft < 24 && hoursLeft > 0)
-            daysLeftStr += ", " + L("time.hoursLeft", hoursLeft, nhours);
+            daysLeftStr += ", " + L("time.left", hoursLeft, nhours);
 
         if(hoursLeft < 0)
             daysLeftStr = "<span class='time-imp-verybig'>" + daysLeftStr + "</span>";

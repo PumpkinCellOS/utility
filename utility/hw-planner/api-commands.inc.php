@@ -183,6 +183,7 @@ function cmd_modify_hw($json, $uid, $data)
         cmd_error($json, "{error.sql}(" . mysqli_errno($conn) . "," . mysqli_error($conn) . ")");
         return;
     }
+    $json->message2 = "This is an old way...";
     
     hwplanner_add_request_log($conn, $uid, "modify-hw", array(
         "tid" => $tid,

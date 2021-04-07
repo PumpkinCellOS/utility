@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <style>
+            body {
+                background-color: #00ff00;
+            }
+        
+            @font-face {
+                font-family: good_times_rg;
+                src: url(/res/good_times_rg.ttf);
+            }
+        
+            .s {
+                color: white;
+                font-family: "good_times_rg";
+                font-size: 30pt;
+                text-shadow: 2px 3px 3px rgba(0, 0, 0, 1);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="s" style="padding-left: 30px;">
+        </div>
+        <div class="s" style="font-size: 17pt; padding-left: 30px; display: inline-block">
+        </div>
+        <div class="s" style="font-size: 17pt; padding-left: 10px; display: inline-block">
+        </div>
+        <audio src="tick.wav" id="t"></audio>
+        <script>
+            var strs = ["Laboratorium i Baza Wojskowa PumpkinCell", "Godz. 13:06", "Mega Tajga"];
+            var els = document.getElementsByClassName("s");
+            var tick = document.getElementById("t");
+            var ix = 0;
+            var six = 0;
+            var waitTicks;
+            var tm;
+            
+            function update()
+            {
+                if(waitTicks > 0)
+                {
+                    waitTicks--;
+                    return;
+                }
+            
+                if(strs.length <= six)
+                    return;
+            
+                ix++;
+                var str = strs[six].substring(0, ix);
+                els[six].innerHTML = str;
+                
+                if(strs[six][ix] != ' ')
+                {
+                    const newAudio = tick.cloneNode();
+                    newAudio.play();
+                }
+                else
+                    waitTicks = 1;
+
+                if(str == strs[six])
+                {
+                    waitTicks = 10;
+                    ix = 0;
+                    six++;
+                }
+            }
+            
+            setInterval(update, 70);
+        </script>
+    </body>
+</html>
