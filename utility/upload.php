@@ -26,37 +26,35 @@ switch($_SERVER["REQUEST_METHOD"])
                     runtimes: 'html5,html4',
                     browse_button: 'file-submit',
                     url: 'upload.php',
-                    chunk_size: '4mb',
-                    /* OPTIONAL
+                    chunk_size: '2mb',
                     filters: {
-                    max_file_size: '150mb',
-                    mime_types: [{title: "Image files", extensions: "jpg,gif,png"}]
+                        prevent_duplicates: true
                     },
-                    */
                     init: {
-                    PostInit: function () {
-                        document.getElementById('files').innerHTML = '';
-                    },
-                    FilesAdded: function (up, files) {
-                        plupload.each(files, function (file) {
-                        document.getElementById('files').innerHTML += `<div id="${file.id}">${file.name} (${plupload.formatSize(file.size)}) <strong></strong></div>`;
-                        });
-                        uploader.start();
-                    },
-                    UploadProgress: function (up, file) {
-                        document.querySelector(`#${file.id} strong`).innerHTML = `<span>${file.percent}%</span>`;
-                    },
-                    Error: function (up, err) {
-                        try
-                        {
-                            console.log(err);
-                            document.querySelector(`#${err.file.id} strong`).innerHTML = `<span>${JSON.parse(err.response).message}</span>`;
+                        PostInit: function() {
+                            document.getElementById('files').innerHTML = '';
+                        },
+                        FilesAdded: function(up, files) {
+                            plupload.each(files, function (file) {
+                            document.getElementById('files').innerHTML += `<div id="${file.id}">${file.name} (${plupload.formatSize(file.size)}) <strong></strong></div>`;
+                            });
+                            uploader.start();
+                        },
+                        UploadProgress: function(up, file) {
+                            if(file.state != 1)
+                                document.querySelector(`#${file.id} strong`).innerHTML = `<span>${file.percent}%</span>`;
+                        },
+                        Error: function(up, err) {
+                            try
+                            {
+                                console.log(err);
+                                document.querySelector(`#${err.file.id} strong`).innerHTML = `<span>${JSON.parse(err.response).message}</span>`;
+                            }
+                            catch(e)
+                            {
+                                console.log(e);
+                            }
                         }
-                        catch(e)
-                        {
-                            console.log(e);
-                        }
-                    }
                     }
                 });
                 uploader.init();
@@ -68,13 +66,25 @@ switch($_SERVER["REQUEST_METHOD"])
         break;
     case "POST":
         require_once("../lib/pcu.php");
+        pcu_cmd_fatal("Not implemented");
+        
         if(empty($_FILES) || $_FILES['file']['error'])
         {
             pcu_cmd_fatal("Failed to move uploaded file.");
         }
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
-        $target = "upload/" . basename($fileName);
+        $target = "files/uploads/" . basename($fileName);
+        
+        // create folders
+        mkdir("files");
+        mkdir("files/uploads");
+        
+        // check if exists
+        if(file_exists($target))
+        {
+            pcu_cmd_fatal("File exists: $target");
+        }
         
         $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
         $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;

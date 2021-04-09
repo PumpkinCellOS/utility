@@ -10,6 +10,7 @@ class PCUGenerator
 
     public function __construct(string $title = "", string $head_suffix = "", string $body_suffix = "")
     {
+        session_start();
         $this->title = $title;
         $this->head_suffix = $head_suffix;
         $this->body_suffix = $body_suffix;
@@ -41,9 +42,26 @@ class PCUGenerator
             $this->start_pre_content();
           
         $this->state = 2;
+        $this->userData = $_SESSION["userData"];
         ?>
             <!-- TODO: Use custom elements -->
-            <h1><a href="/" class="title-link"><img src="/res/pumpkin2.png" style="height: 50px"/></a><iframe width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/timer.html?embed=1&mode=3"></iframe></h1>
+            <h1>
+                <a href="/" class="title-link">
+                    <img src="/res/pumpkin2.png" style="height: 50px"/>
+                </a>
+                <div style="float: right; display: flex; align-items: center">
+                    <?php
+                        if(pcu_is_logged_in())
+                        {
+                            echo "<div class='title-link-right'><a href='/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
+                            echo "<div class='title-link-right'><a href='/api/login.php?command=remove-session'>Log out</a></div>";
+                        }
+                        else
+                            echo "<div class='title-link-right'><a href='/login.php'>Log in</a></div>";
+                    ?>
+                    <iframe width=395 height=50 style="overflow: hidden; border: none;" src="/u/timer.html?embed=1&mode=3"></iframe>
+                </div>
+            </h1>
             <div id="content">
                 <?php
                 if(!pcu_allow_insecure_operations())

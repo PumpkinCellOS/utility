@@ -26,7 +26,7 @@ function apiCall(command, args, callback)
     xhr.onreadystatechange = function() {
         if(this.readyState == 4)
         {
-            if(this.status == 200)
+            if(this.status == 200 && callback)
                 callback(JSON.parse(this.responseText)); 
             else
             {
@@ -66,6 +66,20 @@ function getStatus(data)
     return arr;
 }
 
+var UserManagement = 
+{
+    remove: function(uid) {
+        console.log("remove", uid);
+    },
+    expire: function(uid) {
+        console.log("expire", uid);
+    },
+    changePassword: function(uid) {
+        console.log("changePassword", uid);
+        apiCall("change-password-user", JSON.stringify({uid: uid}), null);
+    }
+};
+
 function generateUserData(data)
 {
     function buttonTD(label, callback)
@@ -78,9 +92,9 @@ function generateUserData(data)
     inner += "<td>" + data.userName + "</td>";
     inner += "<td>" + data.role + "</td>";
     inner += "<td>" + getStatus(data).join(", ") + "</td>";
-    inner += buttonTD("Remove", function(button) { console.log("remove", button); });
-    inner += buttonTD("Make expired", function(button) { console.log("expire", button); });
-    inner += buttonTD("Change password", function(button) { console.log("chpwd", button); });
+    inner += buttonTD("Remove", function(button) { console.log("remove", button); UserManagement.remove(button.parentNode.parentNode.firstChild.innerHTML); });
+    inner += buttonTD("Make expired", function(button) { console.log("expire", button); UserManagement.expire(button.parentNode.parentNode.firstChild.innerHTML); });
+    inner += buttonTD("Change password", function(button) { console.log("chpwd", button); UserManagement.changePassword(button.parentNode.parentNode.firstChild.innerHTML); });
     return inner;
 }
 

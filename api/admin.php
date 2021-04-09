@@ -2,12 +2,13 @@
 
 require("../lib/pcu-admin.php");
 
-$action = $_REQUEST["command"];
+$command = $_REQUEST["command"];
 $json = new stdClass();
+$data = json_decode(file_get_contents("php://input"));
 
 $conn = pcu_cmd_connect_db($json, "pcutil");
 
-switch($action)
+switch($command)
 {
     case "version":
     {
@@ -51,7 +52,19 @@ switch($action)
     } break;
     case "add-user":
     case "remove-user":
+    {
+        pcu_cmd_error($json, "Not implemented");
+    } break;
     case "change-password-user":
+    {
+        pcu_cmd_error($json, "PCU change-password-user " . json_encode($data));
+        
+        $password = $conn->real_escape_string(""); // TODO
+        
+        $result = $conn->query("UPDATE users SET password=SHA1($password)"
+        $data->uid;
+        $data->newPassword;
+    } break;
     case "expire-password-user":
     case "change-role-user":
     {

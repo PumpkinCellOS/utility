@@ -92,42 +92,36 @@ function assignEvents(objectId)
 
 function generateEntries(objectId, array)
 {
-var el_app_list = document.getElementById(objectId);
-el_app_list.innerHTML = "";
-array.forEach(function(entry) {
-    el_app_list.innerHTML += generateUtilityEntry(entry);
-    var units = entry.units;
-    if(units == undefined)
-    units = 1;
-    el_app_list.lastChild.style.width = (units * 25) + "%";
-});
-assignEvents(objectId);
+    var el_app_list = document.getElementById(objectId);
+    el_app_list.innerHTML = "";
+    array.forEach(function(entry) {
+        el_app_list.innerHTML += generateUtilityEntry(entry);
+        var units = entry.units;
+        if(units == undefined)
+        units = 1;
+        el_app_list.lastChild.style.width = (units * 25) + "%";
+    });
+    assignEvents(objectId);
 }
 
 function swapEntries(arrId, list, ix1, ix2)
 {
-var tmp = list[ix1];
-list[ix1] = list[ix2];
-list[ix2] = tmp;
-generateEntries(arrId, list);
+    var tmp = list[ix1];
+    list[ix1] = list[ix2];
+    list[ix2] = tmp;
+    generateEntries(arrId, list);
 }
 
 const pcuEntries = [
-    <?php if($login) { ?>
-    {"icon": "#128274", "state": "beta", "displayName": "Log out (<?php echo $userData["userName"]; ?>)", "noblank": true, "color": "#775555", "units": 1, "path": "/api/login.php?command=remove-session"},
-    {"icon": "#128100", "state": "alpha", "displayName": "Profile", "noblank": true, "color": "#557733", "units": 1, "path": "/profile.php?uid=<?php echo $userData["id"]; ?>"},
-    <?php } else { ?>
-    {"icon": "#128275", "state": "beta", "displayName": "Log in", "noblank": true, "color": "#557755", "units": 2, "path": "/login.php"},
-    {"displayName": "Sign up", "state": "beta", "noblank": true, "color": "#555577", "units": 2, "path": "signup.php"},
-    <?php } if(!pcu_role_less($userData["role"], "admin")) { ?>
+    <?php if(!pcu_role_less($userData["role"], "member")) { ?>
+    {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
+    <?php } ?>
+    <?php if(!pcu_role_less($userData["role"], "admin")) { ?>
     {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "state": "beta", "path": "/u/admin"},
     <?php } ?>
 ];
 
 const utilityEntries = [
-    <?php if(!pcu_role_less($userData["role"], "member")) { ?>
-    {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
-    <?php } ?>
     {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
     {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/timer.html"},
     {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/timer-gui.html"},
@@ -135,7 +129,8 @@ const utilityEntries = [
     {"icon": "#128394", "units": 1, "color": "#653939", "displayName": "HW Planner", "path": "/u/hw-planner"},
     {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
     {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
-    {"icon": "#11123",  "units": 1, "color": "#667766", "displayName": "Files", "path": "/u/files"},
+    {"icon": "#11123",  "units": 1, "color": "#776666", "displayName": "Files", "path": "/u/files"},
+    {"icon": "#8613",   "units": 1, "state": "alpha", "color": "#667766", "displayName": "Upload", "path": "/u/upload.php"},
 ]; 
 
 const linkEntries = [
