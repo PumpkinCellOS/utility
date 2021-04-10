@@ -48,7 +48,7 @@ class PCUGenerator
             <!-- TODO: Use custom elements -->
             <h1>
                 <a href="/" class="title-link">
-                    <img src="/res/pumpkin2.png" style="height: 50px"/>
+                    <img src="/res/pumpkin2-beta.png" style="height: 50px"/>
                 </a>
                 <div style="float: right; display: flex; align-items: center">
                     <?php
