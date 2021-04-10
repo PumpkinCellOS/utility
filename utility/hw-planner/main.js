@@ -3,9 +3,9 @@
     Sppmacd (c) 2020 - 2021
 */
 
-/*require("./exe-parser.js");
-require("./exe-stringify.js");
-require("./lang.js");*/
+var I18n = require("./lang.js");
+var EXEParser = require("./exe-parser.js");
+var EXEStringify = require("./exe-stringify.js");
 
 var LANG_en_US = 
 {
@@ -43,6 +43,7 @@ var LANG_en_US =
         tooLate: "Too late, need {1} day(s)",
         hours: "hours",
         days: "days",
+        expired: "expired",
         recently: "Recently",
     },
     progress: {
@@ -148,6 +149,7 @@ var LANG_pl_PL =
         tooLate: "Za późno, wymaga {1} dni",
         hours: "godzin",
         days: "dni",
+        expired: "wygasło",
         recently: "Przed chwilą",
     },
     progress: {
@@ -342,7 +344,7 @@ function pculogin_apiCall(command, args, method, callback)
 function apiCall(command, args, callback, urlprefix)
 {
     var xhr = new XMLHttpRequest();
-    method = API_COMMANDS[command].method;
+    var method = API_COMMANDS[command].method;
     
     var url = "api.php?c=" + command;
     if(method != "POST")
@@ -398,7 +400,7 @@ function generateTopicDisplay(data, fancy = true)
     
     if(data.topicFormat == 'N')
     {
-        topic = exe_stringify_hr(exe_parse(topic));
+        topic = EXEStringify.exe_stringify_hr(EXEParser.parse(topic));
     }
     
     if(data.optional == "1")
@@ -439,7 +441,7 @@ function generateTopicDisplay(data, fancy = true)
     {
         var topicLabelHTML = "";
         var tlArray = topicLabel.split(",");
-        for(tl of tlArray)
+        for(var tl of tlArray)
             topicLabelHTML += generateLabel(tl);
         
         if(fancy)
@@ -658,7 +660,7 @@ function loadFormData(form)
     return data;
 }
 
-function updateTopicDisplay()
+window.updateTopicDisplay = function()
 {
     var obj = document.getElementById("topic-display");
     var data = loadFormData(document.forms["topic-editor"]);
@@ -687,7 +689,7 @@ function validateAndLoadData(form)
     return data;
 }
 
-function submitTopicEditor(form)
+window.submitTopicEditor = function(form)
 {
     console.log("submitTopicEditor")
     
@@ -718,13 +720,13 @@ function submitTopicEditor(form)
     closeTopicEditor();
 }
 
-function closeTopicEditor()
+window.closeTopicEditor = function()
 {
     var editor = document.getElementById("form-topic-editor");
     editor.style.display = "none";
 }
 
-function openTopicEditor(mode, tid)
+window.openTopicEditor = function(mode, tid)
 {
     var editor = document.getElementById("form-topic-editor");
     editor.style.display = "";
@@ -751,7 +753,7 @@ function openTopicEditor(mode, tid)
     updateTopicDisplay();
 }
 
-function submitModifyStatus(tid, value)
+window.submitModifyStatus = function(tid, value)
 {
     var _data = {};
     _data.tid = tid;
@@ -761,7 +763,7 @@ function submitModifyStatus(tid, value)
     });
 }
 
-function submitFilters(form)
+window.submitFilters = function(form)
 {
     var data = {};
     
@@ -808,12 +810,12 @@ function loadEntryToForm(form, tid)
     form["description"].value = entry.description;
 }
 
-function modifyEntry(tid)
+window.modifyEntry = function(tid)
 {
     openTopicEditor("modify", tid);
 }
 
-function deleteEntry(tid)
+window.deleteEntry = function(tid)
 {
     var data = {};
     data.tid = tid;
@@ -822,7 +824,7 @@ function deleteEntry(tid)
     });
 }
 
-function requestLoading()
+window.requestLoading = function()
 {
     apiCall("get-data", "q=hws" + (g_showDones ? "+done" : ""), loadData);
     apiCall("get-request-log", "", function(data) { g_requestLog = data.data; });
@@ -929,8 +931,8 @@ function generateDataTable()
 
 function generateStatistics(stats)
 {
-    wrapStat = (key, value) => ("<div class='stat-entry'><div class='stat-key'>" + key + "</div><div class='stat-value'>" + value + "</div></div>");
-    header = str => ("<h4>" + str + "</h4>");
+    var wrapStat = (key, value) => ("<div class='stat-entry'><div class='stat-key'>" + key + "</div><div class='stat-value'>" + value + "</div></div>");
+    var header = str => ("<h4>" + str + "</h4>");
    
     function wrapStatList(headerStr, list, generator = (key => key))
     {
@@ -1029,7 +1031,7 @@ function generateRequestLogEntry(log)
     return inner;
 }
 
-function generateRequestLog()
+window.generateRequestLog = function()
 {
     var inner = `<table class='data-table'><thead><td>${L("request.time")}</td><td>Action</td></thead><tbody>`;
     for(var log of g_requestLog)
@@ -1044,7 +1046,7 @@ function generateRequestLog()
     // TODO: Load user name!.
 }
 
-function calcStatistics()
+window.calcStatistics = function()
 {
     var element = document.getElementById("statistics-container");
     element.innerHTML = L("progress.generating");
@@ -1057,6 +1059,7 @@ function calcStatistics()
     stats.tiExpired = 0;
     stats.tiSoon = 0;
     stats.tiOther = 0;
+
     for(var id in g_hws)
     {
         var hw = g_hws[id];
@@ -1093,7 +1096,7 @@ function calcStatistics()
             stats.tiOther++;
     }
     
-    sortTransform = (obj) => {
+    var sortTransform = (obj) => {
         var arr = [];
         for(var i in obj)
             arr.push({key: i, value: obj[i]});
@@ -1154,7 +1157,7 @@ function load()
     }, 1000);
 }
 
-function hwplanner_main()
+window.hwplanner_main = function()
 {
     load();
     
