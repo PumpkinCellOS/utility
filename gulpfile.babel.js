@@ -3,6 +3,7 @@ const gulp = require("gulp");
 const source = require('vinyl-source-stream');
 const babelify = require('babelify');
 
+var utilityTasks = [];
 function utilityTask(name, entry = "main.js")
 {
     gulp.task(`${name}-js`, function() {
@@ -20,13 +21,14 @@ function utilityTask(name, entry = "main.js")
     });
 
     gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
+    utilityTasks.push(name);
 };
 
 utilityTask("admin");
 utilityTask("hw-planner");
 utilityTask("lss-tlt-gen");
 
-gulp.task("utilities", gulp.series("hw-planner"));
+gulp.task("utilities", gulp.series(utilityTasks));
 
 gulp.task("lib", function() {
     return gulp.src("lib/*.*").pipe(gulp.dest("../html-build/lib"));
