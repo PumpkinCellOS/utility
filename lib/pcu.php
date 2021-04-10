@@ -2,25 +2,51 @@
 
 require_once("generator.php");
 
+abstract class PCUPageType
+{
+    const Display = "text/html";
+    const API = "application/json";
+}
+
+function pcu_page_type(...$page_type)
+{
+    if(isset($page_type[0]))
+    {
+        $_GLOBALS["page_type"] = $page_type[0];
+        header("Content-type: $page_type[0]");
+    }
+    else
+        return $_GLOBALS["page_type"];
+}
+
+pcu_page_type(PCUPageType::API);
+
 function pcu_cmd_fatal($msg, int $responseCode = 400)
 {
-    $json = new stdClass();
-    pcu_cmd_error($json, $msg, $responseCode);
-    echo json_encode($json);
-    error_log("\nFATAL: HTTP $responseCode: $msg\n");
+    if(pcu_page_type() == PCUPageType::Display)
+    {
+        pcu_page_error("Fatal error: $msg", $responseCode);
+    }
+    else
+    {
+        $json = new stdClass();
+        pcu_cmd_error($json, "Fatal error: $msg", $responseCode);
+        echo json_encode($json);
+    }
     exit;
 }
 
 function pcu_cmd_error($json, $msg, int $responseCode = 400)
 {
-    http_response_code($responseCode);
     $json->message = $msg;
+    http_response_code($responseCode);
     error_log("\nERROR: HTTP $responseCode: $msg\n");
 }
 
 function pcu_page_error(string $message = "Unknown error", int $responseCode = 400)
 {
     http_response_code($responseCode);
+
     $generator = new PCUGenerator($message);
     $generator->start_content();
 
@@ -67,7 +93,7 @@ function pcu_cmd_connect_db($json, $db)
 {
     if(!pcu_allow_insecure_operations())
     {
-        pcu_page_error("You are using a non-private IP. Denying database operations");
+        pcu_cmd_fatal("You are using a non-private IP. Denying database operations", 403);
     }
 
     $conn = new mysqli("localhost", "sppmacd", pcu_mysql_password(), $db);
@@ -123,7 +149,7 @@ function pcu_require_login()
 {
     if(!pcu_is_logged_in())
     {
-        pcu_page_error("A login is required to access this resource", 400);
+        pcu_cmd_fatal("A login is required to access this resource", 401);
     }
     return $_SESSION["userData"];
 }
@@ -142,7 +168,7 @@ function pcu_require_role($roleName)
 {
     $login = pcu_require_login();
     if(pcu_role_less($_SESSION["userData"]["role"], $roleName))
-        pcu_page_error("You must be a(n) $roleName to access this resource");
+        pcu_cmd_fatal("You must be a(n) $roleName to access this resource", 403);
     return $login;
 }
 

@@ -14,6 +14,7 @@ class PCUGenerator
         $this->title = $title;
         $this->head_suffix = $head_suffix;
         $this->body_suffix = $body_suffix;
+        pcu_page_type(PCUPageType::Display);
     }
 
     public function start_pre_content()

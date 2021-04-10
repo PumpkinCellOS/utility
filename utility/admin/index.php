@@ -1,10 +1,11 @@
 <?php
 
 require("../../lib/generator.php");
+$generator = new PCUGenerator("Admin panel");
+
 $userData = pcu_require_role("admin");
 $uid = $userData["id"];
 
-$generator = new PCUGenerator("Admin panel");
 $generator->scripts = ["main.js"];
 $generator->start_content();
 

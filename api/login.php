@@ -45,11 +45,13 @@ switch($action)
         pcu_cmd_error($json, "Invalid command");
     } break;
 }
+pcu_page_type(PCUPageType::Display);
 ?>
 <html>
     <head>
         <title>PCU</title>
         <?php
+
             if(http_response_code() == 200) { ?>
                 <meta http-equiv="refresh" content="0; url=/"/>
             <?php }
