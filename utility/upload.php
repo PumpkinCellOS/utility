@@ -7,6 +7,7 @@ switch($_SERVER["REQUEST_METHOD"])
         $generator = new PCUGenerator("Upload");
 
         $generator->scripts = ["/plupload.full.min.js"];
+        $generator->stylesheets = ["style.css"];
         $generator->start_content();
         ?>
 
@@ -14,19 +15,37 @@ switch($_SERVER["REQUEST_METHOD"])
             <div class="background-tile">
                 <div class="background-tile-padding">
                     <p>Select file to upload (4GB limit):</p>
+                    <p>NOTE: The uploader is very bad, has poor error handling but should work :^)</p>
+                    <input type="button" id="file-submit" value="Upload"></input>
                     <div id="files">
                     </div>
-                    <input type="button" id="file-submit" value="Upload"></input>
                 </div>
             </div>
 
             <script>
+                var uploader;
+                var lastProcessed = 0;
+                var lastProcessedTimestamp = 0;
+                
+                function generateUploadProgress(file)
+                {
+                    var currentTS = new Date().getTime();
+                    var ps = (file.processed - lastProcessed) / (currentTS - lastProcessedTimestamp) * 1000;
+                    lastProcessed = file.processed;
+                    lastProcessedTimestamp = currentTS;
+                    return `
+                        <div class='up-column'>${file.percent}%</div>
+                        <div class='up-column'>${plupload.formatSize(file.processed)}</div>
+                        <div class='up-column'>${plupload.formatSize(ps)}/s</div>
+                    `;
+                }
+                
                 window.addEventListener("load", function () {
-                var uploader = new plupload.Uploader({
+                uploader = new plupload.Uploader({
                     runtimes: 'html5,html4',
                     browse_button: 'file-submit',
                     url: 'upload.php',
-                    chunk_size: '2mb',
+                    chunk_size: '8mb',
                     filters: {
                         prevent_duplicates: true
                     },
@@ -36,13 +55,15 @@ switch($_SERVER["REQUEST_METHOD"])
                         },
                         FilesAdded: function(up, files) {
                             plupload.each(files, function (file) {
-                            document.getElementById('files').innerHTML += `<div id="${file.id}">${file.name} (${plupload.formatSize(file.size)}) <strong></strong></div>`;
+                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file"><a href="/u/files/uploads/${file.name}">${file.name}</a> (${plupload.formatSize(file.size)})<br><strong></strong></div>`;
+                                lastProcessedTimestamp = (new Date()).getTime();
+                                lastProcessed = 0;
                             });
                             uploader.start();
                         },
                         UploadProgress: function(up, file) {
                             if(file.state != 1)
-                                document.querySelector(`#${file.id} strong`).innerHTML = `<span>${file.percent}%</span>`;
+                                document.querySelector(`#${file.id} strong`).innerHTML = generateUploadProgress(file);
                         },
                         Error: function(up, err) {
                             try
@@ -66,11 +87,10 @@ switch($_SERVER["REQUEST_METHOD"])
         break;
     case "POST":
         require_once("../lib/pcu.php");
-        pcu_cmd_fatal("Not implemented");
         
         if(empty($_FILES) || $_FILES['file']['error'])
         {
-            pcu_cmd_fatal("Failed to move uploaded file.");
+            pcu_cmd_fatal("Failed to move uploaded file. " . json_encode($_FILES));
         }
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
@@ -98,7 +118,7 @@ switch($_SERVER["REQUEST_METHOD"])
             $in = @fopen($_FILES['file']['tmp_name'], "rb");
             if($in) 
             {
-                while($buff = fread($in, 4096)) { fwrite($out, $buff); }
+                while($buff = fread($in, 16384)) { fwrite($out, $buff); }
             }
             else 
             {

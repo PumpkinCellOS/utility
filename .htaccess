@@ -3,11 +3,7 @@
     SetHandler "proxy:unix:/var/run/php/php8.0-fpm.sock|fcgi://localhost"
 </FilesMatch>
 
-php_value upload_max_filesize 1G
-php_value post_max_size 1G
-php_value post_max_size 1G
-php_value max_input_time 300
-php_value max_execution_time 300
+LimitRequestBody 16777216
 
 # Errors
 ErrorDocument 400 /errors/err.php
