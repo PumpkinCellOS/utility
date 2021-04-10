@@ -175,7 +175,7 @@ const SCALE = 1;
 const SPACING = 20;
 
 var g_currentLesson = null;
-var g_weekOffset = 0;
+window.g_weekOffset = 0;
 var g_startDay = null;
 var g_endDay = null;
 
@@ -389,7 +389,7 @@ function generate()
     loadHWPlannerData();
 }
 
-function changeWeekOffset(value)
+window.changeWeekOffset = function(value)
 {
     g_weekOffset = value;
     generate();

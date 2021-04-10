@@ -368,7 +368,7 @@ function getUserData(uid, callback)
 
 var loadSteps = 0;
 
-function generateLabel(tl)
+window.generateLabel = function(tl)
 {
     if(tl.length == 0)
         return L(label.noLabel);
@@ -390,7 +390,7 @@ function generateLabel(tl)
     return topicLabelHTML;
 }
 
-function generateTopicDisplay(data, fancy = true)
+window.generateTopicDisplay = function(data, fancy = true)
 {
     var html = "";
     
@@ -474,7 +474,7 @@ function generateStatusNonRich(data_status)
     return status;
 }
 
-function generateStatus(data_status, useRichFormat = true)
+window.generateStatus = function(data_status, useRichFormat = true)
 {
     if(!data_status)
         return "<span class='status-u'>Unknown</span>";

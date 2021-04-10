@@ -7,6 +7,26 @@ var utilityTasks = [];
 function utilityTask(name, entry = "main.js")
 {
     gulp.task(`${name}-js`, function() {
+        return browserify({entries: [
+                `utility/${name}/${entry}`
+            ]})
+            .transform(babelify.configure({presets: ["@babel/env"]}))
+            .bundle()
+            .pipe(source('app.js'))
+            .pipe(gulp.dest(`../html-build/u/${name}`));
+    });
+
+    gulp.task(`${name}-assets`, function() {
+        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`../html-build/u/${name}`));
+    });
+
+    gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
+    utilityTasks.push(name);
+};
+
+function moduleTask(name, entry = "main.js")
+{
+    gulp.task(`${name}-js`, function() {
         return browserify({sourceType: "module", entries: [
                 `utility/${name}/${entry}`
             ]})
@@ -25,6 +45,7 @@ function utilityTask(name, entry = "main.js")
 };
 
 utilityTask("admin");
+moduleTask("hw-planner");
 utilityTask("hw-planner");
 utilityTask("lss-tlt-gen");
 
