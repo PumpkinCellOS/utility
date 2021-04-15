@@ -123,7 +123,6 @@ transition: color 0.1s;
     overflow: auto;
     position: fixed;
     width: 100%;
-    z-index: -1;
 }
 
 #footer-wrapper {
