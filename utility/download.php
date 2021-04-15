@@ -11,37 +11,8 @@ if($_SERVER["REQUEST_METHOD"] != "GET")
 $uid = $_GET["u"];
 $name = basename($_GET["f"]);
 
-if($name == "")
-{
-    $uid = $userData["id"];
-    $generator = new PCUGenerator("Cloud");
-    $generator->start_content();
-    ?>
-        <h2>Cloud storage</h2>
-        <div class="app-list small">
-            <a is="tlf-button-tile" style="width: 33%" href="/u/download.php">Upload</a>
-        </div>
-        <div class="background-tile">
-            <div class="background-tile-padding">
-                <ul>
-                <?php
-                    // TODO: Use API calls for it
-                    // TODO: Support directories
-                    $listing = glob("cloud-files/$uid/*");
-                    foreach($listing as $file)
-                    {
-                        $file_bn = basename($file);
-                        $link = "/u/download.php?u=$uid&f=$file_bn";
-                        echo "<li><a href=" . $link . ">$file_bn</a></li>";
-                    }
-                ?>
-                </li>
-            </div>
-        </div>
-    <?php
-    $generator->finish();
-    exit;
-}
+if($name == "" || $uid == "")
+    pcu_cmd_fatal("Invalid argument");
 
 $fileName = realpath("cloud-files/$uid/$name");
 

@@ -29,6 +29,26 @@ switch($_SERVER["REQUEST_METHOD"])
                     </div>
                 </div>
             </div>
+            
+            <div class="background-tile">
+                <div class="background-tile-padding">
+                    <h3>File listing</h3>
+                    <ul>
+                    <?php
+                        // TODO: Use API calls for it
+                        // TODO: Support directories
+                        $uid = $userData["id"];
+                        $listing = glob("cloud-files/$uid/*");
+                        foreach($listing as $file)
+                        {
+                            $file_bn = basename($file);
+                            $link = "/u/download.php?u=$uid&f=$file_bn";
+                            echo "<li><a href=" . $link . ">$file_bn</a></li>";
+                        }
+                    ?>
+                    </li>
+                </div>
+            </div>
 
             <script>
                 var uploader;
