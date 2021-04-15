@@ -1,4 +1,8 @@
 <?php
+// TODO: Merge this and 'download.php' and rename to 'cloud.php'
+require_once("../lib/pcu.php");
+
+$userData = pcu_require_login();
 
 switch($_SERVER["REQUEST_METHOD"])
 {
@@ -6,8 +10,6 @@ switch($_SERVER["REQUEST_METHOD"])
         require_once("../lib/generator.php");
             
         $generator = new PCUGenerator("Upload");
-        if(!pcu_allow_insecure_operations())
-            pcu_cmd_fatal("access denied because of public IP");
 
         $generator->scripts = ["/plupload.full.min.js"];
         $generator->stylesheets = ["style.css"];
@@ -15,6 +17,9 @@ switch($_SERVER["REQUEST_METHOD"])
         ?>
 
             <h2>Upload File to Server</h2>
+            <div class="app-list small">
+                <a is="tlf-button-tile" style="width: 33%" href="/u/download.php">Download</a>
+            </div>
             <div class="background-tile">
                 <div class="background-tile-padding">
                     <p>Select file to upload (4GB limit):</p>
@@ -29,6 +34,7 @@ switch($_SERVER["REQUEST_METHOD"])
                 var uploader;
                 var lastProcessed = 0;
                 var lastProcessedTimestamp = 0;
+                var uid = <?php echo $userData["id"]; ?>
                 
                 function generateUploadProgress(file)
                 {
@@ -58,7 +64,7 @@ switch($_SERVER["REQUEST_METHOD"])
                         },
                         FilesAdded: function(up, files) {
                             plupload.each(files, function (file) {
-                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file"><a href="/u/files/uploads/${file.name}">${file.name}</a> (${plupload.formatSize(file.size)})<br><strong></strong></div>`;
+                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file"><a href="/u/download.php?u=${uid}&f=${file.name}">${file.name}</a> (${plupload.formatSize(file.size)})<br><strong></strong></div>`;
                                 lastProcessedTimestamp = (new Date()).getTime();
                                 lastProcessed = 0;
                             });
@@ -89,22 +95,19 @@ switch($_SERVER["REQUEST_METHOD"])
         $generator->finish();
         break;
     case "POST":
-        require_once("../lib/pcu.php");
-        if(!pcu_allow_insecure_operations())
-            pcu_cmd_fatal("access denied because of public IP");
-
-        
         if(empty($_FILES) || $_FILES['file']['error'])
         {
             pcu_cmd_fatal("Failed to move uploaded file. " . json_encode($_FILES));
         }
+        
+        $uid = $userData["id"];
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
-        $target = "files/uploads/" . basename($fileName);
+        $target = "cloud-files/$uid/" . basename($fileName);
         
         // create folders
-        mkdir("files");
-        mkdir("files/uploads");
+        mkdir("cloud-files");
+        mkdir("cloud-files/$uid");
         
         // check if exists
         if(file_exists($target))
