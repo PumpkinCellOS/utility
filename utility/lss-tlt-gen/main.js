@@ -67,12 +67,14 @@ var g_data = {
         {"date": "2021-04-06", "reason": "Przerwa świąteczna"},
         {"date": "2021-05-03", "reason": "Święto Konstytucji"},
         {"date": ["2021-05-04", "2021-05-06"], "reason": "Matury"},
+        {"date": "2021-05-11", "reason": "Matury"},
+        {"date": "2021-05-19", "reason": "Matury"},
         {"date": ["2021-06-03", "2021-06-04"], "reason": "Boże Ciało"},
         {"date": ["2021-06-25", "2021-09-01"], "reason": "Wakacje"},
         {"date": "2021-12-23", "reason": "Przerwa świąteczna"},
         {"date": ["2021-12-24", "2021-12-26"], "reason": "Boże Narodzenie"},
         {"date": ["2021-12-27", "2021-12-31"], "reason": "Przerwa świąteczna"},
-        {"date": "2022-01-01", "reason": "Nowy Rok"},
+        {"date": "2022-01-01", "reason": "Nowy Rok"}
     ]
 };
 

@@ -12,11 +12,11 @@ function pcu_page_type(...$page_type)
 {
     if(isset($page_type[0]))
     {
-        $_GLOBALS["page_type"] = $page_type[0];
+        $GLOBALS["page_type"] = $page_type[0];
         header("Content-type: $page_type[0]");
     }
     else
-        return $_GLOBALS["page_type"];
+        return $GLOBALS["page_type"];
 }
 
 pcu_page_type(PCUPageType::API);
@@ -91,11 +91,6 @@ function pcu_cmd_info($json, $msg)
 
 function pcu_cmd_connect_db($json, $db)
 {
-    if(!pcu_allow_insecure_operations())
-    {
-        pcu_cmd_fatal("You are using a non-private IP. Denying database operations", 403);
-    }
-
     $conn = new mysqli("localhost", "sppmacd", pcu_mysql_password(), $db);
     if($conn->connect_error) {
         $passwd = pcu_mysql_password();
@@ -126,7 +121,7 @@ function pcu_is_logged_in_as($userName)
 {
     session_start();
     $sess = $_SESSION["userData"];
-    return isset($sess) && $sess->userName = $userName;
+    return isset($sess) && $sess->userName == $userName;
 }
 
 function pcu_mksession($json, $data)

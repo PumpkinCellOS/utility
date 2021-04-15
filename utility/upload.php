@@ -4,7 +4,10 @@ switch($_SERVER["REQUEST_METHOD"])
 {
     case "GET":
         require_once("../lib/generator.php");
+            
         $generator = new PCUGenerator("Upload");
+        if(!pcu_allow_insecure_operations())
+            pcu_cmd_fatal("access denied because of public IP");
 
         $generator->scripts = ["/plupload.full.min.js"];
         $generator->stylesheets = ["style.css"];
@@ -15,7 +18,7 @@ switch($_SERVER["REQUEST_METHOD"])
             <div class="background-tile">
                 <div class="background-tile-padding">
                     <p>Select file to upload (4GB limit):</p>
-                    <p>NOTE: The uploader is very bad, has poor error handling but should work :^)</p>
+                    <p>NOTE: The uploader is very bad, has poor error handling but should work :)</p>
                     <input type="button" id="file-submit" value="Upload"></input>
                     <div id="files">
                     </div>
@@ -87,6 +90,9 @@ switch($_SERVER["REQUEST_METHOD"])
         break;
     case "POST":
         require_once("../lib/pcu.php");
+        if(!pcu_allow_insecure_operations())
+            pcu_cmd_fatal("access denied because of public IP");
+
         
         if(empty($_FILES) || $_FILES['file']['error'])
         {

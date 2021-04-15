@@ -11,6 +11,11 @@ const API_COMMANDS = {
     "version": {"method": "GET"}
 };
 
+function findUser(uid)
+{
+    
+}
+
 //callback: function(responseText)
 function apiCall(command, args, callback)
 {
@@ -73,6 +78,7 @@ var UserManagement =
     },
     expire: function(uid) {
         console.log("expire", uid);
+        apiCall("change-password-user", JSON.stringify({uid: uid, state = !g_dataTable[uid].}), null);
     },
     changePassword: function(uid) {
         console.log("changePassword", uid);

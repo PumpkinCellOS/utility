@@ -1,6 +1,6 @@
 <?php
 
-require("../lib/pcu-admin.php");
+require_once("../lib/pcu-admin.php");
 
 $command = $_REQUEST["command"];
 $json = new stdClass();
@@ -57,15 +57,22 @@ switch($command)
     } break;
     case "change-password-user":
     {
-        pcu_cmd_error($json, "PCU change-password-user " . json_encode($data));
-        
-        $password = $conn->real_escape_string(""); // TODO
-        
-        $result = $conn->query("UPDATE users SET password=SHA1($password)"
-        $data->uid;
-        $data->newPassword;
+        // args:
+        // - uid
+        // - password
+        $uid = $conn->real_escape_string($data->uid);
+        $password = $conn->real_escape_string($data->password);
+        $result = $conn->query("UPDATE users SET password=SHA1($password) WHERE id='$uid'");
     } break;
     case "expire-password-user":
+    {
+        // args:
+        // - uid
+        // - state (1/0)
+        $uid = $conn->real_escape_string($data->uid);
+        $state = $conn->real_escape_string($data->state);
+        $result = $conn->query("UPDATE users SET passwordExpired='$state' WHERE id='$uid'");
+    } break;
     case "change-role-user":
     {
         pcu_cmd_error($json, "Not implemented");
