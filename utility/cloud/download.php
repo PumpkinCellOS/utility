@@ -1,6 +1,6 @@
 <?php
-require_once("../lib/generator.php");
-require_once("../lib/pcu.php");
+require_once("../../lib/generator.php");
+require_once("../../lib/pcu.php");
 
 pcu_page_type(PCUPageType::Display);
 $userData = pcu_require_login();
@@ -14,7 +14,7 @@ $name = basename($_GET["f"]);
 if($name == "" || $uid == "")
     pcu_cmd_fatal("Invalid argument");
 
-$fileName = realpath("cloud-files/$uid/$name");
+$fileName = realpath("files/$uid/$name");
 
 $exists = stat($fileName);
 if(!$exists)
@@ -23,7 +23,7 @@ if(!$exists)
 if($userData["id"] != $uid)
     pcu_cmd_fatal("Access denied (" . $userData["id"] . " != $uid)", 403);
     
-pcu_page_type(mime_content_type("cloud-files/$uid/$name"));
-echo file_get_contents("cloud-files/$uid/$name");
+pcu_page_type(mime_content_type("files/$uid/$name"));
+echo file_get_contents("files/$uid/$name");
 
 ?>

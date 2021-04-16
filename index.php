@@ -130,7 +130,7 @@ const utilityEntries = [
     {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
     {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
     {"icon": "#11123",  "units": 1, "color": "#776666", "displayName": "Files", "path": "/u/files"},
-    {"icon": "#8613",   "units": 1, "state": "alpha", "color": "#667766", "displayName": "Cloud Storage", "path": "/u/cloud.php"},
+    {"icon": "#8613",   "units": 1, "state": "alpha", "color": "#667766", "displayName": "Cloud Storage", "path": "/u/cloud"},
 ]; 
 
 const linkEntries = [

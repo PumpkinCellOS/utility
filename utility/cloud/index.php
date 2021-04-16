@@ -1,13 +1,13 @@
 <?php
 // TODO: Merge this and 'download.php' and rename to 'cloud.php'
-require_once("../lib/pcu.php");
+require_once("../../lib/pcu.php");
 
 $userData = pcu_require_login();
 
 switch($_SERVER["REQUEST_METHOD"])
 {
     case "GET":
-        require_once("../lib/generator.php");
+        require_once("../../lib/generator.php");
             
         $generator = new PCUGenerator("Upload");
 
@@ -18,7 +18,7 @@ switch($_SERVER["REQUEST_METHOD"])
 
             <h2>Upload File to Server</h2>
             <div class="app-list small">
-                <a is="tlf-button-tile" style="width: 33%" href="/u/download.php">Download</a>
+                <a is="tlf-button-tile" style="width: 33%" href="/u/cloud/download.php">Download</a>
             </div>
             <div class="background-tile">
                 <div class="background-tile-padding">
@@ -38,11 +38,11 @@ switch($_SERVER["REQUEST_METHOD"])
                         // TODO: Use API calls for it
                         // TODO: Support directories
                         $uid = $userData["id"];
-                        $listing = glob("cloud-files/$uid/*");
+                        $listing = glob("../cloud-files/$uid/*");
                         foreach($listing as $file)
                         {
                             $file_bn = basename($file);
-                            $link = "/u/download.php?u=$uid&f=$file_bn";
+                            $link = "/u/cloud/download.php?u=$uid&f=$file_bn";
                             echo "<li><a href=" . $link . ">$file_bn</a></li>";
                         }
                     ?>
@@ -73,7 +73,7 @@ switch($_SERVER["REQUEST_METHOD"])
                 uploader = new plupload.Uploader({
                     runtimes: 'html5,html4',
                     browse_button: 'file-submit',
-                    url: 'upload.php',
+                    url: '',
                     chunk_size: '8mb',
                     filters: {
                         prevent_duplicates: true
@@ -84,7 +84,7 @@ switch($_SERVER["REQUEST_METHOD"])
                         },
                         FilesAdded: function(up, files) {
                             plupload.each(files, function (file) {
-                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file"><a href="/u/download.php?u=${uid}&f=${file.name}">${file.name}</a> (${plupload.formatSize(file.size)})<br><strong></strong></div>`;
+                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file"><a href="/u/cloud/download.php?u=${uid}&f=${file.name}">${file.name}</a> (${plupload.formatSize(file.size)})<br><strong></strong></div>`;
                                 lastProcessedTimestamp = (new Date()).getTime();
                                 lastProcessed = 0;
                             });
@@ -123,11 +123,11 @@ switch($_SERVER["REQUEST_METHOD"])
         $uid = $userData["id"];
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
-        $target = "cloud-files/$uid/" . basename($fileName);
+        $target = "files/$uid/" . basename($fileName);
         
         // create folders
-        mkdir("cloud-files");
-        mkdir("cloud-files/$uid");
+        mkdir("files");
+        mkdir("files/$uid");
         
         // check if exists
         if(file_exists($target))
