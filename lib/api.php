@@ -20,11 +20,10 @@ class PCUAPI
         if($_SERVER["REQUEST_METHOD"] == "GET")
             $args = $_GET;
         else
-            $args = json_decode(file_get_contents("php://input"));
-            
-        $this->args = $args;
+            $args = json_decode(file_get_contents("php://input"), true);
         
         $command = $args["command"];
+        $this->args = $args;
         $handler = $this->commands[$command];
         
         if(!isset($handler))
