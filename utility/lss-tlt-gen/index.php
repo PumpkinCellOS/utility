@@ -4,7 +4,7 @@ require_once("../../lib/generator.php");
 require_once("../../lib/pcu.php");
 
 if(!pcu_allow_insecure_operations())
-    $userData = pcu_require_login();
+    $userData = pcu_require_role("member");
 
 $generator = new PCUGenerator("Lesson Table Generator");
 $generator->scripts = ["../hw-planner/lang.js", "../hw-planner/exe-parser.js", "../hw-planner/exe-stringify.js", "../hw-planner/main.js", "main.js"];
