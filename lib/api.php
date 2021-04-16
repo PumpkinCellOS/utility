@@ -30,7 +30,7 @@ class PCUAPI
         if(!isset($handler))
             pcu_cmd_fatal("Invalid command");
             
-        echo json_encode($handler($this, $args));
+        echo json_encode($handler($this));
     }
     
     function required_arg($arg)
