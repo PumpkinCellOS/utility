@@ -94,7 +94,7 @@ function pcu_cmd_connect_db($json, $db)
     $conn = new mysqli("localhost", "sppmacd", pcu_mysql_password(), $db);
     if($conn->connect_error) {
         $passwd = pcu_mysql_password();
-        pcu_cmd_error($json, "Couldn't connect to database $passwd");
+        pcu_cmd_error($json, "Couldn't connect to database");
         return null;
     }
     return $conn;
