@@ -1,10 +1,27 @@
 @import "form.css";
 @import "tilify.css";
 
+@font-face {
+    font-family: "librmono";
+    src: url(/res/fonts/LiberationMono-Regular.ttf);
+}
+
+@font-face {
+    font-family: "opensans";
+    src: url(/res/fonts/OpenSans-Regular.ttf);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "opensans";
+    src: url(/res/fonts/OpenSans-Bold.ttf);
+    font-weight: bold;
+}
+
 body {
     background-color: #222228;
     color: #dddddf;
-    font-family: "Courier New", "monospace";
+    font-family: "opensans", "monospace";
     margin: 0;
     overflow: hidden;
 }
@@ -165,7 +182,7 @@ transition: color 0.1s;
     border: 1px solid #aa4444;
     border-radius: 10px;
     color: #aa4444;
-    font-family: sans-serif;
+    font-family: "lmsans8";
     font-size: 20px;
     font-weight: bold;
     margin: 100px 20px 0px 20px;

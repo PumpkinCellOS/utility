@@ -85,8 +85,7 @@ div.background-tile-big-padding {
 }
 
 .data {
-    font-family: sans-serif;
-    font-size: 10pt;
+    font-size: 12pt;
     overflow-y: auto;
     text-align: center;
 }
@@ -98,7 +97,7 @@ div.background-tile-big-padding {
 
 .data-table, .topic {
     display: inline-block;
-    font-size: 12pt;
+    font-size: 13pt;
     margin: 13px;
     padding: 20px;
 }

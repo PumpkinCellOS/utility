@@ -37,8 +37,7 @@ body {
 }
 
 .code {
-    font-family: monospace;
-    font-size: 14pt;
+    font-size: 16pt;
 }
 
 
@@ -51,7 +50,7 @@ body {
 
 
 .description {
-    font-size: 9pt;
+    font-size: 11pt;
 }
 
 .error-code {
@@ -115,7 +114,6 @@ body {
 
 .exe-value {
     color: #ffdddd;
-    font-family: "Courier New", "monospace";
 }
 
 
@@ -186,7 +184,7 @@ body {
     border: 1px solid white;*/
     border-radius: 10px;
     display: inline-block;
-    font-size: 90%;
+    font-size: 80%;
     margin: 0px 8px 5px 0px;
     padding: 3px 8px 3px 8px;
     text-transform: uppercase;
