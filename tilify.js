@@ -34,6 +34,18 @@ class TlfButtonTile extends TlfResizableTile {
     }
 }
 
+class TlfBackgroundTile extends HTMLElement {
+    constructor() {
+        super();
+        var paddingClass = "background-tile-padding";
+        if(this.getAttribute("padding") != "")
+            paddingClass = "background-tile-" + this.getAttribute("padding") + "-padding";
+        var inner = this.innerHTML;
+        this.innerHTML = `<div class='${paddingClass}'>` + inner + "</div>"
+    }
+}
+
 // Register custom elements
 customElements.define("tlf-resizable-tile", TlfResizableTile, { extends: 'a' })
 customElements.define("tlf-button-tile", TlfButtonTile, { extends: 'a' })
+customElements.define("tlf-background-tile", TlfBackgroundTile)
