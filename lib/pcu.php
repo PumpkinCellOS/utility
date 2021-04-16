@@ -100,6 +100,17 @@ function pcu_cmd_connect_db($json, $db)
     return $conn;
 }
 
+function pcu_user_by_id($conn, $id)
+{
+    $result = $conn->query("SELECT * FROM users WHERE id='$id'");
+
+    if($result && $result->num_rows == 1)
+    {
+        return $result->fetch_assoc();
+    }
+    return null;
+}
+
 function pcu_load_user_data($conn, $userName)
 {
     $result = $conn->query("SELECT * FROM users WHERE userName='$userName'");
@@ -115,6 +126,12 @@ function pcu_is_logged_in()
 {
     session_start();
     return isset($_SESSION["userData"]);
+}
+
+function pcu_user_session()
+{
+    session_start();
+    return $_SESSION["userData"];
 }
 
 function pcu_is_logged_in_as($userName)
