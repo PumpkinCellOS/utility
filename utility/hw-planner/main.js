@@ -64,7 +64,7 @@ var LANG_en_US =
         },
         filters: {
             name: "Filters",
-            todo: "Filters section is currently disabled."
+            todo: "Filters section is currently disabled (not implemented)"
         },
         requestLog: {
             name: "Request log"
@@ -169,7 +169,7 @@ var LANG_pl_PL =
         },
         filters: {
             name: "Filtry",
-            todo: "Sekcja filtrów jest aktualnie wyłączona."
+            todo: "Sekcja filtrów jest aktualnie wyłączona (nie zaimplementowano)"
         },
         requestLog: {
             name: "Dziennik zmian"
