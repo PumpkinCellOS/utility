@@ -33,11 +33,19 @@ class PCUAPI
         echo json_encode($handler($this, $args));
     }
     
-    function require_arg($arg)
+    function required_arg($arg)
     {
         $val = $this->args[$arg];
         if(!isset($val))
             pcu_cmd_fatal("Missing required argument for command: $arg", 400);
+        return $val;
+    }
+    
+    function optional_arg($arg, $default)
+    {
+        $val = $this->args[$arg];
+        if(!isset($val))
+            return $default;
         return $val;
     }
     
