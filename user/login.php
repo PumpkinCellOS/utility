@@ -1,5 +1,5 @@
 <?php
-require_once("lib/generator.php");
+require_once("../lib/generator.php");
 $generator = new PCUGenerator("Login");
 $generator->start_content();
 ?>
@@ -13,7 +13,7 @@ $generator->start_content();
                 <input type="password" name="password" placeholder="Password"></input><br>
                 <input type="submit" value="Login"></input><br>
             </form>
-            <p>Don't have an account? <a href="/signup.php">Sign up</a> now</p>
+            <p>Don't have an account? <a href="/user/signup.php">Sign up</a> now</p>
         </div>
     </div>
 <?php

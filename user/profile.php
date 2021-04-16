@@ -1,6 +1,6 @@
 <?php
-require("lib/pcu.php");
-require_once("lib/generator.php");
+require("../lib/pcu.php");
+require_once("../lib/generator.php");
         
 // TODO: Use API for this!
 $json = new stdClass();

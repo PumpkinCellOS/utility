@@ -54,11 +54,11 @@ class PCUGenerator
                     <?php
                         if(pcu_is_logged_in())
                         {
-                            echo "<div class='title-link-right'><a href='/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
+                            echo "<div class='title-link-right'><a href='/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
                             echo "<div class='title-link-right'><a href='/api/login.php?command=remove-session'>Log out</a></div>";
                         }
                         else
-                            echo "<div class='title-link-right'><a href='/login.php'>Log in</a></div>";
+                            echo "<div class='title-link-right'><a href='/user/login.php'>Log in</a></div>";
                     ?>
                     <!--<iframe width=395 height=50 style="overflow: hidden; border: none;" src="/u/timer.html?embed=1&mode=3"></iframe>-->
                 </div>
