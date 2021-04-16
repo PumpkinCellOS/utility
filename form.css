@@ -3,7 +3,7 @@ button, input[type="submit"], input[type="button"], input[type="checkbox"] {
     border: 1px solid transparent;
     border-radius: 5px;
     box-sizing: border-box;
-    color: #dddddd;
+    color: #dddddf;
     font-family: "Courier New";
     font-size: 12pt;
     margin: 5px;
@@ -13,7 +13,7 @@ button, input[type="submit"], input[type="button"], input[type="checkbox"] {
 
 button:hover, input[type="submit"]:hover, input[type="button"]:hover {
     border: 1px solid white;
-    background-color: #888888;
+    background-color: #88888f;
     transition: background-color 0.1s, border-color 0.1s;
 }
 

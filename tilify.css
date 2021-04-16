@@ -19,19 +19,19 @@ div.small {
 
 div.resizable-tile {
     align-items: center;
-    background-color: #444444;
-    color: #bbbbbb;
+    background-color: #444448;
+    color: #bbbbbf;
     display: flex;
     font-size: 180%;
     height: calc(100% - 10px);
     justify-content: center;
     margin: 5px;
-    outline: 2px solid #333333;
+    outline: 2px solid #333337;
     transition: transform 0.05s, background-color 0.05s;
 }
 
 div.resizable-tile:hover {
-    background-color: #555555;
+    background-color: #555559;
     transform: scale(1.02, 1.02);
     transition: transform 0.15s, background-color 0.15s;
 }
@@ -64,8 +64,8 @@ div.resizable-tile:hover {
 }
 
 div.background-tile, tlf-background-tile {
-    background-color: #444444;
-    color: #bbbbbb;
+    background-color: #444448;
+    color: #bbbbbf;
     display: block;
     margin: 15px;
     width: calc(100% - 30px);  
@@ -92,7 +92,7 @@ div.background-tile-big-padding {
 }
 
 .data-table {
-    background-color: #585858;
+    background-color: #58585c;
     border-radius: 10px;
 }
 

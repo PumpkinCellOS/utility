@@ -8,7 +8,7 @@ $generator->start_content();
 <h2>PumpkinCell.net</h2>
 <div class="app-list" id="pcu-app-list">
 </div>
-<h2>Utilities</h2>
+<h2>Utilities (Log in for more!)</h2>
 <div class="app-list" id="utility-app-list">
 </div>
 <h2>Links</h2>
@@ -57,32 +57,34 @@ function swapLocations(elementX, elementY)
 } 
 
 function generateUtilityEntry(entry) {
-var icon = entry.icon;
-var displayName = entry.displayName;
-var path = entry.path;
-var settings = entry.settings;
+    var icon = entry.icon;
+    var displayName = entry.displayName;
+    var path = entry.path;
+    var settings = entry.settings;
 
-var list_name = displayName;
-if(icon != undefined && icon.length > 0)
-    list_name = "&" + icon + "; " + list_name;
+    var list_name = displayName;
+    if(icon != undefined && icon.length > 0)
+        list_name = "&" + icon + "; " + list_name;
+        
+    if(entry.state != undefined)
+    {
+        list_name += "<span class='app-spec app-tile-" + entry.state +"'>" + entry.state + "</span>";
+    }
     
-var colorHTML = ""
-if(entry.color == undefined || entry.color.length == 0)
-    colorHTML = "";
-else
-    colorHTML = "style='background-color: " + entry.color + "'";
+    if(entry.disabled)
+    {
+        entry.color = "rgba(1, 1, 1, 0.2)";
+    }
+        
+    var list_link = path;
     
-if(entry.state != undefined)
-{
-    list_name += "<span class='app-spec app-tile-" + entry.state +"'>" + entry.state + "</span>";
-}
-    
-var list_link = path;
-    
-var html = '<a is="tlf-resizable-tile" noblank="' + entry.noblank + '" color="' + entry.color + '" href="';
-html += list_link + '">' + list_name + '</a>';
+    if(entry.noblank === undefined)
+        entry.noblank = true;
+        
+    var html = `<a is="tlf-resizable-tile" style="${entry.disabled ? "" : ""}" noblank="${entry.noblank}" color="${entry.color}" href="`;
+    html += list_link + '">' + list_name + '</a>';
 
-return html;
+    return html;
 }
 
 function assignEvents(objectId)
@@ -115,6 +117,7 @@ function swapEntries(arrId, list, ix1, ix2)
 const pcuEntries = [
     <?php if(!pcu_role_less($userData["role"], "member")) { ?>
     {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
+    {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
     <?php } ?>
     <?php if(!pcu_role_less($userData["role"], "admin")) { ?>
     {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "state": "beta", "path": "/u/admin"},
@@ -122,15 +125,16 @@ const pcuEntries = [
 ];
 
 const utilityEntries = [
-    {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
     {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/timer.html"},
     {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/timer-gui.html"},
     {"icon": "#128308", "units": 1, "color": "#555577", "displayName": "Twitch Overlay", "path": "/u/twitch-redirect.html"},
-    {"icon": "#128394", "units": 1, "color": "#653939", "displayName": "HW Planner", "path": "/u/hw-planner"},
-    {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
     {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
     {"icon": "#11123",  "units": 1, "color": "#776666", "displayName": "Files", "path": "/u/files"},
-    {"icon": "#8613",   "units": 1, "state": "alpha", "color": "#667766", "displayName": "Cloud Storage", "path": "/u/cloud"},
+    <?php if($login) { ?>
+        {"icon": "#8613",   "units": 1, "state": "alpha", "color": "#667766", "displayName": "Cloud Storage", "path": "/u/cloud"},
+        {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
+        {"icon": "#128394", "units": 1, "color": "#653939", "displayName": "HW Planner", "path": "/u/hw-planner"},
+    <?php } ?>
 ]; 
 
 const linkEntries = [
