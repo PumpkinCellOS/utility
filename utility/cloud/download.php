@@ -21,7 +21,7 @@ $fileName = realpath("files/$uid/$name");
 
 $exists = stat($fileName);
 if(!$exists)
-    pcu_cmd_fatal("File doesn't exist: " . __DIR__ . " . $fileName", 404);
+    pcu_cmd_fatal("File doesn't exist: $fileName", 404);
     
 pcu_page_type(mime_content_type("files/$uid/$name"));
 echo file_get_contents("files/$uid/$name");
