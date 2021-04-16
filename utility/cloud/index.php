@@ -38,7 +38,7 @@ switch($_SERVER["REQUEST_METHOD"])
                         // TODO: Use API calls for it
                         // TODO: Support directories
                         $uid = $userData["id"];
-                        $listing = glob("../cloud-files/$uid/*");
+                        $listing = glob("files/$uid/*");
                         foreach($listing as $file)
                         {
                             $file_bn = basename($file);
@@ -73,7 +73,7 @@ switch($_SERVER["REQUEST_METHOD"])
                 uploader = new plupload.Uploader({
                     runtimes: 'html5,html4',
                     browse_button: 'file-submit',
-                    url: '',
+                    url: '.',
                     chunk_size: '8mb',
                     filters: {
                         prevent_duplicates: true
