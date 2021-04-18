@@ -608,7 +608,7 @@ function generateEntry(data)
     var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='description time-imp-verybig'>(" + L("time.tooLate", preparationTime) + ")</span>") : "";
     
     var days = Math.ceil(minutesAgo / 24 / 60);
-    var hours = Math.ceil(minutesAgo / 60)
+    var hours = Math.ceil(minutesAgo / 60);
     
     var daysAgoStr = (
         minutesAgo > 24*60 ?
