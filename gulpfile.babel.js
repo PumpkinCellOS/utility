@@ -3,6 +3,8 @@ const gulp = require("gulp");
 const source = require('vinyl-source-stream');
 const babelify = require('babelify');
 
+const OUTPUT_DIR = "../html-build";
+
 var utilityTasks = [];
 function utilityTask(name, entry = "main.js")
 {
@@ -13,11 +15,11 @@ function utilityTask(name, entry = "main.js")
             .transform(babelify.configure({presets: ["@babel/env"]}))
             .bundle()
             .pipe(source('app.js'))
-            .pipe(gulp.dest(`../html-build/u/${name}`));
+            .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
     gulp.task(`${name}-assets`, function() {
-        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`../html-build/u/${name}`));
+        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
     gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
@@ -33,11 +35,11 @@ function moduleTask(name, entry = "main.js")
             .transform(babelify.configure({presets: ["@babel/env"]}))
             .bundle()
             .pipe(source('app.js'))
-            .pipe(gulp.dest(`../html-build/u/${name}`));
+            .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
     gulp.task(`${name}-assets`, function() {
-        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`../html-build/u/${name}`));
+        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
     gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
@@ -51,20 +53,28 @@ utilityTask("lss-tlt-gen");
 
 gulp.task("utilities", gulp.series(utilityTasks));
 
-gulp.task("lib", function() {
-    return gulp.src("lib/*.*").pipe(gulp.dest("../html-build/lib"));
-});
-
 gulp.task("assets", function() {
-    return gulp.src("*.*").pipe(gulp.dest("../html-build/"));
-});
-
-gulp.task("res", function() {
-    return gulp.src("res/*.*").pipe(gulp.dest("../html-build/res"));
+    return gulp.src([".htaccess", "*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/`));
 });
 
 gulp.task("api", function() {
-    return gulp.src("api/*.*").pipe(gulp.dest("../html-build/api"));
+    return gulp.src("api/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/api`));
 });
 
-gulp.task("default", gulp.series("assets", "api", "lib", "res", "utilities"));
+gulp.task("lib", function() {
+    return gulp.src("lib/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/lib`));
+});
+
+gulp.task("res", function() {
+    return gulp.src("res/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/res`));
+});
+
+gulp.task("misc", function() {
+    return gulp.src("utility/misc/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/u/misc`));
+});
+
+gulp.task("errors", function() {
+    return gulp.src("errors/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/errors`));
+});
+
+gulp.task("default", gulp.series("assets", "api", "lib", "res", "misc", "errors", "utilities"));
