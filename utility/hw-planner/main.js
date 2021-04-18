@@ -605,7 +605,7 @@ function generateEntry(data)
     var minutesAgo = Math.floor((new Date() - new Date(data.addTime)) / 60000);
     var daysBefore = Math.ceil((new Date(data.untilTime) - new Date(data.addTime)) / 86400000);
     var preparationTime = LABELS[data.topicLabel].preparationTime;
-    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='time-imp-verybig'>(" + L("time.tooLate", preparationTime) + ")</span>") : "";
+    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='description time-imp-verybig'>(" + L("time.tooLate", preparationTime) + ")</span>") : "";
     
     var days = Math.ceil(minutesAgo / 24 / 60);
     var hours = Math.ceil(minutesAgo / 60)
