@@ -11,15 +11,12 @@ switch($_SERVER["REQUEST_METHOD"])
             
         $generator = new PCUGenerator("Upload");
 
-        $generator->scripts = ["/plupload.full.min.js"];
+        $generator->scripts = ["/plupload.full.min.js", "main.js"];
         $generator->stylesheets = ["style.css"];
         $generator->start_content();
         ?>
 
             <h2>Upload File to Server</h2>
-            <div class="app-list small">
-                <a is="tlf-button-tile" style="width: 33%" href="/u/cloud/download.php">Download</a>
-            </div>
             <div class="background-tile">
                 <div class="background-tile-padding">
                     <p>Select file to upload (4GB limit):</p>
@@ -33,20 +30,8 @@ switch($_SERVER["REQUEST_METHOD"])
             <div class="background-tile">
                 <div class="background-tile-padding">
                     <h3>File listing</h3>
-                    <ul>
-                    <?php
-                        // TODO: Use API calls for it
-                        // TODO: Support directories
-                        $uid = $userData["id"];
-                        $listing = glob("files/$uid/*");
-                        foreach($listing as $file)
-                        {
-                            $file_bn = basename($file);
-                            $link = "/u/cloud/download.php?u=$uid&f=$file_bn";
-                            echo "<li><a href=" . $link . ">$file_bn</a></li>";
-                        }
-                    ?>
-                    </li>
+                    <div id="file-listing" class="data-table">
+                    </div>
                 </div>
             </div>
 
@@ -63,7 +48,7 @@ switch($_SERVER["REQUEST_METHOD"])
                     lastProcessed = file.processed;
                     lastProcessedTimestamp = currentTS;
                     return `
-                        <div class='up-column'>${file.percent}%</div>
+                        <div class='up-column'>${file.percent == 100 ? 'DONE': file.percent + '%'}</div>
                         <div class='up-column'>${plupload.formatSize(file.processed)}</div>
                         <div class='up-column'>${plupload.formatSize(ps)}/s</div>
                     `;
@@ -84,15 +69,18 @@ switch($_SERVER["REQUEST_METHOD"])
                         },
                         FilesAdded: function(up, files) {
                             plupload.each(files, function (file) {
-                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file"><a href="/u/cloud/download.php?u=${uid}&f=${file.name}">${file.name}</a> (${plupload.formatSize(file.size)})<br><strong></strong></div>`;
+                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file">${file.name}" (${plupload.formatSize(file.size)})<strong></strong></div>`;
                                 lastProcessedTimestamp = (new Date()).getTime();
                                 lastProcessed = 0;
                             });
                             uploader.start();
+                            reload();
                         },
                         UploadProgress: function(up, file) {
                             if(file.state != 1)
                                 document.querySelector(`#${file.id} strong`).innerHTML = generateUploadProgress(file);
+                            if(file.percent == 100)
+                                reload();
                         },
                         Error: function(up, err) {
                             try

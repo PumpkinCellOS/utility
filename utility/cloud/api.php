@@ -12,14 +12,24 @@ $api = new PCUAPI();
 $api->register_command("list-files", function($api) use($uid) {
     $out = array();
     $listing = glob("files/$uid/*");
+    $conn = $api->require_database("pcu-cloud");
     foreach($listing as $file)
     {
         $file_bn = basename($file);
         $link = "/u/cloud/download.php?u=$uid&f=$file_bn";
         
-        $object = new stdClass;
+        $object = new stdClass();
         $object->name = $file_bn;
         $object->link = $link;
+        $object->sharedFor = array();
+        
+        $result = $conn->query("SELECT targetUid FROM shares WHERE uid='$uid' AND file='$file_bn'");
+        if($result && $result->num_rows > 0)
+        {
+            $row = $result->fetch_assoc();
+            $object->sharedFor[$row["targetUid"]] = true;
+        }
+        
         array_push($out, $object);
     }
     return $out;
@@ -33,7 +43,7 @@ $api->register_command("remove-file", function($api) use($uid) {
     
     // For safety.
     // TODO: Implement real recycle bin.
-    $deleted_path = "files_deleted/$uid_$file_bn";
+    $deleted_path = "files_deleted/$uid-$file_bn";
     
     $out = new stdClass();
     $out->exists = file_exists($path);
