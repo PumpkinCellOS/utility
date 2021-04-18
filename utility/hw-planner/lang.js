@@ -3,7 +3,7 @@
     Sppmacd (c) 2021
 */
 
-var I18n = {
+module.exports = {
     translate: function(lang, key, args)
     {
         try
@@ -13,6 +13,7 @@ var I18n = {
 
             var keys = key.split(".");
             var currentVal = lang;
+            var lastKey = "";
             for(var k in keys)
             {
                 var _key = keys[k];
@@ -52,7 +53,7 @@ var I18n = {
             return null;
         }
     },
-    
+
     translateAll: function(data)
     {
         var regexp = /{([\w.]*)}(?:\(([\w\d\s]+)\))?/gm;
@@ -83,10 +84,10 @@ var I18n = {
         {
             n.nodeValue = this.translateAll(n.nodeValue);
         }
-    },
+    }
 };
 
-function L(key)
+window.L = function(key)
 {
-    return I18n.translate(null, key, Array.from(arguments).slice(1));
+    return module.exports.translate(null, key, Array.from(arguments).slice(1));
 }

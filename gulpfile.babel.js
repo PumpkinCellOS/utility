@@ -3,22 +3,78 @@ const gulp = require("gulp");
 const source = require('vinyl-source-stream');
 const babelify = require('babelify');
 
-gulp.task("hw-planner-js", function() {
-    return browserify({sourceType: "module", entries: ["utility/hw-planner/main.js"]})
-        .transform(babelify.configure({presets: ["@babel/env"]}))
-        .bundle()
-        .pipe(source('app.js'))
-        .pipe(gulp.dest("../html-build/u/hw-planner"));
+const OUTPUT_DIR = "../html-build";
+
+var utilityTasks = [];
+function utilityTask(name, entry = "main.js")
+{
+    gulp.task(`${name}-js`, function() {
+        return browserify({entries: [
+                `utility/${name}/${entry}`
+            ]})
+            .transform(babelify.configure({presets: ["@babel/env"]}))
+            .bundle()
+            .pipe(source('app.js'))
+            .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
+    });
+
+    gulp.task(`${name}-assets`, function() {
+        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
+    });
+
+    gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
+    utilityTasks.push(name);
+};
+
+function moduleTask(name, entry = "main.js")
+{
+    gulp.task(`${name}-js`, function() {
+        return browserify({sourceType: "module", entries: [
+                `utility/${name}/${entry}`
+            ]})
+            .transform(babelify.configure({presets: ["@babel/env"]}))
+            .bundle()
+            .pipe(source('app.js'))
+            .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
+    });
+
+    gulp.task(`${name}-assets`, function() {
+        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
+    });
+
+    gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
+    utilityTasks.push(name);
+};
+
+utilityTask("admin");
+moduleTask("hw-planner");
+utilityTask("hw-planner");
+utilityTask("lss-tlt-gen");
+
+gulp.task("utilities", gulp.series(utilityTasks));
+
+gulp.task("assets", function() {
+    return gulp.src([".htaccess", "*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/`));
 });
 
-gulp.task("hw-planner-assets", function() {
-    return gulp.src(["utility/hw-planner/*.css", "utility/hw-planner/*.php"]).pipe(gulp.dest("../html-build/u/hw-planner"));
+gulp.task("api", function() {
+    return gulp.src("api/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/api`));
 });
-
-gulp.task("hw-planner", gulp.series("hw-planner-js", "hw-planner-assets"));
 
 gulp.task("lib", function() {
-    return gulp.src("lib/*.*").pipe(gulp.dest("../html-build/lib"));
+    return gulp.src("lib/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/lib`));
 });
 
-gulp.task("default", gulp.series("lib", "hw-planner"));
+gulp.task("res", function() {
+    return gulp.src("res/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/res`));
+});
+
+gulp.task("misc", function() {
+    return gulp.src("utility/misc/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/u/misc`));
+});
+
+gulp.task("errors", function() {
+    return gulp.src("errors/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/errors`));
+});
+
+gulp.task("default", gulp.series("assets", "api", "lib", "res", "misc", "errors", "utilities"));

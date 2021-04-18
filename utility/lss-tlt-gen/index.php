@@ -7,7 +7,7 @@ if(!pcu_allow_insecure_operations())
     $userData = pcu_require_role("member");
 
 $generator = new PCUGenerator("Lesson Table Generator");
-$generator->scripts = ["../hw-planner/lang.js", "../hw-planner/exe-parser.js", "../hw-planner/exe-stringify.js", "../hw-planner/main.js", "main.js"];
+$generator->scripts = ["../hw-planner/app.js", "app.js"];
 $generator->stylesheets = ["style.css", "../hw-planner/style.css"];
 
 $generator->start_content();

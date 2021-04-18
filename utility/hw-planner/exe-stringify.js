@@ -3,106 +3,104 @@
     Sppmacd (c) 2020 - 2021
 */
 
-function exe_parse(str)
-{
-    return EXEParser.parse(str);
-}
+module.exports = {
 
-function exe_type_str(type)
-{
-    switch(type)
+    exe_type_str: function(type)
     {
-        case "B": return L("exe.book");
-        case "C": return L("exe.chapter");
-        case "P": return L("exe.page");
-        case "p": return L("exe.point");
-        case "T": return L("exe.topic");
-        case "x": return L("exe.ex");
-        case null:
-        case undefined:
-            return "???";
-        default: return type + " (?)";
-    }
-}
-
-function colorify(val, color)
-{
-    return "<span style='color: " + color + "'>" + val + "</span>";
-}
-
-function exe_stringify_value(obj)
-{
-    if(typeof obj == "object")
-    {
-        if(obj.type && obj.type == "topic-expression")
-            return obj.value.join(".");
-        else
-            return obj;
-    }
-    return obj;
-}
-
-function exe_stringify_definer(obj)
-{
-    if(typeof obj == "object")
-    {
-        if(obj.length)
+        switch(type)
         {
-            var i = 0;
-            var output = "<b>(</b>";
-            for(var val of obj)
-            {
-                output += exe_stringify_definition(val);
-        
-                if(i < obj.length - 1)
-                    output += ", ";
-                
-                i++;
-            }
-            return output + "<b>)</b>";
+            case "B": return L("exe.book");
+            case "C": return L("exe.chapter");
+            case "P": return L("exe.page");
+            case "p": return L("exe.point");
+            case "T": return L("exe.topic");
+            case "x": return L("exe.ex");
+            case null:
+            case undefined:
+                return "???";
+            default: return type + " (?)";
         }
-        return exe_type_str(obj.type) + " <span class='exe-value'><b>" + exe_stringify_value(obj.value) + "</b></span>";
-    }
-    if(obj == "*")
-        return "All";
-    return obj;
-}
+    },
 
-function exe_stringify_definition(obj)
-{
-    var output = "";
-    
-    var i = 0;
-    for(var val of obj)
+    colorify: function(val, color)
     {
-        output += exe_stringify_definer(val);
-        
-        if(i < obj.length - 1)
-            output += " &#10148; ";
-        
-        i++;
-    }
-    
-    return output;
-}
+        return "<span style='color: " + color + "'>" + val + "</span>";
+    },
 
-function exe_stringify_hr(obj)
-{
-    var output = "";
-    
-    if(obj == null)
-        return "(invalid)";
-    
-    var i = 0;
-    for(var val of obj)
+    exe_stringify_value: function(obj)
     {
-        output += exe_stringify_definition(val);
+        if(typeof obj == "object")
+        {
+            if(obj.type && obj.type == "topic-expression")
+                return obj.value.join(".");
+            else
+                return obj;
+        }
+        return obj;
+    },
+
+    exe_stringify_definer: function(obj)
+    {
+        if(typeof obj == "object")
+        {
+            if(obj.length)
+            {
+                var i = 0;
+                var output = "<b>(</b>";
+                for(var val of obj)
+                {
+                    output += this.exe_stringify_definition(val);
+            
+                    if(i < obj.length - 1)
+                        output += ", ";
+                    
+                    i++;
+                }
+                return output + "<b>)</b>";
+            }
+            return this.exe_type_str(obj.type) + " <span class='exe-value'><b>" + this.exe_stringify_value(obj.value) + "</b></span>";
+        }
+        if(obj == "*")
+            return "All";
+        return obj;
+    },
+
+    exe_stringify_definition: function(obj)
+    {
+        var output = "";
         
-        if(i < obj.length - 1)
-            output += " &nbsp;&#8275;&nbsp; ";
+        var i = 0;
+        for(var val of obj)
+        {
+            output += this.exe_stringify_definer(val);
+            
+            if(i < obj.length - 1)
+                output += " &#10148; ";
+            
+            i++;
+        }
         
-        i++;
+        return output;
+    },
+
+    exe_stringify_hr: function(obj)
+    {
+        var output = "";
+        
+        if(obj == null)
+            return "(invalid)";
+        
+        var i = 0;
+        for(var val of obj)
+        {
+            output += this.exe_stringify_definition(val);
+            
+            if(i < obj.length - 1)
+                output += " &nbsp;&#8275;&nbsp; ";
+            
+            i++;
+        }
+        
+        return output;
     }
-    
-    return output;
-}
+};

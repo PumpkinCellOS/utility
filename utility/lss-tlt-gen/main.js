@@ -1,16 +1,16 @@
 var g_data = {
     "dayrange": [1, 5],
     "tunit": [
-        [07,10, 07,55],
-        [08,00, 08,45],
-        [08,50, 09,35],
-        [09,50, 10,35],
+        [ 7,10,  7,55],
+        [ 8, 0,  8,45],
+        [ 8,50,  9,35],
+        [ 9,50, 10,35],
         [10,40, 11,25],
         [11,30, 12,15],
         [12,30, 13,15],
-        [13,20, 14,05],
+        [13,20, 14, 5],
         [14,10, 14,55],
-        [15,00, 15,45]
+        [15, 0, 15,45]
     ],
     "lessons": [
         {"sub": "SIE", "class": 36,  "tunit": 3, "tday": 1},
@@ -177,7 +177,7 @@ const SCALE = 1;
 const SPACING = 20;
 
 var g_currentLesson = null;
-var g_weekOffset = 0;
+window.g_weekOffset = 0;
 var g_startDay = null;
 var g_endDay = null;
 
@@ -391,7 +391,7 @@ function generate()
     loadHWPlannerData();
 }
 
-function changeWeekOffset(value)
+window.changeWeekOffset = function(value)
 {
     g_weekOffset = value;
     generate();

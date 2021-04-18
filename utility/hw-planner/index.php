@@ -1,7 +1,7 @@
 <?php
 require_once("../../lib/generator.php");
 $generator = new PCUGenerator("HW Planner", "", "<script>hwplanner_main()</script>");
-$generator->scripts = ["lang.js", "exe-parser.js", "exe-stringify.js", "main.js"];
+$generator->scripts = ["app.js"];
 $generator->stylesheets = ["style.css"];
 
 $generator->start_pre_content();
