@@ -161,7 +161,7 @@ var LANG_pl_PL =
         page: "Strona",
         point: "p.",
         topic: "Temat",
-        ex: "Ćw."
+        ex: "Zad."
     },
     form: {
         editor: {
