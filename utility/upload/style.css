@@ -1,0 +1,13 @@
+.up-column {
+    display: inline-block;
+    font-size: 83.33%;
+    padding-left: 10px;
+    width: 150px;
+}
+
+.up-file {
+    font-size: 120%;
+}
+
+#files {
+}

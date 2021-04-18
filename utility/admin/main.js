@@ -78,7 +78,7 @@ var UserManagement =
     },
     expire: function(uid) {
         console.log("expire", uid);
-        apiCall("change-password-user", JSON.stringify({uid: uid, state = !g_dataTable[uid].}), null);
+        //apiCall("change-password-user", JSON.stringify({uid: uid, state = !g_dataTable[uid]}), null);
     },
     changePassword: function(uid) {
         console.log("changePassword", uid);

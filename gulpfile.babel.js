@@ -50,6 +50,7 @@ utilityTask("admin");
 moduleTask("hw-planner");
 utilityTask("hw-planner");
 utilityTask("lss-tlt-gen");
+utilityTask("cloud");
 
 gulp.task("utilities", gulp.series(utilityTasks));
 
@@ -66,7 +67,11 @@ gulp.task("lib", function() {
 });
 
 gulp.task("res", function() {
-    return gulp.src("res/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/res`));
+    return gulp.src(["res/*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/res`));
+});
+
+gulp.task("res-fonts", function() {
+    return gulp.src(["res/fonts/*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/res/fonts`));
 });
 
 gulp.task("misc", function() {
@@ -77,4 +82,8 @@ gulp.task("errors", function() {
     return gulp.src("errors/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/errors`));
 });
 
-gulp.task("default", gulp.series("assets", "api", "lib", "res", "misc", "errors", "utilities"));
+gulp.task("user", function() {
+    return gulp.src("user/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/user`));
+});
+
+gulp.task("default", gulp.series("assets", "api", "lib", "res", "res-fonts", "misc", "errors", "user", "utilities"));
