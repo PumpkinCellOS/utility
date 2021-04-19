@@ -117,7 +117,7 @@ function getUserData(uid, callback)
 
 var loadSteps = 0;
 
-window.generateLabel = function(tl)
+window.generateLabel = function(tl, customImp)
 {
     if(tl.length == 0)
         return L(label.noLabel);
@@ -126,6 +126,9 @@ window.generateLabel = function(tl)
     var label = LABELS[tl];
     if(label == undefined)
         return "<span class='topic-label imp-none'>" + tl + "</span>";
+    
+    if(customImp !== undefined)
+        label.imp = customImp;
     
     switch(label.imp)
     {
