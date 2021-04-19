@@ -20,7 +20,7 @@ function findUser(uid)
 function apiCall(command, args, callback)
 {
     var xhr = new XMLHttpRequest();
-    method = API_COMMANDS[command].method;
+    var method = API_COMMANDS[command].method;
     
     var url = "/api/admin.php?command=" + command;
     if(method != "POST")
@@ -123,7 +123,7 @@ function generateUserDataTable(data)
     divData.innerHTML = inner;
 }
 
-function updateUserList(value)
+window.updateUserList = function(value)
 {
     if(value.length >= 3)
     {
