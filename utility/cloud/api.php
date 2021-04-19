@@ -51,12 +51,18 @@ $api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
     if(unlink($path) < 0)
         pcu_cmd_fatal("Failed to rename file", 500);
     
+    // Unshare deleted files
+    $fileShareData = array();
+    $fileShareData["file"] = $file_bn;
+    $fileShareData["uid"] = -1;
+    $fileShareData["remove"] = true;
+    $api->run_command("file-share", $fileShareData);
     return $out;
 });
 
-// args: string file, int uid (0 for public file), bool remove
+// args: string file, int uid (0 for public file, -1 for all shares), bool remove
 $api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
-    //$api->require_method("POST");
+    $api->require_method("POST");
     $conn = $api->require_database("pcu-cloud");
     
     $file_bn = basename($api->required_arg("file"));
@@ -64,7 +70,12 @@ $api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
     $remove = $conn->real_escape_string($api->optional_arg("remove", false));
     
     if($remove)
-        $result = $conn->query("DELETE FROM shares WHERE uid='$uid' AND file='$file_bn' AND targetUid='$targetUid'");
+    {
+        if($targetUid == -1)
+            $result = $conn->query("DELETE FROM shares WHERE uid='$uid' AND file='$file_bn'");
+        else
+            $result = $conn->query("DELETE FROM shares WHERE uid='$uid' AND file='$file_bn' AND targetUid='$targetUid'");
+    }
     else
         $result = $conn->query("INSERT INTO shares (uid, targetUid, file) VALUES ('$uid', '$targetUid', '$file_bn')");
     
