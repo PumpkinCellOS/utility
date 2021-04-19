@@ -3,15 +3,18 @@
 require_once("../../lib/api.php");
 require_once("../../lib/pcu.php");
 
+$PCU_CLOUD = "/var/pcu-cloud";
+
 $userData = pcu_require_login();
 $uid = $userData["id"];
 
 $api = new PCUAPI();
 
 // args: none
-$api->register_command("list-files", function($api) use($uid) {
+$api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     $out = array();
-    $listing = glob("files/$uid/*");
+    error_log("GLOBBING: $PCU_CLOUD/files/$uid/*");
+    $listing = glob("$PCU_CLOUD/files/$uid/*");
     $conn = $api->require_database("pcu-cloud");
     foreach($listing as $file)
     {
@@ -36,25 +39,23 @@ $api->register_command("list-files", function($api) use($uid) {
 });
 
 // args: string file
-$api->register_command("remove-file", function($api) use($uid) {
+$api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
     $api->require_method("POST");
     $file_bn = basename($api->required_arg("file"));
-    $path = "files/$uid/$file_bn";
+    $path = "$PCU_CLOUD/files/$uid/$file_bn";
     
-    // For safety.
-    // TODO: Implement real recycle bin.
-    $deleted_path = "files_deleted/$uid-$file_bn";
+    // TODO: Implement recycle bin.
     
     $out = new stdClass();
     $out->exists = file_exists($path);
-    if(rename($path, $deleted_path) < 0)
+    if(unlink($path) < 0)
         pcu_cmd_fatal("Failed to rename file", 500);
     
     return $out;
 });
 
 // args: string file, int uid (0 for public file), bool remove
-$api->register_command("file-share", function($api) use($uid) {
+$api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
     //$api->require_method("POST");
     $conn = $api->require_database("pcu-cloud");
     

@@ -2,7 +2,7 @@
 require_once("../../lib/generator.php");
 require_once("../../lib/pcu.php");
 
-$PCU_CLOUD = "/var/pcu-cloud/";
+$PCU_CLOUD = "/var/pcu-cloud";
 
 if($_SERVER["REQUEST_METHOD"] != "GET")
     pcu_cmd_fatal("Invalid method", 400);
@@ -47,6 +47,8 @@ if(!$exists)
     
 header("Content-Disposition: inline; filename=\"${name}\"");
 pcu_page_type(mime_content_type($fileName));
+
+// TODO: Make it chunked!
 echo file_get_contents($fileName);
 
 ?>

@@ -4,7 +4,7 @@ require_once("../../lib/pcu.php");
 
 $userData = pcu_require_login();
 
-$PCU_CLOUD = "/var/pcu-cloud/";
+$PCU_CLOUD = "/var/pcu-cloud";
 
 switch($_SERVER["REQUEST_METHOD"])
 {
@@ -57,7 +57,7 @@ switch($_SERVER["REQUEST_METHOD"])
                 }
                 
                 window.addEventListener("load", function () {
-                uploader = new plupload.Uploader({
+                window.uploader = new plupload.Uploader({
                     runtimes: 'html5,html4',
                     browse_button: 'file-submit',
                     url: '.',
@@ -76,13 +76,13 @@ switch($_SERVER["REQUEST_METHOD"])
                                 lastProcessed = 0;
                             });
                             uploader.start();
-                            reload();
+                            window.reload();
                         },
                         UploadProgress: function(up, file) {
                             if(file.state != 1)
                                 document.querySelector(`#${file.id} strong`).innerHTML = generateUploadProgress(file);
                             if(file.percent == 100)
-                                reload();
+                                window.reload();
                         },
                         Error: function(up, err) {
                             try
@@ -97,7 +97,7 @@ switch($_SERVER["REQUEST_METHOD"])
                         }
                     }
                 });
-                uploader.init();
+                window.uploader.init();
                 });
             </script>
         

@@ -50,7 +50,7 @@ function pculogin_apiCall(command, args, method, callback)
 function apiCall(command, args, callback, urlprefix)
 {
     var xhr = new XMLHttpRequest();
-    method = API_COMMANDS[command].method;
+    var method = API_COMMANDS[command].method;
     
     var url = "api.php";
     if(method != "POST")
@@ -138,6 +138,7 @@ function generateFileEntry(file)
 
 function generateFileTable(data)
 {
+    console.log("Regenerating file table", data);
     var element = document.getElementById("file-listing");
     element.innerHTML = "";
     for(var file of data)
@@ -146,9 +147,9 @@ function generateFileTable(data)
     }
 }
 
-function reload()
+window.reload = function()
 {
     fileListing(generateFileTable);
 }
 
-reload();
+window.reload();
