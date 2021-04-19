@@ -4,6 +4,8 @@ require_once("../../lib/pcu.php");
 
 $userData = pcu_require_login();
 
+$PCU_CLOUD = "/var/pcu-cloud/";
+
 switch($_SERVER["REQUEST_METHOD"])
 {
     case "GET":
@@ -11,7 +13,7 @@ switch($_SERVER["REQUEST_METHOD"])
             
         $generator = new PCUGenerator("Upload");
 
-        $generator->scripts = ["/plupload.full.min.js", "main.js"];
+        $generator->scripts = ["/plupload.full.min.js", "app.js"];
         $generator->stylesheets = ["style.css"];
         $generator->start_content();
         ?>
@@ -111,11 +113,11 @@ switch($_SERVER["REQUEST_METHOD"])
         $uid = $userData["id"];
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
-        $target = "files/$uid/" . basename($fileName);
+        $target = "$PCU_CLOUD/files/$uid/" . basename($fileName);
         
         // create folders
-        mkdir("files");
-        mkdir("files/$uid");
+        mkdir("$PCU_CLOUD/files");
+        mkdir("$PCU_CLOUD/files/$uid");
         
         // check if exists
         if(file_exists($target))

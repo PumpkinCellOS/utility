@@ -6,7 +6,7 @@ $generator = new PCUGenerator("Admin panel");
 $userData = pcu_require_role("admin");
 $uid = $userData["id"];
 
-$generator->scripts = ["main.js"];
+$generator->scripts = ["app.js"];
 $generator->start_content();
 
 ?>

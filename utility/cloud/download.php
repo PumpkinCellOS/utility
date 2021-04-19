@@ -2,6 +2,8 @@
 require_once("../../lib/generator.php");
 require_once("../../lib/pcu.php");
 
+$PCU_CLOUD = "/var/pcu-cloud/";
+
 if($_SERVER["REQUEST_METHOD"] != "GET")
     pcu_cmd_fatal("Invalid method", 400);
 
@@ -37,7 +39,7 @@ if($result && $result->num_rows > 0)
 if($userData["id"] != $uid && !isset($shared))
     pcu_cmd_fatal("Access denied for user " . $userData["userName"] . ". Ask file owner for sharing it", 403);
 
-$fileName = "files/$uid/$name";
+$fileName = "$PCU_CLOUD/files/$uid/$name";
 
 $exists = stat($fileName);
 if(!$exists)
