@@ -116,12 +116,10 @@ function constructMinutes(h, m)
 
 function findFreeDay(date)
 {
-    console.log(date);
     var freeDays = g_data.freeDays;
     for(var fdd of freeDays)
     {
         var dates = fdd.date;
-        console.log(dates);
         if((dates instanceof Array && dateNoTime(date) >= new Date(dates[0]) && dateNoTime(date) <= new Date(dates[1] + " 23:59:59")) ||
            (dateNoTime(date) >= new Date(dates) && dateNoTime(date) <= new Date(dates + " 23:59:59"))
         )
@@ -151,14 +149,25 @@ function generateBlockTextHWTitle(hw)
     return inner;
 }
 
+function statusToImp(status)
+{
+    if(statusIsDone(status))
+        return "small";
+    else if(status.search("ip") == 0 || statusIsEvaluating(status))
+        return "medium";
+    else
+        return undefined;
+}
+
 function generateBlockText(data, hwPlannerData)
 {
     var inner = "<b>" + data.sub + "</b>&nbsp;" + data.class;
     var title = "";
     if(hwPlannerData.length == 1)
     {
-        title = generateBlockTextHWTitle(hwPlannerData[0]);
-        inner += `&nbsp;<a class="tlt-topic-label" tid=${hwPlannerData[0].tid}>` + generateLabel(hwPlannerData[0].topicLabel) + "</a>";
+        var hw = hwPlannerData[0];
+        title = generateBlockTextHWTitle(hw);
+        inner += `&nbsp;<a class="tlt-topic-label" tid=${hw.tid}>` + generateLabel(hw.topicLabel, statusToImp(hw.status)) + "</a>";
     }
     else if(hwPlannerData.length > 1)
     {
@@ -247,7 +256,6 @@ function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
             && tday == untilTime.getDay()
         )
         {
-            console.log(hw);
             hws.push(hw);
         }
     }
@@ -315,8 +323,6 @@ function generateBlock(data, hwPlannerData)
 
 function generateTlt(data)
 {
-    console.log("HW Planner Data:", data);
-    
     // configure
     var current = new Date();
     g_startDay = new Date(current.getTime() - (current.getDay() - g_data.dayrange[0] - g_weekOffset * 7) * 86400000);
@@ -335,7 +341,6 @@ function generateTlt(data)
         inner += generateBlock(lsn, data);
     }
     
-    console.log(g_currentLesson);
     inner += generateCurrent();
     document.getElementById("container").innerHTML = inner;
     
