@@ -7,6 +7,7 @@ const I18n = require("./lang.js");
 const EXEParser = require("./exe-parser.js");
 const EXEStringify = require("./exe-stringify.js");
 const LANG = require("./languages.js");
+const api = require("./api.js");
 
 I18n.LANG = LANG.pl_PL;
 I18n.FALLBACK_LANG = LANG.en_US;
@@ -25,6 +26,16 @@ const API_COMMANDS = {
     "get-request-log": {"method": "GET"},
     "version": {"method": "GET"}
 };
+
+function errorLoading(msg)
+{
+    var divData = document.getElementById("data");
+    var divLoading = document.getElementById("loading");
+    divData.innerHTML = "<span class='error-code'>" + msg + "</span>";
+    divLoading.style.display = "none";
+}
+
+api.setup( { commands: API_COMMANDS, onError: errorLoading } );
 
 // TODO: Make it configurable
 var LABELS = 
@@ -92,65 +103,13 @@ function toggleSortMode(field)
     generateDataTable();
 }
 
-function api_doXHR(xhr, args, method, callback)
-{
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4)
-        {
-            if(this.status == 200 && callback instanceof Function)
-                callback(JSON.parse(this.responseText)); 
-            else
-            {
-                var response = JSON.parse(this.responseText);
-                var serverMessage = response.message;
-                if(serverMessage === undefined)
-                    serverMessage = L("error.server");
-                var msg = serverMessage + " (" + this.status + ")";
-                console.log(msg);
-                errorLoading(msg);
-            }
-        }
-    };
-    
-    if(method == "POST")
-        xhr.send(args); // args in JSON
-    else
-        xhr.send(); // args in URL
-}
-
-function pculogin_apiCall(command, args, method, callback)
-{
-    console.log(command, args, method, callback);
-    var xhr = new XMLHttpRequest();
-    var url = "/api/login.php?command=" + command;
-    if(method != "POST")
-        url += "&" + args;
-
-    xhr.open(method, url);
-    api_doXHR(xhr, args, method, callback);
-}
-
-//callback: function(responseText)
-function apiCall(command, args, callback, urlprefix)
-{
-    var xhr = new XMLHttpRequest();
-    var method = API_COMMANDS[command].method;
-    
-    var url = "api.php?c=" + command;
-    if(method != "POST")
-        url += "&" + args;
-    
-    xhr.open(method, url);
-    api_doXHR(xhr, args, method, callback);
-}
-
 function getUserData(uid, callback)
 {
     // try find in cache
     var user = g_userCache[uid];
     if(!user)
     {
-        pculogin_apiCall("query-user", `id=${uid}`, "GET", data => callback(data.data)); 
+        api.pculogin_apiCall("query-user", `id=${uid}`, "GET", data => callback(data.data)); 
     }
     else
         callback(user);
@@ -494,12 +453,12 @@ window.submitTopicEditor = function(form)
     switch(form["mode"].value)
     {
         case "modify":
-            apiCall("modify-hw", JSON.stringify(_data), function() { 
+            api.apiCall("modify-hw", JSON.stringify(_data), function() { 
                 requestLoading(g_showDones);
             });
             break;
         case "add":
-            apiCall("add-hw", JSON.stringify(_data), function() { 
+            api.apiCall("add-hw", JSON.stringify(_data), function() { 
                 requestLoading(g_showDones);
             });
             break;
@@ -548,7 +507,7 @@ window.submitModifyStatus = function(tid, value)
     var _data = {};
     _data.tid = tid;
     _data.status = value;
-    apiCall("modify-status", JSON.stringify(_data), function() { 
+    api.apiCall("modify-status", JSON.stringify(_data), function() { 
         requestLoading(g_showDones);
     });
 }
@@ -609,15 +568,15 @@ window.deleteEntry = function(tid)
 {
     var data = {};
     data.tid = tid;
-    apiCall("remove-hw", JSON.stringify(data), function() { 
+    api.apiCall("remove-hw", JSON.stringify(data), function() { 
         requestLoading(g_showDones);
     });
 }
 
 window.requestLoading = function()
 {
-    apiCall("get-data", "q=hws" + (g_showDones ? "+done" : ""), loadData);
-    apiCall("get-request-log", "", function(data) { g_requestLog = data.data; });
+    api.apiCall("get-data", "q=hws" + (g_showDones ? "+done" : ""), loadData);
+    api.apiCall("get-request-log", "", function(data) { g_requestLog = data.data; });
 }
 
 function sortStatus(status)
@@ -921,19 +880,11 @@ function finishLoading()
     divLoading.style.display = "none";
 }
 
-function errorLoading(msg)
-{
-    var divData = document.getElementById("data");
-    var divLoading = document.getElementById("loading");
-    divData.innerHTML = "<span class='error-code'>" + msg + "</span>";
-    divLoading.style.display = "none";
-}
-
 function load()
 {
     // Load tasks
-    apiCall("version", "", function(data) { g_serverVersion = data.version; } );
-    apiCall("get-labels", "", loadLabels);
+    api.apiCall("version", "", function(data) { g_serverVersion = data.version; } );
+    api.apiCall("get-labels", "", loadLabels);
     
     var inv = setInterval(function()
     {
