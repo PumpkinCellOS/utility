@@ -125,9 +125,9 @@ const pcuEntries = [
 ];
 
 const utilityEntries = [
-    {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/timer.html"},
-    {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/timer-gui.html"},
-    {"icon": "#128308", "units": 1, "color": "#555577", "displayName": "Twitch Overlay", "path": "/u/twitch-redirect.html"},
+    {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/misc/timer.html"},
+    {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/misc/timer-gui.html"},
+    {"icon": "#128308", "units": 1, "color": "#555577", "displayName": "Twitch Overlay", "path": "/u/misc/twitch-redirect.html"},
     {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
     {"icon": "#11123",  "units": 1, "color": "#776666", "displayName": "Files", "path": "/u/files"},
     <?php if($login) { ?>
