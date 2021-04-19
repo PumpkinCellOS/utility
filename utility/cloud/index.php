@@ -113,11 +113,12 @@ switch($_SERVER["REQUEST_METHOD"])
         $uid = $userData["id"];
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
-        $target = "$PCU_CLOUD/files/$uid/" . basename($fileName);
+        $targetTmp = "$PCU_CLOUD/files_pending/$uid/" . basename($fileName);
         
         // create folders
-        mkdir("$PCU_CLOUD/files");
-        mkdir("$PCU_CLOUD/files/$uid");
+        // TODO: Move this to setup
+        mkdir("$PCU_CLOUD/files_pending");
+        mkdir("$PCU_CLOUD/files_pending/$uid");
         
         // check if exists
         if(file_exists($target))
@@ -127,7 +128,7 @@ switch($_SERVER["REQUEST_METHOD"])
         
         $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
         $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
-        $out = @fopen("{$target}.part", $chunk == 0 ? "wb" : "ab");
+        $out = @fopen($targetTmp, $chunk == 0 ? "wb" : "ab");
         
         echo json_encode($_FILES);
         echo "tmp_name: " . $_FILES['file']['tmp_name'] . " name: " . $target;
@@ -154,7 +155,10 @@ switch($_SERVER["REQUEST_METHOD"])
         
         if(!$chunks || $chunk == $chunks - 1) 
         {
-            rename("{$target}.part", $target);
+            $target = "$PCU_CLOUD/files/$uid/" . basename($fileName);
+            mkdir("$PCU_CLOUD/files");
+            mkdir("$PCU_CLOUD/files/$uid");
+            rename($targetTmp, $target);
         }
         
         break;
