@@ -140,10 +140,17 @@ function generateFileTable(data)
 {
     console.log("Regenerating file table", data);
     var element = document.getElementById("file-listing");
-    element.innerHTML = "";
-    for(var file of data)
+    if(data.length == 0)
     {
-        element.appendChild(generateFileEntry(file));
+        element.innerHTML = "Nothing here! Use <b>Upload</b> button to add new files.";
+    }
+    else
+    {
+        element.innerHTML = "";
+        for(var file of data)
+        {
+            element.appendChild(generateFileEntry(file));
+        }
     }
 }
 
