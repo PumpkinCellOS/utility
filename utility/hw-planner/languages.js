@@ -102,6 +102,9 @@ en_US : {
         most: "is more than",
         exact: "is equal to"
     },
+    dataTable: {
+        nothing: "Nothing to display. Add a new task with the 'Add object' button."
+    },
     todo: "[TODO]"
 },
 
@@ -205,6 +208,9 @@ pl_PL : {
         least: "jest mniejszy od",
         most: "jest większy od",
         exact: "jest równy"
+    },
+    dataTable: {
+        nothing: "Brak danych do wyświetlenia. Dodaj nowe zadanie za pomocą przycisku 'Dodaj obiekt'."
     },
     todo: "[TODO]"
 },
