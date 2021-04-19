@@ -8,7 +8,7 @@ const OUTPUT_DIR = "../html-build";
 var utilityTasks = [];
 function utilityTask(name, entry = "main.js")
 {
-    gulp.task(`${name}-js`, function() {
+    gulp.task(`${name}/js`, function() {
         return browserify({entries: [
                 `utility/${name}/${entry}`
             ]})
@@ -18,17 +18,17 @@ function utilityTask(name, entry = "main.js")
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}-assets`, function() {
+    gulp.task(`${name}/assets`, function() {
         return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
+    gulp.task(`${name}`, gulp.series(`${name}/js`, `${name}/assets`));
     utilityTasks.push(name);
 };
 
 function moduleTask(name, entry = "main.js")
 {
-    gulp.task(`${name}-js`, function() {
+    gulp.task(`${name}/js`, function() {
         return browserify({sourceType: "module", entries: [
                 `utility/${name}/${entry}`
             ]})
@@ -38,11 +38,11 @@ function moduleTask(name, entry = "main.js")
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}-assets`, function() {
+    gulp.task(`${name}/assets`, function() {
         return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}`, gulp.series(`${name}-js`, `${name}-assets`));
+    gulp.task(`${name}`, gulp.series(`${name}/js`, `${name}/assets`));
     utilityTasks.push(name);
 };
 
