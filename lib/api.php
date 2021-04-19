@@ -6,12 +6,31 @@ class PCUAPI
 {
     private $commands = [];
     private $args;
+    private bool $requireMethod;
 
     // handler is function(PCUAPI $api, array $args), returns array
     // that will be encoded to JSON.
     function register_command($name, $handler)
     {
         $this->commands[$name] = $handler;
+    }
+    
+    function run_command($command, $args, $requireMethod = true)
+    {
+        $oldArgs = $this->args;
+        $this->args = $args;
+        $this->requireMethod = $requireMethod;
+        $handler = $this->commands[$command];
+        
+        if(!isset($handler))
+        {
+            error_log("Invalid API command: $command");
+            return false;
+        }
+            
+        $out = $handler($this);
+        $this->args = $args;
+        return $out;
     }
     
     function run()
@@ -23,13 +42,10 @@ class PCUAPI
             $args = json_decode(file_get_contents("php://input"), true);
         
         $command = $args["command"];
-        $this->args = $args;
-        $handler = $this->commands[$command];
-        
-        if(!isset($handler))
-            pcu_cmd_fatal("Invalid command");
-            
-        echo json_encode($handler($this));
+        $out = $this->run_command($command, $args);
+        if($out === false)
+            pcu_cmd_fatal("Invalid command: $command");
+        echo json_encode($out);
     }
     
     function required_arg($arg)
@@ -50,7 +66,7 @@ class PCUAPI
     
     function require_method($method)
     {
-        if($_SERVER["REQUEST_METHOD"] != $method)
+        if($_SERVER["REQUEST_METHOD"] != $method && $this->requireMethod)
             pcu_cmd_fatal("Method not allowed: " . $_SERVER["REQUEST_METHOD"] . ", required: $method", 405);
     }
     
