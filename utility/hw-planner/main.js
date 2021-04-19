@@ -125,12 +125,21 @@ window.generateLabel = function(tl, customImp)
     var topicLabelHTML = "";
     var label = LABELS[tl];
     if(label == undefined)
+    {
+        if(customImp != undefined)
+            return `<span class='topic-label imp-${customImp}'>` + tl + "</span>";
         return "<span class='topic-label imp-none'>" + tl + "</span>";
+    }
     
-    if(customImp !== undefined)
-        label.imp = customImp;
+    var imp = label.imp;
     
-    switch(label.imp)
+    console.log("hwPlanner.generateLabel(): ", tl, customImp);
+    if(customImp != undefined)
+    {
+        imp = customImp;
+    }
+    
+    switch(imp)
     {
         case "verybig": topicLabelHTML += "<span class='topic-label imp-verybig'>" + tl + "</span>"; break;
         case "big":     topicLabelHTML += "<span class='topic-label imp-big'>" + tl + "</span>"; break;
@@ -270,12 +279,12 @@ function sortLabel(label)
     }
 }
 
-function statusIsDone(status)
+window.statusIsDone = function(status)
 {
     return status == "P" || status == "V" || status == "X";
 }
 
-function statusIsEvaluating(status)
+window.statusIsEvaluating = function(status)
 {
     return status == "E";
 }
