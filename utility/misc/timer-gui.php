@@ -6,6 +6,12 @@ $generator = new PCUGenerator("Timer");
 $generator->start_content();
 ?>
     <h2>Timer</h2>
+
+    <!-- Timer -->
+    <div id="timer-timer">
+        <iframe id="timer-iframe" width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/misc/timer.html?mode=3"></iframe>
+    </div>
+
     <div class="background-tile">
         <div class="background-tile-padding">
         <h3 id="_1_timer-mode">Normal Mode (No Sync)</h3>
@@ -81,18 +87,6 @@ $generator->start_content();
             </div>
         </div>
     </div>-->
-        
-        <div id="footer-wrapper">
-            <div id="footer">
-                <a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;(c) 2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms of Use</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy Policy</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Timer -->
-    <div id="timer-timer">
-        <iframe id="timer-iframe" width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/timer.html?mode=3"></iframe>
-    </div>
     
     <!-- Script -->
     <script>
