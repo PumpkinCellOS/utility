@@ -74,7 +74,7 @@ class PCUGenerator
                         <!-- TODO: Use custom elements -->
                         <div id="footer-wrapper">
                             <div id="footer">
-                                ©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy</a> &nbsp;&#8226;&nbsp;<a href="https://github.com/PumpkinCellOS/utility">GitHub</a>
+                                ©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy</a>&nbsp;&#8226;&nbsp;<a href="https://github.com/PumpkinCellOS/utility">GitHub</a>&nbsp;&#8226;&nbsp;<b>Last update:&nbsp;</b><?php echo date("F d Y H:i:s.", getlastmod()); ?>
                             </div>
                         </div>
                     </div>

@@ -64,7 +64,6 @@ $generator->start_content();
             <tr><td>auth_data</td><td>Session</td><td>In Twitch Overlay, stores Twitch authentication data</td></tr>
         </tbody>
     </table>
-    <p><b>Last update: </b><?php echo date("F d Y H:i:s.", getlastmod()); ?></p>
 </tlf-background-tile>
 <?php
 $generator->finish();
