@@ -5,8 +5,10 @@
         "@babel/preset-env": "^7.13.12",
         "@babel/register": "^7.9.0",
         "gulp": "^4.0.2",
+        "gulp-uglify": "",
         "browserify": "",
         "babelify": "",
-        "vinyl-source-stream": ""
+        "vinyl-source-stream": "",
+        "vinyl-buffer": ""
     }
 }

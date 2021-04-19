@@ -1,7 +1,9 @@
 const browserify = require('browserify');
 const gulp = require("gulp");
+const buffer = require("vinyl-buffer");
 const source = require('vinyl-source-stream');
 const babelify = require('babelify');
+const uglify = require('gulp-uglify');
 
 const OUTPUT_DIR = "../html-build";
 
@@ -15,6 +17,8 @@ function utilityTask(name, entry = "main.js")
             .transform(babelify.configure({presets: ["@babel/env"]}))
             .bundle()
             .pipe(source('app.js'))
+            .pipe(buffer())
+            .pipe(uglify())
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
@@ -35,6 +39,8 @@ function moduleTask(name, entry = "main.js")
             .transform(babelify.configure({presets: ["@babel/env"]}))
             .bundle()
             .pipe(source('app.js'))
+            .pipe(buffer())
+            .pipe(uglify())
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
