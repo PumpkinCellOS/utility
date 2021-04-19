@@ -136,6 +136,8 @@ window.generateLabel = function(tl)
         case "none":    topicLabelHTML += "<span class='topic-label imp-none'>" + tl + "</span>"; break;
         default:        topicLabelHTML += "<span class='topic-label'>" + tl + "</span>"; break;
     }
+    if(label.fullFlow == '1')
+        topicLabelHTML += "&#128068; ";
     return topicLabelHTML;
 }
 
