@@ -45,10 +45,17 @@ $exists = stat($fileName);
 if(!$exists)
     pcu_cmd_fatal("File doesn't exist: $name", 404);
     
+$fileSize = filesize($fileName);
+    
 header("Content-Disposition: inline; filename=\"${name}\"");
+header("Content-Length: ${fileSize}");
 pcu_page_type(mime_content_type($fileName));
 
-// TODO: Make it chunked!
-echo file_get_contents($fileName);
+$fd = @fopen($fileName, "r");
+while(!@feof($fd))
+{
+    $buff = @fread($fd, 16384);
+    echo $buff;
+}
 
 ?>
