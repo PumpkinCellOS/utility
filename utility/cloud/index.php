@@ -11,14 +11,14 @@ switch($_SERVER["REQUEST_METHOD"])
     case "GET":
         require_once("../../lib/generator.php");
             
-        $generator = new PCUGenerator("Upload");
+        $generator = new PCUGenerator("Cloud");
 
         $generator->scripts = ["/plupload.full.min.js", "app.js"];
         $generator->stylesheets = ["style.css"];
         $generator->start_content();
         ?>
 
-            <h2>Upload File to Server</h2>
+            <h2>Cloud Storage</h2>
             <div class="background-tile">
                 <div class="background-tile-padding">
                     <p>Select file to upload (4GB limit):</p>
