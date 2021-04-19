@@ -289,7 +289,7 @@ window.statusIsEvaluating = function(status)
     return status == "E";
 }
 
-function shouldDisplayAsterisk(data, daysLeft)
+window.shouldDisplayAsterisk = function(data, daysLeft)
 {
     var notDone = !statusIsDone(data.status) && !statusIsEvaluating(data.status);
     return notDone && daysLeft < LABELS[data.topicLabel].preparationTime / 2;
