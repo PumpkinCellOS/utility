@@ -107,13 +107,14 @@ switch($_SERVER["REQUEST_METHOD"])
     case "POST":
         if(empty($_FILES) || $_FILES['file']['error'])
         {
-            pcu_cmd_fatal("Failed to move uploaded file. " . json_encode($_FILES));
+            pcu_cmd_fatal("Failed to move uploaded file: ");
         }
         
         $uid = $userData["id"];
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
         $targetTmp = "$PCU_CLOUD/files_pending/$uid/" . basename($fileName);
+        $target = "$PCU_CLOUD/files/$uid/" . basename($fileName);
         
         // create folders
         // TODO: Move this to setup
@@ -155,7 +156,6 @@ switch($_SERVER["REQUEST_METHOD"])
         
         if(!$chunks || $chunk == $chunks - 1) 
         {
-            $target = "$PCU_CLOUD/files/$uid/" . basename($fileName);
             mkdir("$PCU_CLOUD/files");
             mkdir("$PCU_CLOUD/files/$uid");
             rename($targetTmp, $target);
