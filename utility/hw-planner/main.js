@@ -8,6 +8,7 @@ const EXEParser = require("./exe-parser.js");
 const EXEStringify = require("./exe-stringify.js");
 const LANG = require("./languages.js");
 const api = require("./api.js");
+const filters = require("./filters.js");
 
 I18n.LANG = LANG.pl_PL;
 I18n.FALLBACK_LANG = LANG.en_US;
@@ -85,7 +86,7 @@ var g_serverVersion = "Unknown";
 var g_showDones = false;
 var g_sortBy = "date"; // "sub", "date", "status"
 var g_sortMode = 1;  // 1, -1
-var g_filters = {};
+var g_filters = {}; // TODO: Make some default filters
 var g_requestLog = null;
 var g_userCache = {};
 
@@ -531,31 +532,33 @@ window.submitFilters = function(form)
     var data = {};
     
     data.status = [];
-    if(form["status-f"]) data.status.push("f");
-    if(form["status-ip"]) data.status.push("i");
-    if(form["status-e"]) data.status.push("a");
-    if(form["status-v"]) data.status.push("v");
-    if(form["status-x"]) data.status.push("x");
-    if(form["status-n"]) data.status.push("n");
+    if(form["status-f"].checked) data.status.push("f");
+    if(form["status-ip"].checked) data.status.push("i");
+    if(form["status-e"].checked) data.status.push("a");
+    if(form["status-v"].checked) data.status.push("v");
+    if(form["status-x"].checked) data.status.push("x");
+    if(form["status-n"].checked) data.status.push("n");
     
     data.turn_in = {};
-    data.turn_in.mode = form["turn-in-mode"];
-    data.turn_in.unit = form["turn-in-mode"];
-    data.turn_in.sign = form["turn-in-sign"];
-    data.turn_in.value = form["turn-in"];
+    data.turn_in.mode = form["turn-in-mode"].value;
+    data.turn_in.unit = form["turn-in-unit"].value;
+    data.turn_in.sign = form["turn-in-sign"].value;
+    data.turn_in.value = form["turn-in"].value;
     
     data.added = {};
-    data.added.mode = form["added-mode"];
-    data.added.unit = form["added-unit"];
-    data.added.value = form["added"];
+    data.added.mode = form["added-mode"].value;
+    data.added.unit = form["added-unit"].value;
+    data.added.value = form["added"].value;
     
-    data.exercise_list = form["exercise-list"];
-    data.optional = form["optional"];
+    data.exercise_list = form["exercise-list"].checked;
+    data.optional = form["optional"].checked;
+    data.description = form["description"].checked;
     
     data.label = null;
     data.sub = null;
     
     g_filters = data;
+    console.log("FILTERS applied: ", g_filters);
     generateDataTable();
 }
 
@@ -669,7 +672,10 @@ function generateDataTable()
     
     for(var t in g_hws)
     {
-        arr.push(g_hws[t]);
+        var f = filters.filter(g_hws[t], g_filters);
+        console.log(f);
+        if(f)
+            arr.push(g_hws[t]);
     }
     
     var DIR = g_sortMode;

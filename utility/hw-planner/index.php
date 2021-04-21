@@ -82,9 +82,9 @@ $generator->start_pre_content();
             </select><br>
             <h4>{field.addTime}</h4>
             <select name="added-mode">
-                <option value=">">at least</option>
-                <option value="<">at most</option>
-                <option value="=">exactly</option>
+                <option value=">">{cmp.least}</option>
+                <option value="<">{cmp.most}</option>
+                <option value="=">{cmp.exact}</option>
             </select><input type="number" name="added"/>
             <select name="added-unit">
                 <option value="h">{time.hours}</option>

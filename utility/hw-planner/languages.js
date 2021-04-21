@@ -98,9 +98,9 @@ en_US : {
         }
     },
     cmp: {
-        least: "is less than",
-        most: "is more than",
-        exact: "is equal to"
+        least: "at least",
+        most: "at most",
+        exact: "exactly"
     },
     dataTable: {
         nothing: "Nothing to display. Add a new task with the 'Add object' button."
@@ -205,9 +205,9 @@ pl_PL : {
         }
     },
     cmp: {
-        least: "jest mniejszy od",
-        most: "jest większy od",
-        exact: "jest równy"
+        least: "przynajmniej",
+        most: "najwięcej",
+        exact: "dokładnie"
     },
     dataTable: {
         nothing: "Brak danych do wyświetlenia. Dodaj nowe zadanie za pomocą przycisku 'Dodaj obiekt'."
