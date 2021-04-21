@@ -18,7 +18,7 @@ function utilityTask(name, entry = "main.js")
             .bundle()
             .pipe(source('app.js'))
             .pipe(buffer())
-            .pipe(uglify())
+            //.pipe(uglify())
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
@@ -40,7 +40,7 @@ function moduleTask(name, entry = "main.js")
             .bundle()
             .pipe(source('app.js'))
             .pipe(buffer())
-            .pipe(uglify())
+            //.pipe(uglify())
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
