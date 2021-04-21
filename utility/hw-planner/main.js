@@ -366,32 +366,6 @@ function generateEntry(data)
     html += "<td class='col-sub'><span class='code'>" + data.sub + "</span></td>";
     
     html += generateTopicDisplay(data);
-    
-    // Add time
-    var minutesAgo = Math.floor((new Date() - new Date(data.addTime)) / 60000);
-    var daysBefore = Math.ceil((new Date(data.untilTime) - new Date(data.addTime)) / 86400000);
-    var preparationTime = LABELS[data.topicLabel].preparationTime;
-    var daysBeforeStr = (daysBefore < preparationTime) ? (" <span class='description time-imp-verybig'>(" + L("time.tooLate", preparationTime) + ")</span>") : "";
-    
-    var days = Math.ceil(minutesAgo / 24 / 60);
-    var hours = Math.ceil(minutesAgo / 60);
-    
-    var daysAgoStr = (
-        minutesAgo > 24*60 ?
-            L("time.ago", days, L("time.nday", days))  :
-            (
-                minutesAgo >= 60 ?
-                    L("time.ago", hours, L("time.nhour", hours)) :
-                    (
-                        minutesAgo >= 1 ?
-                        L("time.ago", minutesAgo, L("time.nminute", minutesAgo)) :
-                        L("time.recently")
-                    )
-            )
-    );
-    daysAgoStr += daysBeforeStr;
-    
-    html += "<td><b>" + daysAgoStr + "</b><br><span class='description'>" + data.addTime + "</span> </td>";
     html += "<td>" + generateTurnInTime(data) + "<br><span class='description'>" + data.untilTime + " <b>" + data.untilTimeT + "</b></span> </td>";
     
     var evalTime = LABELS[data.topicLabel].evaluationTime;
@@ -643,7 +617,7 @@ function generateDataTable()
         
     inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + `${L("field.subject")}</td>`;
     
-    inner += `<td>${L("field.topic")}</td><td>${L("field.addTime")}</td>`;
+    inner += `<td>${L("field.topic")}</td>`;
     
     var dateSort = "";
     if(g_sortBy == "date")
