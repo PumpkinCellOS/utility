@@ -20,7 +20,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
 switch($command)
 {
     case "add-hw": cmd_add_hw($json, $uid, $request->data); break;
-    case "get-data": cmd_get_data($json, $uid, $_REQUEST["q"], $_REQUEST["sort"]); break;
+    case "get-data": cmd_get_data($json, $uid, $_REQUEST["q"]); break;
     // TODO: Separate turn-in time and status modification
     case "modify-hw": cmd_modify_hw($json, $uid, $request->data); break;
 

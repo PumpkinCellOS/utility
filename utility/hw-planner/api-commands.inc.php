@@ -80,7 +80,7 @@ function hwplanner_get_hw($conn, int $uid, int $tid)
     return $row;
 }
 
-function cmd_get_data($json, $uid, $query, $sort)
+function cmd_get_data($json, $uid, $query)
 {
     if(!isset($query))
     {
@@ -98,13 +98,8 @@ function cmd_get_data($json, $uid, $query, $sort)
         $query = "hws where status<>'V' and status<>'X'";
     else if($query == "hws done")
         $query = "hws where 1";
-        
-    if(isset($sort))
-        $sort = "sort by $sort";
-    else
-        $sort = "";
     
-    $sql = "select * from $query and userId='$uid' $sort";
+    $sql = "select * from $query and userId='$uid'";
     $result = $conn->query($sql);
     if(!$result)
     {
