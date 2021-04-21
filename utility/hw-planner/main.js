@@ -90,7 +90,7 @@ var g_filters = {}; // TODO: Make some default filters
 var g_requestLog = null;
 var g_userCache = {};
 
-function toggleSortMode(field)
+window.toggleSortMode = function(field)
 {
     console.log("toggleSortMode " + field);
     if(g_sortBy == field)
