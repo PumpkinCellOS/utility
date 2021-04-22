@@ -116,7 +116,11 @@ function tlfOpenForm(fields, callback, config)
                 args[field.name] = fullScreenForm[field.name].value;
         }
         
-        callback(args);
+        if(!callback(args))
+        {
+            // FIXME: Allow setting some error message
+            return false;
+        }
         fullScreenForm.parentNode.removeChild(fullScreenForm);
         return false;
     }
