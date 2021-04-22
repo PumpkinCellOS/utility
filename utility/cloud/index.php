@@ -39,7 +39,9 @@ switch($_SERVER["REQUEST_METHOD"])
                 <div class="background-tile-padding">
                     <h3>File listing</h3>
                     <div id="breadcrumb"></div>
-                    <div id="file-listing" class="data-table">
+                    <div class="data-table">
+                        <table id="file-listing">
+                        </table>
                     </div>
                 </div>
             </div>

@@ -214,6 +214,24 @@ function generateFileEntry(file)
     
     var name = document.createElement("td");
     
+    var nameFlex = document.createElement("div");
+    nameFlex.classList.add("name-flex");
+    
+    var icon = document.createElement("span");
+    icon.classList.add("icon");
+    
+    if(file.isDir)
+    {
+        if(file.name == "..")
+            icon.style.backgroundPosition = "-32px -32px";
+        else
+            icon.style.backgroundPosition = "-32px 0px";
+    }
+    else
+        icon.style.backgroundPosition = "0px 0px";
+    
+    nameFlex.appendChild(icon);
+
     var link = document.createElement('a');
     if(file.isDir)
     {
@@ -235,17 +253,19 @@ function generateFileEntry(file)
         link.href = file.link;
     
     link.download = file.name;
-    link.innerHTML = file.name == ".." ? " (Up)" : file.name;
-    name.appendChild(link);
+    link.innerHTML = file.name == ".." ? "(Go up)" : file.name;
+    nameFlex.appendChild(link);
     
     if(file.isDir)
     {
         var link2 = document.createElement('a');
-        link2.innerHTML = " [DIR]";
         if(file.name != "..")
             link2.href = file.link;
-        name.appendChild(link2);
+        nameFlex.appendChild(link2);
     }
+    
+    name.appendChild(nameFlex);
+    tr.appendChild(name);
     
     function mkButton(name, callback)
     {
@@ -254,8 +274,6 @@ function generateFileEntry(file)
         button.addEventListener("click", callback);
         return button;
     }
-    
-    tr.appendChild(name);
     
     if(uid_url == uid && file.name != "..")
     {

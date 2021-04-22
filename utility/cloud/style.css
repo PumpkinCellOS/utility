@@ -9,5 +9,19 @@
     font-size: 120%;
 }
 
+#file-listing .name-flex {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: left;
+}
+
+#file-listing .icon {
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+    padding-right: 5px;
+}
+
 #files {
 }
