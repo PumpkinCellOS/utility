@@ -185,11 +185,8 @@ function generateFileTable(data)
     var element = document.getElementById("file-listing");
     
     element.innerHTML = "";
-    if(data.length <= 1)
-    {
-        element.innerHTML = "Nothing here! Use <b>Upload</b> button to add new files.";
-    }
     
+    var oldLength = data.length;
     if(g_currentDir.length > 1)
     {
         data.unshift({
@@ -204,6 +201,11 @@ function generateFileTable(data)
     for(var file of data)
     {
         element.appendChild(generateFileEntry(file));
+    }
+    
+    if(oldLength == 0)
+    {
+        element.innerHTML += "Nothing here! Use <b>Upload</b> button to add new files.";
     }
 }
 
