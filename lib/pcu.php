@@ -209,11 +209,24 @@ function pcu_mkuser($json, $conn, $userName, $password)
     if(pcu_load_user_data($conn, $userName))
         pcu_cmd_fatal("The user already exists");
     
-    // TODO: Actually make user!
     if(!$conn->query("INSERT INTO users (userName, password) VALUES ('$userName', '$hash')"))
         pcu_cmd_fatal("Failed to add user");
     
     pcu_authuser($json, $conn, $userName, $password);
+}
+
+function pcu_change_password($json, $conn, $password)
+{
+    session_start();
+    
+    if(strlen($password) < 1)
+        pcu_cmd_fatal("Your password must not be empty");
+        
+    $hash = sha1($password);
+    
+    $uid = pcu_user_session()["id"];
+    if(!$conn->query("UPDATE users SET password='$hash' WHERE id='$uid'"))
+        pcu_cmd_fatal("Failed to change password");
 }
 
 function pcu_authuser($json, $conn, $userName, $password)

@@ -4,7 +4,8 @@
     cmd_error($json, "Invalid method");
 */
 
-require("../lib/pcu.php");
+require_once("../lib/api.php");
+require_once("../lib/pcu.php");
 
 $action = $_REQUEST["command"];
 $json = new stdClass();
@@ -42,7 +43,14 @@ switch($action)
     } return; // Don't output default html!
     default:
     {
-        pcu_cmd_error($json, "Invalid command");
+        // TODO: Move everything to PCUAPI
+        $api = new PCUAPI();
+        $api->register_command("change-password", function($api) use($json, $conn) {
+            $password = $api->required_arg("password");
+            pcu_change_password($json, $conn, $password);
+            return $json;
+        });
+        $api->run();
     } break;
 }
 pcu_page_type(PCUPageType::Display);

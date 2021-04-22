@@ -49,10 +49,65 @@ $generator->start_content();
 </div>
 
 <script>
+// FIXME: Stop copying it everywhere!!!
+function api_doXHR(xhr, args, method, callback)
+{
+    xhr.onreadystatechange = function() {
+        if(this.readyState == 4)
+        {
+            try
+            {
+                if(this.status == 200 && callback instanceof Function)
+                    callback(JSON.parse(this.responseText)); 
+                else
+                {
+                    var response = JSON.parse(this.responseText);
+                    var serverMessage = response.message;
+                    if(serverMessage === undefined)
+                        serverMessage = "Server error :("
+                    var msg = serverMessage + " (" + this.status + ")";
+                    console.log(msg);
+                }
+            }
+            catch(e)
+            {
+                console.log(e);
+            }
+        }
+    };
+    
+    if(method == "POST")
+        xhr.send(args); // args in JSON
+    else
+        xhr.send(); // args in URL
+}
+
+function apiCall(command, args, callback, method)
+{
+    var xhr = new XMLHttpRequest();
+    
+    var url = "/api/login.php";
+    if(method != "POST")
+        url += `?command=${command}&${args}`;
+    else
+    {
+        args.command = command;
+        args = JSON.stringify(args);
+    }
+    
+    xhr.open(method, url);
+    api_doXHR(xhr, args, method, callback);
+}
+
 function pcu_changePassword()
 {
-    alert("not implemented");
+    tlfOpenForm([{type: "password", name: "password", placeholder: "Password"}, {type: "password", name: "password2", placeholder: "Repeat password"}], function(args) {
+        if(args.password != args.password2)
+            return false;
+            
+        apiCall("change-password", {"password": args.password}, null, "POST");
+    }, {title: "Change password"});
 }
-</script
+</script>
 <?php
 $generator->finish();
