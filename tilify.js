@@ -49,3 +49,90 @@ class TlfBackgroundTile extends HTMLElement {
 customElements.define("tlf-resizable-tile", TlfResizableTile, { extends: 'a' })
 customElements.define("tlf-button-tile", TlfButtonTile, { extends: 'a' })
 customElements.define("tlf-background-tile", TlfBackgroundTile)
+
+// Forms
+function tlfOpenForm(fields, callback, config)
+{
+    if(config === undefined)
+    {
+        config = {};
+    }
+    
+    if(callback === null)
+    {
+        callback = function() {};
+    }
+    
+    var fullScreenForm = document.createElement("form");
+    fullScreenForm.classList.add("fullscreen-form");
+    
+    var title = document.createElement("h3");
+    title.innerHTML = config.title ?? "Form";
+    fullScreenForm.appendChild(title);
+    
+    for(var field of fields)
+    {
+        if(field.type == "label")
+        {
+            var widget = document.createElement("div");
+            widget.innerHTML = field.value;
+            fullScreenForm.appendChild(widget);
+        }
+        else if(field.type == "link")
+        {
+            var widget = document.createElement("a");
+            widget.innerHTML = field.name ?? field.value;
+            widget.href = field.value;
+            fullScreenForm.appendChild(widget);
+            fullScreenForm.appendChild(document.createElement("br"));
+        }
+        else
+        {
+            var widget = document.createElement("input");
+            widget.type = field.type ?? "text";
+            widget.name = field.name ?? widget.type;
+            widget.value = field.value ?? "";
+            widget.placeholder = field.placeholder ?? "";
+            if(field.type == "button")
+            {
+                if(field.onclick instanceof Function)
+                    widget.onclick = field.onclick; 
+                else if(field.onclick == "close")
+                    widget.onclick = function() { fullScreenForm.parentNode.removeChild(fullScreenForm); };
+            }
+            fullScreenForm.appendChild(widget);
+            fullScreenForm.appendChild(document.createElement("br"));
+        }
+    }
+    
+    var submit = document.createElement("input");
+    submit.type = "submit";
+    submit.value = config.submitName ?? "Ok";
+    submit.onclick = function() {
+        var args = {};
+        for(var field of fields)
+        {
+            if(field.type != "label" && field.type != "link")
+                args[field.name] = fullScreenForm[field.name].value;
+        }
+        
+        callback(args);
+        fullScreenForm.parentNode.removeChild(fullScreenForm);
+        return false;
+    }
+    fullScreenForm.appendChild(submit);
+    
+    if(!config.noCancel)
+    {
+        var cancel = document.createElement("input");
+        cancel.type = "submit";
+        cancel.value = config.cancelName ?? "Cancel";
+        cancel.onclick = function() {
+            fullScreenForm.parentNode.removeChild(fullScreenForm);
+            return false;
+        }
+        fullScreenForm.appendChild(cancel);
+    }
+    
+    document.body.insertBefore(fullScreenForm, document.body.firstChild);
+}
