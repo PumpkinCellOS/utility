@@ -82,7 +82,9 @@ function shareFile(file, targetUid)
 {
     // TODO: Use something better than alert()
     apiCall("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: false}, function() {
-        reload(); alert("Anyone can download this file using that link:\nhttp://" + document.location.hostname + file.link);
+        reload();
+        if(!file.isDir)
+            alert("Anyone can download this file using that link:\nhttp://" + document.location.hostname + file.link);
     });
 }
 
