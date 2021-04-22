@@ -73,6 +73,7 @@ $api = new PCUAPI();
 // args: none
 $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     $currentDir = $api->optional_arg("currentDir", ".");
+    $targetUid = $api->optional_arg("uid", $uid);
     if($currentDir == "")
         $currentDir = ".";
     validate_path($currentDir);
@@ -81,15 +82,15 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     
     // actually glob the files
     $out = array();
-    error_log("GLOBBING: " . cloud_path($uid, $currentDir) . "/*");
-    $listing = glob(cloud_path($uid, $currentDir) . "/*");
+    error_log("GLOBBING: " . cloud_path($targetUid, $currentDir) . "/*");
+    $listing = glob(cloud_path($targetUid, $currentDir) . "/*");
     
     $conn = $api->require_database("pcu-cloud");
     
     foreach($listing as $file)
     {
         $file_bn = basename($file);
-        $link = "/u/cloud/download.php?u=$uid&f=$currentDir/$file_bn";
+        $link = "/u/cloud/download.php?u=$targetUid&f=$currentDir/$file_bn";
         
         $object = new stdClass();
         $object->name = $file_bn;
@@ -97,14 +98,15 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
         $object->isDir = is_dir($file);
         $object->sharedFor = array();
         
-        $result = $conn->query("SELECT targetUid FROM shares WHERE uid='$uid' AND file='$currentDir/$file_bn'");
+        $result = $conn->query("SELECT targetUid FROM shares WHERE uid='$targetUid' AND file='$currentDir/$file_bn'");
         if($result && $result->num_rows > 0)
         {
             $row = $result->fetch_assoc();
             $object->sharedFor[$row["targetUid"]] = true;
         }
         
-        array_push($out, $object);
+        if(isset($object->sharedFor[$uid]) || isset($object->sharedFor[0]) || $targetUid == $uid)
+            array_push($out, $object);
     }
     
     return $out;
