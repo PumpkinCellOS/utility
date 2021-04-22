@@ -10,8 +10,6 @@ const API_COMMANDS = {
     "make-directory": {"method": "POST"},
 };
 
-window.g_currentDir = ["."];
-
 function getParam(name)
 {
     var url = new URL(window.location);
@@ -19,6 +17,10 @@ function getParam(name)
     return (v === undefined || v === null) ? "" : v;
 }
 var uid_url = getParam("u");
+var currentDir = getParam("cd");
+window.g_currentDir = (currentDir != "" ? currentDir.split() : []);
+if(window.g_currentDir[0] != ".")
+    window.g_currentDir.unshift(".");
 
 function api_doXHR(xhr, args, method, callback)
 {
@@ -92,8 +94,7 @@ function shareFile(file, targetUid)
     // TODO: Use something better than alert()
     apiCall("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: false}, function() {
         reload();
-        if(!file.isDir)
-            alert("Anyone can download this file using that link:\nhttp://" + document.location.hostname + file.link);
+        alert("Anyone can see this file using that link:\nhttp://" + document.location.hostname + file.link);
     });
 }
 

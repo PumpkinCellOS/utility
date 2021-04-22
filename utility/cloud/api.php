@@ -90,12 +90,21 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     foreach($listing as $file)
     {
         $file_bn = basename($file);
-        $link = "/u/cloud/download.php?u=$targetUid&f=$currentDir/$file_bn";
         
         $object = new stdClass();
         $object->name = $file_bn;
-        $object->link = $link;
         $object->isDir = is_dir($file);
+        
+        if($object->isDir)
+        {
+            $link = "/u/cloud/?u=$targetUid&cd=$currentDir/$file_bn";
+        }
+        else
+        {
+            $link = "/u/cloud/download.php?u=$targetUid&f=$currentDir/$file_bn";
+        }
+        $object->link = $link;
+        
         $object->sharedFor = array();
         
         $result = $conn->query("SELECT targetUid FROM shares WHERE uid='$targetUid' AND file='$currentDir/$file_bn'");
