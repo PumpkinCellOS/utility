@@ -3,6 +3,8 @@
     SetHandler "proxy:unix:/var/run/php/php8.0-fpm.sock|fcgi://localhost"
 </FilesMatch>
 
+Options -Indexes
+
 LimitRequestBody 16777216
 
 # Errors
