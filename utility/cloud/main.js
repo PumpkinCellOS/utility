@@ -7,7 +7,10 @@ const API_COMMANDS = {
     "list-files": {"method": "GET"},
     "remove-file": {"method": "POST"},
     "file-share": {"method": "POST"},
+    "make-directory": {"method": "POST"},
 };
+
+window.g_currentDir = ["."];
 
 function api_doXHR(xhr, args, method, callback)
 {
@@ -67,25 +70,30 @@ function apiCall(command, args, callback, urlprefix)
 
 function fileListing(callback)
 {
-    apiCall("list-files", "", callback);
+    apiCall("list-files", `currentDir=${g_currentDir.join("/")}`, callback);
 }
 
 function deleteFile(name)
 {
-    apiCall("remove-file", {file: name}, reload);
+    apiCall("remove-file", {file: `${g_currentDir.join("/")}/${name}`}, reload);
 }
 
 function shareFile(file, targetUid)
 {
     // TODO: Use something better than alert()
-    apiCall("file-share", {file: file.name, uid: targetUid, remove: false}, function() {
+    apiCall("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: false}, function() {
         reload(); alert("Anyone can download this file using that link:\nhttp://" + document.location.hostname + file.link);
     });
 }
 
 function unshareFile(file, targetUid)
 {
-    apiCall("file-share", {file: file.name, uid: targetUid, remove: true}, reload);
+    apiCall("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: true}, reload);
+}
+
+function makeDirectory(name)
+{
+    apiCall("make-directory", {name: `${g_currentDir.join("/")}/${name}`}, reload);
 }
 
 function downloadFile(name, path)
@@ -103,9 +111,30 @@ function generateFileEntry(file)
     var name = document.createElement("td");
     
     var link = document.createElement('a');
-    link.href = file.link;
+    if(file.isDir)
+    {
+        link.onclick = function() {
+            if(file.name == "..")
+            {
+                g_currentDir.pop();
+            }
+            else
+            {
+                g_currentDir.push(file.name);
+            }
+            window.uploader._options.headers["X-Destination"] = g_currentDir.join("/");
+            reload();
+            return false;
+        };
+    }
+    else
+        link.href = file.link;
+    
     link.download = file.name;
-    link.innerHTML = file.name;
+    link.innerHTML = file.name == ".." ? " (Up)" : file.name;
+    
+    if(file.isDir)
+        link.innerHTML += " [DIR]";
     
     name.appendChild(link);
     
@@ -138,20 +167,67 @@ function generateFileEntry(file)
 
 function generateFileTable(data)
 {
-    console.log("Regenerating file table", data);
     var element = document.getElementById("file-listing");
-    if(data.length == 0)
+    
+    element.innerHTML = "";
+    if(data.length <= 1)
     {
         element.innerHTML = "Nothing here! Use <b>Upload</b> button to add new files.";
     }
-    else
+    
+    if(g_currentDir.length > 1)
     {
-        element.innerHTML = "";
-        for(var file of data)
-        {
-            element.appendChild(generateFileEntry(file));
-        }
+        data.unshift({
+            isDir: true,
+            name: "..",
+            sharedFor: [],
+        });
     }
+    
+    console.log("Regenerating file table", data);
+    
+    for(var file of data)
+    {
+        element.appendChild(generateFileEntry(file));
+    }
+}
+
+function openForm(fields, callback)
+{
+    var fullScreenForm = document.createElement("form");
+    fullScreenForm.classList.add("fullscreen-form");
+    
+    for(var field of fields)
+    {
+        var textBox = document.createElement("input");
+        textBox.type = field.type ?? "text";
+        textBox.name = field.name;
+        textBox.placeholder = field.placeholder ?? "";
+        fullScreenForm.appendChild(textBox);
+    }
+    
+    var submit = document.createElement("input");
+    submit.type = "submit";
+    submit.onclick = function() {
+        var args = {};
+        for(var field of fields)
+        {
+            args[field.name] = fullScreenForm[field.name].value;
+        }
+        
+        callback(args);
+        fullScreenForm.parentNode.removeChild(fullScreenForm);
+        return false;
+    }
+    fullScreenForm.appendChild(submit);
+    document.body.insertBefore(fullScreenForm, document.body.firstChild);
+}
+
+function setupEvents()
+{
+    document.getElementById("file-mkdir").addEventListener("click", function() {
+        openForm([{name: "dirname", placeholder: "Directory name"}], (args) => { makeDirectory(args.dirname) });
+    });
 }
 
 window.reload = function()
@@ -159,4 +235,5 @@ window.reload = function()
     fileListing(generateFileTable);
 }
 
+setupEvents();
 window.reload();

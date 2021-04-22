@@ -24,6 +24,7 @@ switch($_SERVER["REQUEST_METHOD"])
                     <p>Select file to upload (4GB limit):</p>
                     <p>NOTE: The uploader is very bad, has poor error handling but should work :)</p>
                     <input type="button" id="file-submit" value="Upload"></input>
+                    <input type="button" id="file-mkdir" value="Create directory"></input>
                     <div id="files">
                     </div>
                 </div>
@@ -57,47 +58,50 @@ switch($_SERVER["REQUEST_METHOD"])
                 }
                 
                 window.addEventListener("load", function () {
-                window.uploader = new plupload.Uploader({
-                    runtimes: 'html5,html4',
-                    browse_button: 'file-submit',
-                    url: '.',
-                    chunk_size: '8mb',
-                    filters: {
-                        prevent_duplicates: true
-                    },
-                    init: {
-                        PostInit: function() {
-                            document.getElementById('files').innerHTML = '';
+                    window.uploader = new plupload.Uploader({
+                        runtimes: 'html5,html4',
+                        browse_button: 'file-submit',
+                        url: '.',
+                        chunk_size: '8mb',
+                        filters: {
+                            prevent_duplicates: true
                         },
-                        FilesAdded: function(up, files) {
-                            plupload.each(files, function (file) {
-                                document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file">${file.name}" (${plupload.formatSize(file.size)})<strong></strong></div>`;
-                                lastProcessedTimestamp = (new Date()).getTime();
-                                lastProcessed = 0;
-                            });
-                            uploader.start();
-                            window.reload();
+                        headers: {
+                            "X-Destination": window.g_currentDir.join("/")
                         },
-                        UploadProgress: function(up, file) {
-                            if(file.state != 1)
-                                document.querySelector(`#${file.id} strong`).innerHTML = generateUploadProgress(file);
-                            if(file.percent == 100)
+                        init: {
+                            PostInit: function() {
+                                document.getElementById('files').innerHTML = '';
+                            },
+                            FilesAdded: function(up, files) {
+                                plupload.each(files, function (file) {
+                                    document.getElementById('files').innerHTML += `<div id="${file.id}" class="up-file">${g_currentDir.join("/")}/${file.name}" (${plupload.formatSize(file.size)})<strong></strong></div>`;
+                                    lastProcessedTimestamp = (new Date()).getTime();
+                                    lastProcessed = 0;
+                                });
+                                uploader.start();
                                 window.reload();
-                        },
-                        Error: function(up, err) {
-                            try
-                            {
-                                console.log(err);
-                                document.querySelector(`#${err.file.id} strong`).innerHTML = `<span>${JSON.parse(err.response).message}</span>`;
-                            }
-                            catch(e)
-                            {
-                                console.log(e);
+                            },
+                            UploadProgress: function(up, file) {
+                                if(file.state != 1)
+                                    document.querySelector(`#${file.id} strong`).innerHTML = generateUploadProgress(file);
+                                if(file.percent == 100)
+                                    window.reload();
+                            },
+                            Error: function(up, err) {
+                                try
+                                {
+                                    console.log(err);
+                                    document.querySelector(`#${err.file.id} strong`).innerHTML = `<span>${JSON.parse(err.response).message}</span>`;
+                                }
+                                catch(e)
+                                {
+                                    console.log(e);
+                                }
                             }
                         }
-                    }
-                });
-                window.uploader.init();
+                    });
+                    window.uploader.init();
                 });
             </script>
         
@@ -112,14 +116,18 @@ switch($_SERVER["REQUEST_METHOD"])
         
         $uid = $userData["id"];
 
+        $currentDir = getallheaders()['X-Destination'];
+        error_log("Current dir: $currentDir");
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : $_FILES["file"]["name"];
         $targetTmp = "$PCU_CLOUD/files_pending/$uid/" . basename($fileName);
-        $target = "$PCU_CLOUD/files/$uid/" . basename($fileName);
+        $target = "$PCU_CLOUD/files/$uid/$currentDir/" . basename($fileName);
         
         // create folders
         // TODO: Move this to setup
         mkdir("$PCU_CLOUD/files_pending");
         mkdir("$PCU_CLOUD/files_pending/$uid");
+        // We don't need to create $currentDir folders
+        // because they are created by user :)
         
         // check if exists
         if(file_exists($target))
