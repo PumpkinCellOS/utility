@@ -204,7 +204,7 @@ function pcu_mkuser($json, $conn, $userName, $password)
     if(strlen($password) < 1)
         pcu_cmd_fatal("Your password must not be empty");
         
-    $hash = sha1($password);
+    $hash = hash('sha256', $password);
     
     if(pcu_load_user_data($conn, $userName))
         pcu_cmd_fatal("The user already exists");
@@ -222,7 +222,7 @@ function pcu_change_password($json, $conn, $password)
     if(strlen($password) < 1)
         pcu_cmd_fatal("Your password must not be empty");
         
-    $hash = sha1($password);
+    $hash = hash('sha256', $password);
     
     $uid = pcu_user_session()["id"];
     if(!$conn->query("UPDATE users SET password='$hash' WHERE id='$uid'"))
@@ -232,10 +232,10 @@ function pcu_change_password($json, $conn, $password)
 function pcu_authuser($json, $conn, $userName, $password)
 {
     $userName = $conn->real_escape_string($userName);
-    $hash = sha1($password);
+    $hash = hash('sha256', $password);
     
     $result = $conn->query("SELECT * FROM users WHERE userName='$userName' AND password='$hash'");
-
+    
     if($result && $result->num_rows == 1)
         pcu_mksession($json, $result->fetch_assoc());
     else
