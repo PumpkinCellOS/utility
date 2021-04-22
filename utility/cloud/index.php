@@ -2,7 +2,12 @@
 // TODO: Merge this and 'download.php' and rename to 'cloud.php'
 require_once("../../lib/pcu.php");
 
-$userData = pcu_require_login();
+$userData = pcu_user_session();
+if(!pcu_is_logged_in())
+{
+    $userData["id"] = "0";
+    $userData["userName"] = "[[public]]";
+}
 
 $PCU_CLOUD = "/var/pcu-cloud";
 
@@ -109,6 +114,7 @@ switch($_SERVER["REQUEST_METHOD"])
         $generator->finish();
         break;
     case "POST":
+        pcu_require_login();
         if(empty($_FILES) || $_FILES['file']['error'])
         {
             pcu_cmd_fatal("Failed to move uploaded file: ");

@@ -65,7 +65,12 @@ function share_all_in_dir($conn, $name, $targetUid, $remove)
     return true;
 }
 
-$userData = pcu_require_login();
+$userData = pcu_user_session();
+if(!pcu_is_logged_in())
+{
+    $userData["id"] = "0";
+    $userData["userName"] = "[[public]]";
+}
 $uid = $userData["id"];
 
 $api = new PCUAPI();
@@ -123,6 +128,7 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
 
 // args: string file
 $api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
+    pcu_require_login();
     $api->require_method("POST");
     $file = $api->required_arg("file");
     validate_path($file);
@@ -144,6 +150,7 @@ $api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
 
 // args: string file, int uid (0 for public file, -1 for all shares), bool remove
 $api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
+    pcu_require_login();
     $api->require_method("POST");
     $conn = $api->require_database("pcu-cloud");
     
@@ -163,8 +170,8 @@ $api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
 });
 
 $api->register_command("make-directory", function($api) use($uid, $PCU_CLOUD) {
+    pcu_require_login();
     $api->require_method("POST");
-    
     $file = $api->required_arg("name");
     validate_path($file);
     $target = cloud_path($uid, $file);
