@@ -183,6 +183,17 @@ function generateFileEntry(file)
     return tr;
 }
 
+function generateBreadcrumb()
+{
+    var breadcrumb = document.getElementById("breadcrumb");
+    var inner = "";
+    for(var dir of g_currentDir)
+    {
+        inner += `<a>${dir}</a> &gt;`;
+    }
+    breadcrumb.innerHTML = inner;
+}
+
 function generateFileTable(data)
 {
     var element = document.getElementById("file-listing");
@@ -199,6 +210,8 @@ function generateFileTable(data)
         });
     }
     
+    generateBreadcrumb();
+    
     console.log("Regenerating file table", data);
     
     for(var file of data)
@@ -208,7 +221,9 @@ function generateFileTable(data)
     
     if(oldLength == 0)
     {
-        element.innerHTML += "Nothing here! Use <b>Upload</b> button to add new files.";
+        var nothingHere = document.createElement("div");
+        nothingHere.innerHTML = "Nothing here! Use <b>Upload</b> button to add new files.";
+        element.appendChild(nothingHere);
     }
 }
 
