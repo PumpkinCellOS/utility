@@ -30,16 +30,23 @@ function api_doXHR(xhr, args, method, callback)
     xhr.onreadystatechange = function() {
         if(this.readyState == 4)
         {
-            if(this.status == 200 && callback instanceof Function)
-                callback(JSON.parse(this.responseText)); 
-            else
+            try
             {
-                var response = JSON.parse(this.responseText);
-                var serverMessage = response.message;
-                if(serverMessage === undefined)
-                    serverMessage = "Server error :("
-                var msg = serverMessage + " (" + this.status + ")";
-                console.log(msg);
+                if(this.status == 200 && callback instanceof Function)
+                    callback(JSON.parse(this.responseText)); 
+                else
+                {
+                    var response = JSON.parse(this.responseText);
+                    var serverMessage = response.message;
+                    if(serverMessage === undefined)
+                        serverMessage = "Server error :("
+                    var msg = serverMessage + " (" + this.status + ")";
+                    console.log(msg);
+                }
+            }
+            catch(e)
+            {
+                console.log(e);
             }
         }
     };
