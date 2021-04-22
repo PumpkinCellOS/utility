@@ -163,7 +163,7 @@ function generateFileEntry(file)
     
     tr.appendChild(name);
     
-    if(uid_url == uid)
+    if(uid_url == uid && file.name != "..")
     {
         var shareButton = document.createElement("td");
         
@@ -187,9 +187,10 @@ function generateBreadcrumb()
 {
     var breadcrumb = document.getElementById("breadcrumb");
     var inner = "";
-    for(var dir of g_currentDir)
+    for(var dir in g_currentDir)
     {
-        inner += `<a>${dir}</a> &gt;`;
+        // TODO: Make it a link!
+        inner += `${g_currentDir[dir]} &gt; `;
     }
     breadcrumb.innerHTML = inner;
 }
