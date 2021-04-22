@@ -236,11 +236,16 @@ function generateFileEntry(file)
     
     link.download = file.name;
     link.innerHTML = file.name == ".." ? " (Up)" : file.name;
+    name.appendChild(link);
     
     if(file.isDir)
-        link.innerHTML += " [DIR]";
-    
-    name.appendChild(link);
+    {
+        var link2 = document.createElement('a');
+        link2.innerHTML = " [DIR]";
+        if(file.name != "..")
+            link2.href = file.link;
+        name.appendChild(link2);
+    }
     
     function mkButton(name, callback)
     {
