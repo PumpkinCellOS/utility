@@ -19,7 +19,7 @@ switch($_SERVER["REQUEST_METHOD"])
         ?>
 
             <h2>Cloud Storage</h2>
-            <div class="background-tile">
+            <div class="background-tile" id="uploader-box">
                 <div class="background-tile-padding">
                     <p>Select file to upload (4GB limit):</p>
                     <p>NOTE: The uploader is very bad, has poor error handling but should work :)</p>

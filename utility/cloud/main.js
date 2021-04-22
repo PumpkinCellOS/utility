@@ -158,21 +158,24 @@ function generateFileEntry(file)
         return button;
     }
     
-    var shareButton = document.createElement("td");
-    
-    var shareButtonCallback = (file.sharedFor["0"] ?
-        function() { unshareFile(file, 0); } :
-        function() { shareFile(file, 0); }
-    );
-    
-    shareButton.appendChild(mkButton(file.sharedFor["0"] ? "Unshare" : "Share", shareButtonCallback));
-    
-    var deleteButton = document.createElement("td");
-    deleteButton.appendChild(mkButton("Delete", function() { deleteFile(file.name); }));
-    
     tr.appendChild(name);
-    tr.appendChild(shareButton);
-    tr.appendChild(deleteButton);
+    
+    if(uid_url == uid)
+    {
+        var shareButton = document.createElement("td");
+        
+        var shareButtonCallback = (file.sharedFor["0"] ?
+            function() { unshareFile(file, 0); } :
+            function() { shareFile(file, 0); }
+        );
+        
+        shareButton.appendChild(mkButton(file.sharedFor["0"] ? "Unshare" : "Share", shareButtonCallback));
+        
+        var deleteButton = document.createElement("td");
+        deleteButton.appendChild(mkButton("Delete", function() { deleteFile(file.name); }));
+        tr.appendChild(shareButton);
+        tr.appendChild(deleteButton);
+    }
     
     return tr;
 }
@@ -240,6 +243,9 @@ function setupEvents()
     document.getElementById("file-mkdir").addEventListener("click", function() {
         openForm([{name: "dirname", placeholder: "Directory name"}], (args) => { makeDirectory(args.dirname) });
     });
+    
+    if(uid_url != uid)
+        document.getElementById("uploader-box").style.display = "none";
 }
 
 window.reload = function()
