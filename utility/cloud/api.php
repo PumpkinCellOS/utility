@@ -3,6 +3,14 @@
 require_once("../../lib/api.php");
 require_once("../../lib/pcu.php");
 
+$PCU_CLOUD = "/var/pcu-cloud";
+
+function cloud_path($uid, $name)
+{
+    global $PCU_CLOUD;
+    return "$PCU_CLOUD/files/$uid/$name";
+}
+
 function validate_path($path)
 {
     $output = explode('/', $path);
@@ -13,7 +21,49 @@ function validate_path($path)
     }
 }
 
-$PCU_CLOUD = "/var/pcu-cloud";
+function do_share_file($conn, $name, $targetUid, $remove)
+{
+    // TODO: Error handling
+    global $uid;
+    if($remove)
+    {
+        if($targetUid == -1)
+            $conn->query("DELETE FROM shares WHERE uid='$uid' AND file='$name'");
+        else
+            $conn->query("DELETE FROM shares WHERE uid='$uid' AND file='$name' AND targetUid='$targetUid'");
+    }
+    else
+    {
+        $conn->query("INSERT INTO shares (uid, targetUid, file) VALUES ('$uid', '$targetUid', '$name')");
+    }
+    return true;
+}
+
+function share_file($conn, $name, $targetUid, $remove)
+{
+    global $uid;
+    error_log("Sharing file '$name':$remove uid=$uid, target=$targetUid");
+    
+    if(is_dir(cloud_path($uid, $name)))
+    {
+        if(!share_all_in_dir($conn, $name, $targetUid, $remove))
+            return false;
+    }
+    return do_share_file($conn, $name, $targetUid, $remove);
+}
+
+function share_all_in_dir($conn, $name, $targetUid, $remove)
+{
+    global $uid;
+    $files = glob(cloud_path($uid, $name) . "/*");
+    error_log("Sharing directory '$name':$remove uid=$uid, target=$targetUid");
+    foreach($files as $file)
+    {
+        if(!share_file($conn, "$name/" . basename($file), $targetUid, $remove))
+            return false;
+    }
+    return true;
+}
 
 $userData = pcu_require_login();
 $uid = $userData["id"];
@@ -31,8 +81,8 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     
     // actually glob the files
     $out = array();
-    error_log("GLOBBING: $PCU_CLOUD/files/$uid/$currentDir/*");
-    $listing = glob("$PCU_CLOUD/files/$uid/$currentDir/*");
+    error_log("GLOBBING: " . cloud_path($uid, $currentDir) . "/*");
+    $listing = glob(cloud_path($uid, $currentDir) . "/*");
     
     $conn = $api->require_database("pcu-cloud");
     
@@ -65,9 +115,10 @@ $api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
     $api->require_method("POST");
     $file = $api->required_arg("file");
     validate_path($file);
-    $path = "$PCU_CLOUD/files/$uid/$file";
+    $path = cloud_path($uid, $file);
     
     // TODO: Implement recycle bin.
+    // TODO: Implement directory removal.
     
     $out = new stdClass();
     $out->exists = file_exists($path);
@@ -75,11 +126,8 @@ $api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
         pcu_cmd_fatal("Failed to rename file", 500);
     
     // Unshare deleted files
-    $fileShareData = array();
-    $fileShareData["file"] = $file;
-    $fileShareData["uid"] = -1;
-    $fileShareData["remove"] = true;
-    $api->run_command("file-share", $fileShareData);
+    $conn = $api->require_database("pcu-cloud");
+    share_file($conn, $file, -1, true);
     return $out;
 });
 
@@ -93,20 +141,12 @@ $api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
     $targetUid = $conn->real_escape_string($api->optional_arg("uid", 0));
     $remove = $conn->real_escape_string($api->optional_arg("remove", false));
     
-    if($remove)
-    {
-        if($targetUid == -1)
-            $result = $conn->query("DELETE FROM shares WHERE uid='$uid' AND file='$file'");
-        else
-            $result = $conn->query("DELETE FROM shares WHERE uid='$uid' AND file='$file' AND targetUid='$targetUid'");
-    }
-    else
-        $result = $conn->query("INSERT INTO shares (uid, targetUid, file) VALUES ('$uid', '$targetUid', '$file')");
-    
+    $result = share_file($conn, $file, $targetUid, $remove);
     if(!$result)
-        pcu_cmd_fatal(mysqli_error($conn) . " .. " . $remove);
+        pcu_cmd_fatal("Failed to share file");
     
     $out = new stdClass();
+    $out->isDir = is_dir($file);
     $out->remove = $remove;
     return $out;
 });
@@ -116,7 +156,7 @@ $api->register_command("make-directory", function($api) use($uid, $PCU_CLOUD) {
     
     $file = $api->required_arg("name");
     validate_path($file);
-    $target = "$PCU_CLOUD/files/$uid/$file";
+    $target = cloud_path($uid, $file);
 
     mkdir("$PCU_CLOUD/files");
     mkdir("$PCU_CLOUD/files/$uid");
