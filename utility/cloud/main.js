@@ -17,6 +17,9 @@ function getParam(name)
     return (v === undefined || v === null) ? "" : v;
 }
 var uid_url = getParam("u");
+if(uid_url == "")
+    uid_url = uid;
+console.log("Request UID is " + uid_url);
 var currentDir = getParam("cd");
 window.g_currentDir = (currentDir != "" ? currentDir.split() : []);
 if(window.g_currentDir[0] != ".")
