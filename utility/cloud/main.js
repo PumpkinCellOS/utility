@@ -12,6 +12,14 @@ const API_COMMANDS = {
 
 window.g_currentDir = ["."];
 
+function getParam(name)
+{
+    var url = new URL(window.location);
+    var v = url.searchParams.get(name);
+    return (v === undefined || v === null) ? "" : v;
+}
+var uid_url = getParam("u");
+
 function api_doXHR(xhr, args, method, callback)
 {
     xhr.onreadystatechange = function() {
@@ -70,7 +78,8 @@ function apiCall(command, args, callback, urlprefix)
 
 function fileListing(callback)
 {
-    apiCall("list-files", `currentDir=${g_currentDir.join("/")}`, callback);
+    var uid_arg = uid_url != "" ? `&uid=${uid_url}` : "";
+    apiCall("list-files", `currentDir=${g_currentDir.join("/")}` + uid_arg, callback);
 }
 
 function deleteFile(name)

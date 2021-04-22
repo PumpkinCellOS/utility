@@ -42,7 +42,7 @@ switch($_SERVER["REQUEST_METHOD"])
                 var uploader;
                 var lastProcessed = 0;
                 var lastProcessedTimestamp = 0;
-                var uid = <?php echo $userData["id"]; ?>
+                var uid = <?php echo $userData["id"]; ?>;
                 
                 function generateUploadProgress(file)
                 {
