@@ -81,6 +81,92 @@ function apiCall(command, args, callback, urlprefix)
     api_doXHR(xhr, args, method, callback);
 }
 
+function openForm(fields, callback, config)
+{
+    if(config === undefined)
+    {
+        config = {};
+    }
+    
+    if(callback === null)
+    {
+        callback = function() {};
+    }
+    
+    var fullScreenForm = document.createElement("form");
+    fullScreenForm.classList.add("fullscreen-form");
+    
+    var title = document.createElement("h3");
+    title.innerHTML = config.title ?? "Form";
+    fullScreenForm.appendChild(title);
+    
+    for(var field of fields)
+    {
+        if(field.type == "label")
+        {
+            var widget = document.createElement("div");
+            widget.innerHTML = field.value;
+            fullScreenForm.appendChild(widget);
+        }
+        else if(field.type == "link")
+        {
+            var widget = document.createElement("a");
+            widget.innerHTML = field.name ?? field.value;
+            widget.href = field.value;
+            fullScreenForm.appendChild(widget);
+            fullScreenForm.appendChild(document.createElement("br"));
+        }
+        else
+        {
+            var widget = document.createElement("input");
+            widget.type = field.type ?? "text";
+            widget.name = field.name ?? widget.type;
+            widget.value = field.value ?? "";
+            widget.placeholder = field.placeholder ?? "";
+            if(field.type == "button")
+            {
+                if(field.onclick instanceof Function)
+                    widget.onclick = field.onclick; 
+                else if(field.onclick == "close")
+                    widget.onclick = function() { fullScreenForm.parentNode.removeChild(fullScreenForm); };
+            }
+            fullScreenForm.appendChild(widget);
+            fullScreenForm.appendChild(document.createElement("br"));
+        }
+    }
+    
+    var submit = document.createElement("input");
+    submit.type = "submit";
+    submit.value = config.submitName ?? "Ok";
+    submit.onclick = function() {
+        var args = {};
+        for(var field of fields)
+        {
+            if(field.type != "label" && field.type != "link")
+                args[field.name] = fullScreenForm[field.name].value;
+        }
+        
+        callback(args);
+        fullScreenForm.parentNode.removeChild(fullScreenForm);
+        return false;
+    }
+    fullScreenForm.appendChild(submit);
+    
+    if(!config.noCancel)
+    {
+        var cancel = document.createElement("input");
+        cancel.type = "submit";
+        cancel.value = config.cancelName ?? "Cancel";
+        cancel.onclick = function() {
+            fullScreenForm.parentNode.removeChild(fullScreenForm);
+            return false;
+        }
+        fullScreenForm.appendChild(cancel);
+    }
+    
+    document.body.insertBefore(fullScreenForm, document.body.firstChild);
+}
+
 function fileListing(callback)
 {
     var uid_arg = uid_url != "" ? `&uid=${uid_url}` : "";
@@ -89,15 +175,18 @@ function fileListing(callback)
 
 function deleteFile(name)
 {
-    apiCall("remove-file", {file: `${g_currentDir.join("/")}/${name}`}, reload);
+    openForm([ {"value": `Do you really want to delete ${name}?`, "type": "label"} ], function() {
+        apiCall("remove-file", {file: `${g_currentDir.join("/")}/${name}`}, reload);
+    }, { title: "Confirm deletion", submitName: "Yes", cancelName: "No" });
 }
 
 function shareFile(file, targetUid)
 {
-    // TODO: Use something better than alert()
     apiCall("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: false}, function() {
         reload();
-        alert("Anyone can see this file using that link:\nhttp://" + document.location.hostname + file.link);
+        openForm ([{ type: "label", value: "Anyone can see this file using that link:"},
+                   { type: "link", value: "http://" + document.location.hostname + file.link }], null,
+                   { title: "Share", noCancel: true });
     });
 }
 
@@ -226,37 +315,6 @@ function generateFileTable(data)
         nothingHere.innerHTML = "Nothing here! Use <b>Upload</b> button to add new files.";
         element.appendChild(nothingHere);
     }
-}
-
-function openForm(fields, callback)
-{
-    var fullScreenForm = document.createElement("form");
-    fullScreenForm.classList.add("fullscreen-form");
-    
-    for(var field of fields)
-    {
-        var textBox = document.createElement("input");
-        textBox.type = field.type ?? "text";
-        textBox.name = field.name;
-        textBox.placeholder = field.placeholder ?? "";
-        fullScreenForm.appendChild(textBox);
-    }
-    
-    var submit = document.createElement("input");
-    submit.type = "submit";
-    submit.onclick = function() {
-        var args = {};
-        for(var field of fields)
-        {
-            args[field.name] = fullScreenForm[field.name].value;
-        }
-        
-        callback(args);
-        fullScreenForm.parentNode.removeChild(fullScreenForm);
-        return false;
-    }
-    fullScreenForm.appendChild(submit);
-    document.body.insertBefore(fullScreenForm, document.body.firstChild);
 }
 
 function setupEvents()
