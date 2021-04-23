@@ -61,8 +61,8 @@ switch($command)
         // - uid
         // - password
         $uid = $conn->real_escape_string($data->uid);
-        $password = $conn->real_escape_string($data->password);
-        $result = $conn->query("UPDATE users SET password=SHA1($password) WHERE id='$uid'");
+        $password = hash('sha256', $conn->real_escape_string($data->password));
+        $result = $conn->query("UPDATE users SET password='$password' WHERE id='$uid'");
     } break;
     case "expire-password-user":
     {
@@ -70,7 +70,7 @@ switch($command)
         // - uid
         // - state (1/0)
         $uid = $conn->real_escape_string($data->uid);
-        $state = $conn->real_escape_string($data->state);
+        $state = $conn->real_escape_string($data->state) ? "1" : "0";
         $result = $conn->query("UPDATE users SET passwordExpired='$state' WHERE id='$uid'");
     } break;
     case "change-role-user":

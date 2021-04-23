@@ -16,7 +16,7 @@ $generator->start_content();
 </div>
 <div class="background-tile">
     <div class="background-tile-padding">
-        <input type="text" oninput="updateUserList(this.value)" placeholder="Type to search users..."></input>
+        <input id="username-box" type="text" oninput="updateUserList(this.value)" placeholder="Type to search users..."></input>
         <div id="user-data" class="data background-tile">
         </div>
     </div>

@@ -1,4 +1,4 @@
-var g_dataTable;
+window.g_dataTable = {};
 
 const API_COMMANDS = {
     "search-users": {"method": "GET"},
@@ -13,7 +13,12 @@ const API_COMMANDS = {
 
 function findUser(uid)
 {
-    
+    for(var user of window.g_dataTable)
+    {
+        if(user.id == uid)
+            return user;
+    }
+    return null;
 }
 
 //callback: function(responseText)
@@ -71,18 +76,21 @@ function getStatus(data)
     return arr;
 }
 
-var UserManagement = 
+window.UserManagement = 
 {
     remove: function(uid) {
         console.log("remove", uid);
     },
     expire: function(uid) {
         console.log("expire", uid);
-        //apiCall("change-password-user", JSON.stringify({uid: uid, state = !g_dataTable[uid]}), null);
+        apiCall("expire-password-user", JSON.stringify({uid: uid, state: findUser(uid).passwordExpired == "0"}), function() {
+            updateUserList(document.getElementById("username-box").value);
+        });
     },
     changePassword: function(uid) {
-        console.log("changePassword", uid);
-        apiCall("change-password-user", JSON.stringify({uid: uid}), null);
+        tlfOpenForm([{type:"password", name:"password", placeholder:"Enter new password"}], function(args) {
+            apiCall("change-password-user", JSON.stringify({uid: uid, password: args.password}), null);
+        }, {title: "Change password"});
     }
 };
 
@@ -111,6 +119,7 @@ function generateUserDataTable(data)
     inner += "<thead><tr>";
     inner += "<td>ID</td><td>User name</td><td>Role</td><td>Status</td>";
     inner += "</tr></thead><tbody>";
+    g_dataTable = data.data;
     
     for(var user of data.data)
     {
