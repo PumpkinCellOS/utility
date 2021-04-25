@@ -65,6 +65,40 @@ function share_all_in_dir($conn, $name, $targetUid, $remove)
     return true;
 }
 
+function remove_file($conn, $uid, $name)
+{
+    $path = cloud_path($uid, $name);
+    
+    $out = new stdClass();
+    $out->exists = file_exists($path);
+    
+    if(is_dir($path))
+    {
+        if(!remove_all_in_dir($conn, $uid, $name))
+            return false;
+    
+        if(rmdir($path) < 0)
+            return false;
+    }
+    else if(unlink($path) < 0)
+        return false;
+    
+    // Unshare deleted files
+    return share_file($conn, $name, -1, true);
+}
+
+function remove_all_in_dir($conn, $uid, $name)
+{
+    $files = glob(cloud_path($uid, $name) . "/*");
+    error_log("Deleting directory '$name' uid=$uid");
+    foreach($files as $file)
+    {
+        if(!remove_file($conn, $uid, "$name/" . basename($file)))
+            return false;
+    }
+    return true;
+}
+
 $userData = pcu_user_session();
 if(!pcu_is_logged_in())
 {
@@ -132,20 +166,13 @@ $api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
     $api->require_method("POST");
     $file = $api->required_arg("file");
     validate_path($file);
-    $path = cloud_path($uid, $file);
+    
+    $conn = $api->require_database("pcu-cloud");
+    if(!remove_file($conn, $uid, $file))
+        pcu_cmd_fatal("Failed to remove $file", 500);
     
     // TODO: Implement recycle bin.
-    // TODO: Implement directory removal.
-    
-    $out = new stdClass();
-    $out->exists = file_exists($path);
-    if(unlink($path) < 0)
-        pcu_cmd_fatal("Failed to rename file", 500);
-    
-    // Unshare deleted files
-    $conn = $api->require_database("pcu-cloud");
-    share_file($conn, $file, -1, true);
-    return $out;
+    return null;
 });
 
 // args: string file, int uid (0 for public file, -1 for all shares), bool remove
