@@ -1,7 +1,7 @@
 button, input[type="submit"], input[type="button"], input[type="checkbox"] {
     background-color: #777777;
-    border: 1px solid transparent;
-    border-radius: 5px;
+    border: none;
+    border-radius: 3px;
     box-sizing: border-box;
     color: #dddddf;
     font-family: "librmono";
@@ -12,9 +12,8 @@ button, input[type="submit"], input[type="button"], input[type="checkbox"] {
 }
 
 button:hover, input[type="submit"]:hover, input[type="button"]:hover {
-    border: 1px solid white;
     background-color: #88888f;
-    transition: background-color 0.1s, border-color 0.1s;
+    transition: background-color 0.1s;
 }
 
 input[type="text"],
