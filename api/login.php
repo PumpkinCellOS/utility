@@ -5,70 +5,47 @@
 */
 
 require_once("../lib/api.php");
-require_once("../lib/pcu.php");
 
-$action = $_REQUEST["command"];
-$json = new stdClass();
+// FIXME: Don't send plaintext password to server!
 
-$conn = pcu_cmd_connect_db($json, "pcutil");
+$api = new PCUAPI();
+$api->register_command("auth-user", function($api) {
+    $json = new stdClass();
+    $conn = $api->require_database("pcutil");
+    $userName = $conn->real_escape_string($api->required_arg("userName"));
+    $password = $api->required_arg("password");
+    pcu_authuser($json, $conn, $userName, $password);
+    return $json;
+});
+$api->register_command("remove-session", function($api) {
+    pcu_rmsession();
+    return null;
+});
+$api->register_command("create-user", function($api) {
+    $json = new stdClass();
+    $conn = $api->require_database("pcutil");
+    $userName = $conn->real_escape_string($api->required_arg("userName"));
+    $password = $api->required_arg("password");
+    pcu_mkuser($json, $conn, $userName, $password);
+    return $json;
+});
+$api->register_command("query-user", function($api) {
+    $json = new stdClass();
+    $conn = $api->require_database("pcutil");
+    $id = $conn->real_escape_string($api->required_arg("id"));
+    $result = $conn->query("SELECT userName, role FROM users WHERE id='$id'");
 
-switch($action)
-{
-    case "auth-user":
+    if($result && $result->num_rows > 0)
     {
-        $userName = $conn->real_escape_string($_REQUEST["userName"]);
-        $password = $_REQUEST["password"];
-        pcu_authuser($json, $conn, $userName, $password);
-    } break;
-    case "remove-session":
-    {
-        pcu_rmsession();
-    } break;
-    case "create-user":
-    {
-        $userName = $conn->real_escape_string($_REQUEST["userName"]);
-        $password = $_REQUEST["password"];
-        pcu_mkuser($json, $conn, $userName, $password);
-    } break;
-    case "query-user":
-    {
-        $id = $_REQUEST["id"];
-        $result = $conn->query("SELECT userName, role FROM users WHERE id='$id'");
-
-        if($result && $result->num_rows > 0)
-        {
-            $json->data = $result->fetch_assoc();
-        }
-        echo json_encode($json);
-    } return; // Don't output default html!
-    default:
-    {
-        // TODO: Move everything to PCUAPI
-        $api = new PCUAPI();
-        $api->register_command("change-password", function($api) use($json, $conn) {
-            $password = $api->required_arg("password");
-            pcu_change_password($json, $conn, $password);
-            return $json;
-        });
-        $api->run();
-    } break;
-}
-pcu_page_type(PCUPageType::Display);
-?>
-<html>
-    <head>
-        <title>PCU</title>
-        <?php
-
-            if(http_response_code() == 200) { ?>
-                <meta http-equiv="refresh" content="0; url=/"/>
-            <?php }
-        ?>
-    </head>
-    <body>
-        <?php
-        echo $json->message;
-        ?>
-        <a href="/login.php">(Go back)</a>
-    </body>
-</html>
+        $json->data = $result->fetch_assoc();
+    }
+    return $json;
+});
+$api->register_command("change-password", function($api) {
+    $json = new stdClass();
+    $conn = $api->require_database("pcutil");
+    $password = $api->required_arg("password");
+    pcu_change_password($json, $conn, $password);
+    return $json;
+});
+$api->run();
