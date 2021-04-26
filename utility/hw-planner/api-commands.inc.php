@@ -91,15 +91,8 @@ function cmd_get_data($json, $uid, $query)
     $conn = pcu_cmd_connect_db($json, "hwplanner");
     if(!$conn)
         return;
-        
-    $query = $conn->real_escape_string($query);
-    $json->query = $query;
-    if($query == "hws")
-        $query = "hws where status<>'V' and status<>'X'";
-    else if($query == "hws done")
-        $query = "hws where 1";
     
-    $sql = "select * from $query and userId='$uid'";
+    $sql = "select * from hws where userId='$uid'";
     $result = $conn->query($sql);
     if(!$result)
     {
