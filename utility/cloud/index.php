@@ -71,9 +71,6 @@ switch($_SERVER["REQUEST_METHOD"])
                         browse_button: 'file-submit',
                         url: '.',
                         chunk_size: '8mb',
-                        filters: {
-                            prevent_duplicates: true
-                        },
                         headers: {
                         },
                         init: {
