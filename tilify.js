@@ -163,7 +163,7 @@ class TlfAPI {
         this.config = config;
     }
     
-    _doXHR(xhr, args, method, callback)
+    _doXHR(xhr, args, method, callback, errorCallback)
     {
         xhr.onreadystatechange = function() {
             if(this.readyState == 4)
@@ -177,9 +177,10 @@ class TlfAPI {
                         var response = JSON.parse(this.responseText);
                         var serverMessage = response.message;
                         if(serverMessage === undefined)
-                            serverMessage = "Server error :("
+                            serverMessage = "Server error :(";
                         var msg = serverMessage + " (" + this.status + ")";
                         console.log(msg);
+                        errorCallback(response);
                     }
                 }
                 catch(e)
@@ -203,22 +204,34 @@ class TlfAPI {
         }).join('&');
     }
     
-    call(command, args, callback)
+    call(command, args = {}, callback = function() {}, errorCallback = function() {})
     {
         console.info(`API call ${command} with args=${JSON.stringify(args)}`);
         var xhr = new XMLHttpRequest();
         var method = this.config.calls[command].method;
         
         var url = this.config.endpoint;
+        args.command = command;
         if(method != "POST")
             url += `?${this.json2uri(args)}`;
         else
         {
-            args.command = command;
             args = JSON.stringify(args);
         }
         
         xhr.open(method, url);
-        this._doXHR(xhr, args, method, callback);
+        this._doXHR(xhr, args, method, callback, errorCallback);
     }
+}
+
+function tlfApiCall(method, endpoint, command, args = {}, callback = function() {}, errorCallback = function() {})
+{
+    var config = {};
+    config.endpoint = endpoint;
+    config.calls = {};
+    config.calls[command] = {
+        method: method
+    };
+    var api = new TlfAPI(config);
+    api.call(command, args, callback, errorCallback);
 }
