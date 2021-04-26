@@ -29,12 +29,32 @@ module.exports = {
 
     exe_stringify_value: function(obj)
     {
-        if(typeof obj == "object")
+        if(obj instanceof Array)
         {
-            if(obj.type && obj.type == "topic-expression")
-                return obj.value.join(".");
+            var i = 0;
+            var output = "";
+            for(var val of obj)
+            {
+                output += this.exe_stringify_value(val);
+        
+                if(i < obj.length - 1)
+                    output += ", ";
+                
+                i++;
+            }
+            return output;
+        }
+        else if(obj instanceof Object)
+        {
+            if(obj.type)
+            {
+                if(obj.type == "topic-expression")
+                    return obj.value.join(".");
+                else if(obj.type == "interval")
+                    return this.exe_stringify_value(obj.left) + " - " + this.exe_stringify_value(obj.right);
+            }
             else
-                return obj;
+                return JSON.stringify(obj);
         }
         return obj;
     },
@@ -85,6 +105,7 @@ module.exports = {
 
     exe_stringify_hr: function(obj)
     {
+        console.log(obj);
         var output = "";
         
         if(obj == null)

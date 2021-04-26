@@ -182,7 +182,9 @@ module.exports = {
 
     // topic-expression ::= TOKEN_VALUE TOKEN_DOT...
 
-    // value ::= topic-expression | glob-selector | TOKEN_VALUE
+    // interval-expression ::= value(!interval-expression) TOKEN_DASH value(!interval-expression)
+    
+    // value ::= topic-expression | interval-expression | glob-selector | TOKEN_VALUE
 
     // type ::= /[a-zA-Z_]/
 
@@ -254,8 +256,25 @@ module.exports = {
         }
         return topicExpression;
     },
+    
+    parseIntervalExpression : function(parser)
+    {
+        var valueLeft = this.parseValue(parser, false);
+        if(!valueLeft)
+            return null;
+        
+        var dash = parser.consumeOfType(this.TOKEN_DASH);
+        if(!dash)
+            return null;
+        
+        var valueRight = this.parseValue(parser, false);
+        if(!valueRight)
+            return null;
+        
+        return {type: "interval", left: valueLeft, right: valueRight};
+    },
 
-    parseValue : function(parser)
+    parseValue : function(parser, allowInterval = true)
     {
         //console.log("parseValue");
         var value = {};
@@ -265,19 +284,25 @@ module.exports = {
         if(!topicExpression)
         {
             parser.seek(tmp);
-            var globSelector = this.parseGlobSelector(parser);
-            if(!globSelector)
+            var intervalExpression = allowInterval ? this.parseIntervalExpression(parser) : null;
+            if(!intervalExpression)
             {
                 parser.seek(tmp);
-                value = parser.consumeOfType(this.TOKEN_VALUE);
-                if(!value)
+                var globSelector = this.parseGlobSelector(parser);
+                if(!globSelector)
                 {
                     parser.seek(tmp);
-                    return null;
+                    value = parser.consumeOfType(this.TOKEN_VALUE);
+                    if(!value)
+                    {
+                        parser.seek(tmp);
+                        return null;
+                    }
+                    return value.value;
                 }
-                return value.value;
+                return typeValue;
             }
-            return typeValue;
+            return intervalExpression;
         }
         return topicExpression;
     },
