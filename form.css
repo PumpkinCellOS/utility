@@ -4,7 +4,6 @@ button, input[type="submit"], input[type="button"], input[type="checkbox"] {
     border-radius: 3px;
     box-sizing: border-box;
     color: #dddddf;
-    font-family: "librmono";
     font-size: 12pt;
     margin: 5px;
     padding: 7px;
