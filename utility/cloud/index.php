@@ -58,10 +58,12 @@ switch($_SERVER["REQUEST_METHOD"])
                     var ps = (file.processed - lastProcessed) / (currentTS - lastProcessedTimestamp) * 1000;
                     lastProcessed = file.processed;
                     lastProcessedTimestamp = currentTS;
+                    var estimatedTime = file.size / ps;
                     return `
                         <div class='up-column'>${file.percent == 100 ? 'DONE': file.percent + '%'}</div>
                         <div class='up-column'>${plupload.formatSize(file.processed)}</div>
                         <div class='up-column'>${plupload.formatSize(ps)}/s</div>
+                        <div class='up-column'>~${Math.round(estimatedTime)} s left</div>
                     `;
                 }
                 
@@ -147,6 +149,10 @@ switch($_SERVER["REQUEST_METHOD"])
         
         $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
         $chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 0;
+
+        if($chunk == 0)
+            unlink($targetTmp);
+
         $out = @fopen($targetTmp, $chunk == 0 ? "wb" : "ab");
         
         echo json_encode($_FILES);
