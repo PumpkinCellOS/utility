@@ -32,7 +32,8 @@ CREATE TABLE `shares` (
   `sid` int NOT NULL,
   `uid` int DEFAULT NULL COMMENT 'Sharing UID',
   `targetUid` int NOT NULL DEFAULT '0' COMMENT 'Target UID',
-  `file` tinytext NOT NULL COMMENT 'File name'
+  `file` tinytext NOT NULL COMMENT 'File name',
+  `inherit` BOOLEAN NOT NULL COMMENT 'For directories, if the files should inherit shared state' 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

@@ -75,7 +75,6 @@ switch($_SERVER["REQUEST_METHOD"])
                             prevent_duplicates: true
                         },
                         headers: {
-                            "X-Destination": window.g_currentDir.join("/")
                         },
                         init: {
                             PostInit: function() {
@@ -87,6 +86,7 @@ switch($_SERVER["REQUEST_METHOD"])
                                     lastProcessedTimestamp = (new Date()).getTime();
                                     lastProcessed = 0;
                                 });
+                                uploader._options.headers["x-destination"] = g_currentDir.join("/");
                                 uploader.start();
                                 window.reload();
                             },
@@ -176,6 +176,25 @@ switch($_SERVER["REQUEST_METHOD"])
             mkdir("$PCU_CLOUD/files");
             mkdir("$PCU_CLOUD/files/$uid");
             rename($targetTmp, $target);
+            error_log("UPLOAD FINISHED! $targetTmp --> $target");
+            $file = "$currentDir/" . basename($fileName);
+            
+            $json = new stdClass();
+            $conn = pcu_cmd_connect_db($json, "pcu-cloud");
+            $containPath = dirname($file);
+            $shared = $conn->query("SELECT inherit,targetUid FROM shares WHERE uid='$uid' AND file='$containPath'");
+            if($shared && $shared->num_rows > 0)
+            {
+                while($row = $shared->fetch_assoc())
+                {
+                    $inherit = $row["inherit"];
+                    if($inherit == '1')
+                    {
+                        $targetUid = $row["targetUid"];
+                        $conn->query("INSERT INTO shares (uid, targetUid, file, inherit) VALUES ('$uid', '$targetUid', '$file', '1')");
+                    }
+                }
+            }
         }
         
         break;

@@ -21,7 +21,7 @@ function validate_path($path)
     }
 }
 
-function do_share_file($conn, $name, $targetUid, $remove)
+function do_share_file($conn, $name, $targetUid, $remove, $inherit)
 {
     // TODO: Error handling
     global $uid;
@@ -34,32 +34,32 @@ function do_share_file($conn, $name, $targetUid, $remove)
     }
     else
     {
-        $conn->query("INSERT INTO shares (uid, targetUid, file) VALUES ('$uid', '$targetUid', '$name')");
+        $conn->query("INSERT INTO shares (uid, targetUid, file, inherit) VALUES ('$uid', '$targetUid', '$name', '$inherit')");
     }
     return true;
 }
 
-function share_file($conn, $name, $targetUid, $remove)
+function share_file($conn, $name, $targetUid, $remove, $inherit = true)
 {
     global $uid;
     error_log("Sharing file '$name':$remove uid=$uid, target=$targetUid");
     
-    if(is_dir(cloud_path($uid, $name)))
+    if(is_dir(cloud_path($uid, $name)) && $inherit)
     {
-        if(!share_all_in_dir($conn, $name, $targetUid, $remove))
+        if(!share_all_in_dir($conn, $name, $targetUid, $remove, $inherit))
             return false;
     }
-    return do_share_file($conn, $name, $targetUid, $remove);
+    return do_share_file($conn, $name, $targetUid, $remove, $inherit);
 }
 
-function share_all_in_dir($conn, $name, $targetUid, $remove)
+function share_all_in_dir($conn, $name, $targetUid, $remove, $inherit)
 {
     global $uid;
     $files = glob(cloud_path($uid, $name) . "/*");
     error_log("Sharing directory '$name':$remove uid=$uid, target=$targetUid");
     foreach($files as $file)
     {
-        if(!share_file($conn, "$name/" . basename($file), $targetUid, $remove))
+        if(!share_file($conn, "$name/" . basename($file), $targetUid, $remove, $inherit))
             return false;
     }
     return true;
@@ -186,7 +186,7 @@ $api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
     $targetUid = $conn->real_escape_string($api->optional_arg("uid", 0));
     $remove = $conn->real_escape_string($api->optional_arg("remove", false));
     
-    $result = share_file($conn, $file, $targetUid, $remove);
+    $result = share_file($conn, $file, $targetUid, $remove, true);
     if(!$result)
         pcu_cmd_fatal("Failed to share file");
     
@@ -208,6 +208,22 @@ $api->register_command("make-directory", function($api) use($uid, $PCU_CLOUD) {
 
     if(!mkdir($target))
         pcu_cmd_fatal("Failed to create directory!", 500);
+        
+    $conn = $api->require_database("pcu-cloud");
+    $containPath = dirname($file);
+    $shared = $conn->query("SELECT inherit,targetUid FROM shares WHERE uid='$uid' AND file='$containPath'");
+    if($shared && $shared->num_rows > 0)
+    {
+        while($row = $shared->fetch_assoc())
+        {
+            $inherit = $row["inherit"];
+            if($inherit == '1')
+            {
+                share_file($conn, $file, $row["targetUid"], false, true);
+            }
+        }
+    }
+        
     return null;
 });
 

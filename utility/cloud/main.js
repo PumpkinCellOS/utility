@@ -165,7 +165,6 @@ function generateFileEntry(file)
             {
                 g_currentDir.push(file.name);
             }
-            window.uploader._options.headers["X-Destination"] = g_currentDir.join("/");
             reload();
             return false;
         };
