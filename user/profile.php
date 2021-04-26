@@ -29,24 +29,22 @@ $generator->start_content();
     </div>
 <?php } ?>
 
-<div class="background-tile">
-    <div class="background-tile-padding">
-        <?php
-        
-        echo "<h3>" . $qUserData["userName"];
-        $roles = [
-            "default" => "User",
-            "trusted" => "Trusted user",
-            "moderator" => "Moderator",
-            "member" => "Staff member",
-            "owner" => "Owner",
-            "admin" => "Administration",
-        ];
-        echo "</h3><p class='pcu-user-role'>" . $roles[$qUserData["role"]] . "</p>";
-        echo "</h3><p>Joined " . $qUserData["createTime"] . "</p>";
-        ?>
-    </div>
-</div>
+<tlf-background-tile padding="big">
+    <?php
+    
+    echo "<h3>" . $qUserData["userName"];
+    $roles = [
+        "default" => "User",
+        "trusted" => "Trusted user",
+        "moderator" => "Moderator",
+        "member" => "Staff member",
+        "owner" => "Owner",
+        "admin" => "Administration",
+    ];
+    echo "</h3><p class='pcu-user-role'>" . $roles[$qUserData["role"]] . "</p>";
+    echo "</h3><p>Joined " . $qUserData["createTime"] . "</p>";
+    ?>
+</tlf-background-tile>
 
 <script>
 // FIXME: Stop copying it everywhere!!!
