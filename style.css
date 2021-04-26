@@ -57,15 +57,20 @@ h2 {
 }
 
 h3 {
+    border-bottom: 1px solid #808084;
+    color: #cdcdcf;
     font-size: 25px;
+    padding: 0px 0px 4px 4px;
 }
 
 h4 {
-    font-size: 20px;
+    color: #cdcdcf;
+    font-size: 22px;
 }
 
 pre {
-    border: 1px solid #bbbbbf;
+    border: 1px solid #cccccf;
+    border-radius: 3px;
     max-width: 100%;
     overflow-x: scroll;
     padding: 5px;
