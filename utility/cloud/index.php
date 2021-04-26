@@ -88,10 +88,14 @@ switch($_SERVER["REQUEST_METHOD"])
                                 window.reload();
                             },
                             UploadProgress: function(up, file) {
-                                if(file.state != 1)
-                                    document.querySelector(`#${file.id} strong`).innerHTML = generateUploadProgress(file);
+                                var fileBox = document.querySelector(`#${file.id} strong`);
+                                if(fileBox && file.state != 1)
+                                    fileBox.innerHTML = generateUploadProgress(file);
                                 if(file.percent == 100)
+                                {
                                     window.reload();
+                                    document.getElementById('files').innerHTML = "";
+                                }
                             },
                             Error: function(up, err) {
                                 try
