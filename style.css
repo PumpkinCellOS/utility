@@ -57,10 +57,13 @@ h2 {
 }
 
 h3 {
-    border-bottom: 1px solid #808084;
     color: #cdcdcf;
     font-size: 25px;
     padding: 0px 0px 4px 4px;
+}
+
+.background-tile-big-padding h3 {
+    border-bottom: 1px solid #808084;
 }
 
 h4 {
