@@ -148,3 +148,77 @@ function tlfOpenForm(fields, callback, config)
         fullScreenForm.parentNode.removeChild(fullScreenForm);
     }
 }
+
+class TlfAPI {
+    // config:
+    //   endpoint:
+    //   calls:
+    //     {
+    //       method
+    //     }
+    constructor(config)
+    {
+        if(config === undefined)
+            throw Error("You must give a config!");
+        this.config = config;
+    }
+    
+    _doXHR(xhr, args, method, callback)
+    {
+        xhr.onreadystatechange = function() {
+            if(this.readyState == 4)
+            {
+                try
+                {
+                    if(this.status == 200 && callback instanceof Function)
+                        callback(JSON.parse(this.responseText)); 
+                    else
+                    {
+                        var response = JSON.parse(this.responseText);
+                        var serverMessage = response.message;
+                        if(serverMessage === undefined)
+                            serverMessage = "Server error :("
+                        var msg = serverMessage + " (" + this.status + ")";
+                        console.log(msg);
+                    }
+                }
+                catch(e)
+                {
+                    console.log(e);
+                }
+            }
+        };
+        
+        if(method == "POST")
+            xhr.send(args); // args in JSON
+        else
+            xhr.send(); // args in URL
+    }
+    
+    json2uri(json)
+    {
+        return Object.keys(json).map(function(k)
+        {
+            return encodeURIComponent(k) + "=" + encodeURIComponent(json[k]);
+        }).join('&');
+    }
+    
+    call(command, args, callback)
+    {
+        console.info(`API call ${command} with args=${JSON.stringify(args)}`);
+        var xhr = new XMLHttpRequest();
+        var method = this.config.calls[command].method;
+        
+        var url = this.config.endpoint;
+        if(method != "POST")
+            url += `?${this.json2uri(args)}`;
+        else
+        {
+            args.command = command;
+            args = JSON.stringify(args);
+        }
+        
+        xhr.open(method, url);
+        this._doXHR(xhr, args, method, callback);
+    }
+}
