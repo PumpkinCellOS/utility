@@ -5,7 +5,7 @@ $generator->start_content();
 ?>
 <h2 id="terms">PumpkinCell.net Legal Information</h2>
 <tlf-background-tile padding="big">
-    <h3>Go to:</h3>
+    <h3>Go to</h3>
     <ul>
         <li><a href="#terms">Terms of use</a></li>
         <li><a href="#privacy">Privacy policy</a></li>
