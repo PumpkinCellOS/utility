@@ -126,8 +126,6 @@ $generator->start_content();
             {controls.statistics}
         </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('request-log').style.display='block'; generateRequestLog(); return false;">
             {controls.requestLog}
-        </a><a is="tlf-button-tile" style="width: 16.666%">
-            <input type="checkbox" name="showDones" onclick="g_showDones = this.checked; requestLoading()" onload="onclick()"></input><span class="label">{controls.showAll}</span>
         </a><a is="tlf-button-tile" style="width: 16.666%" href="/u/lss-tlt-gen">
             {controls.lssTltGen}
         </a>
