@@ -25,8 +25,8 @@ $generator->start_pre_content();
                     </select><br>
                     <input type="checkbox" name="topicFormat" oninput="updateTopicDisplay()"><label for="topicFormat">{field.isExerciseList}</label><br>
                     <label for="untilTime">{field.turnInTime}</label><br>
-                    </select><input type="date" name="untilDate" oninput="updateTopicDisplay()"><br>
-                    </select><input type="time" step="60" name="untilTime" oninput="updateTopicDisplay()"><br>
+                    <input type="date" name="untilDate" oninput="updateTopicDisplay()"><br>
+                    <input type="time" step="60" name="untilTime" oninput="updateTopicDisplay()"><br>
                     <select name="status" onchange="submitModifyStatus(document.forms['topic-editor']['tid'].value, this.value); closeTopicEditor()">
                         <option value="?">{status.f}</option>
                         <option value="N">{status.n}</option>
