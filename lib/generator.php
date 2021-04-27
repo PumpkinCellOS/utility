@@ -58,8 +58,10 @@ class PCUGenerator
                             echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/`; })'>Log out</a></div>";
                         }
                         else
+                        {
                             echo "<div class='title-link-right'><a href='/user/login.php'>Log in</a></div>";
                             echo "<div class='title-link-right'><a href='/user/signup.php'>Sign up</a></div>";
+                        }
                     ?>
                     <!--<iframe width=395 height=50 style="overflow: hidden; border: none;" src="/u/timer.html?embed=1&mode=3"></iframe>-->
                 </div>
