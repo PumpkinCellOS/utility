@@ -58,13 +58,13 @@ utilityTask("hw-planner");
 utilityTask("lss-tlt-gen");
 utilityTask("cloud");
 
-gulp.task("utilities", gulp.series(utilityTasks));
+utilityTasks.push("utilities/network-builder");
 
 gulp.task("utilities/network-builder", function() {
-    return gulp.src("utility/network-builder/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/`));
+    return gulp.src("utility/network-builder/**", {base: "utility/network-builder/"}).pipe(gulp.dest(`${OUTPUT_DIR}/u/network-builder`));
 });
 
-utilityTasks.push("utilities/network-builder");
+gulp.task("utilities", gulp.series(utilityTasks));
 
 gulp.task("assets", function() {
     return gulp.src([".htaccess", "*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/`));
