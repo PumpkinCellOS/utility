@@ -86,7 +86,7 @@ var g_serverVersion = "Unknown";
 var g_showDones = false;
 var g_sortBy = "date"; // "sub", "date", "status"
 var g_sortMode = 1;  // 1, -1
-var g_filters = {}; // TODO: Make some default filters
+var g_filters = { status: ["f", "i", "e", "p", "n"] }; // TODO: Make some default filters
 var g_requestLog = null;
 var g_userCache = {};
 
@@ -508,7 +508,8 @@ window.submitFilters = function(form)
     data.status = [];
     if(form["status-f"].checked) data.status.push("f");
     if(form["status-ip"].checked) data.status.push("i");
-    if(form["status-e"].checked) data.status.push("a");
+    if(form["status-e"].checked) data.status.push("e");
+    if(form["status-p"].checked) data.status.push("p");
     if(form["status-v"].checked) data.status.push("v");
     if(form["status-x"].checked) data.status.push("x");
     if(form["status-n"].checked) data.status.push("n");

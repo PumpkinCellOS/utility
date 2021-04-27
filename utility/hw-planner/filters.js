@@ -34,6 +34,17 @@ data.sub = null;
     
 filter: function(hw, filters)
 {
+    {
+        var hasStatus = false;
+        for(var status of filters.status)
+        {
+            if(hw.status.toLowerCase().startsWith(status))
+                hasStatus = true;
+        }
+        if(!hasStatus)
+            return false;
+    }
+    
     if(filters.exercise_list && hw.topicFormat != "N")
         return false;
 
