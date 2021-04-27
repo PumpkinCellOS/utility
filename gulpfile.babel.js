@@ -10,7 +10,7 @@ const OUTPUT_DIR = "../html-build";
 var utilityTasks = [];
 function utilityTask(name, entry = "main.js")
 {
-    gulp.task(`${name}/js`, function() {
+    gulp.task(`utilities/${name}/js`, function() {
         return browserify({entries: [
                 `utility/${name}/${entry}`
             ]})
@@ -22,17 +22,17 @@ function utilityTask(name, entry = "main.js")
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}/assets`, function() {
+    gulp.task(`utilities/${name}/assets`, function() {
         return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}`, gulp.series(`${name}/js`, `${name}/assets`));
-    utilityTasks.push(name);
+    gulp.task(`utilities/${name}`, gulp.series(`utilities/${name}/js`, `utilities/${name}/assets`));
+    utilityTasks.push(`utilities/${name}`);
 };
 
 function moduleTask(name, entry = "main.js")
 {
-    gulp.task(`${name}/js`, function() {
+    gulp.task(`utilities/${name}/js`, function() {
         return browserify({sourceType: "module", entries: [
                 `utility/${name}/${entry}`
             ]})
@@ -44,12 +44,12 @@ function moduleTask(name, entry = "main.js")
             .pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}/assets`, function() {
+    gulp.task(`utilities/${name}/assets`, function() {
         return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
-    gulp.task(`${name}`, gulp.series(`${name}/js`, `${name}/assets`));
-    utilityTasks.push(name);
+    gulp.task(`utilities/${name}`, gulp.series(`utilities/${name}/js`, `utilities/${name}/assets`));
+    utilityTasks.push(`utilities/${name}`);
 };
 
 utilityTask("admin");
@@ -59,6 +59,12 @@ utilityTask("lss-tlt-gen");
 utilityTask("cloud");
 
 gulp.task("utilities", gulp.series(utilityTasks));
+
+gulp.task("utilities/network-builder", function() {
+    return gulp.src("utility/network-builder/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/`));
+});
+
+utilityTasks.push("utilities/network-builder");
 
 gulp.task("assets", function() {
     return gulp.src([".htaccess", "*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/`));
