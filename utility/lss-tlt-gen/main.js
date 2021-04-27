@@ -59,14 +59,13 @@ var g_data = {
         {"sub": "NI*", "class": 34,  "tunit": 8, "tday": 5, "type": "optional"},
         {"sub": "NI*", "class": 34,  "tunit": 9, "tday": 5, "type": "optional"}
     ],
-    // TODO
     "freeDays": [
         {"date": ["2021-04-01", "2021-04-02"], "reason": "Przerwa świąteczna"},
         {"date": ["2021-04-03", "2021-04-04"], "reason": "Wielkanoc"},
         {"date": "2021-04-05", "reason": "Pon. Wielkanocny"},
         {"date": "2021-04-06", "reason": "Przerwa świąteczna"},
         {"date": "2021-05-03", "reason": "Święto Konstytucji"},
-        {"date": ["2021-05-04", "2021-05-06"], "reason": "Matury"},
+        {"date": ["2021-05-04", "2021-05-07"], "reason": "Matury"},
         {"date": "2021-05-11", "reason": "Matury"},
         {"date": "2021-05-19", "reason": "Matury"},
         {"date": ["2021-06-03", "2021-06-04"], "reason": "Boże Ciało"},
