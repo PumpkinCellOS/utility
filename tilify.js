@@ -45,10 +45,63 @@ class TlfBackgroundTile extends HTMLElement {
     }
 }
 
+class TlfCombobox extends HTMLElement {
+    constructor() {
+        super();
+
+        this.selectBox = document.createElement("div");
+        this.selectBox.classList.add("tlf-selectbox");
+        this.appendChild(this.selectBox);
+        
+        this.openButton = document.createElement("button");
+        this.openButton.onclick = function() {
+            this.parentNode.expand(!this.parentNode.expanded);
+        };
+        this.appendChild(this.openButton);
+        
+        this.optionBox = document.createElement("div");
+        this.optionBox.classList.add("tlf-optionbox");
+        
+        for(var optionElement of this.querySelectorAll("option"))
+        {
+            var option = document.createElement("div");
+            option.classList.add("tlf-option");
+            option.value =  optionElement.getAttribute("value");
+            option.innerHTML = optionElement.innerHTML;
+            option.onclick = function() {
+                this.parentNode.parentNode.changeSelection(this);
+                this.parentNode.parentNode.expand(false);
+            }
+            this.optionBox.appendChild(option);
+        }
+        
+        this.appendChild(this.optionBox);
+    }
+    
+    expand(state) {
+        if(!state)
+        {
+            this.expanded = false;
+            this.optionBox.style.display = "";
+        }
+        else
+        {
+            this.expanded = true;
+            this.optionBox.style.display = "block";
+        }
+    }
+    
+    changeSelection(node) {
+        this.value = node.value;
+        this.selectBox.innerHTML = node.innerHTML;
+    }
+}
+
 // Register custom elements
-customElements.define("tlf-resizable-tile", TlfResizableTile, { extends: 'a' })
-customElements.define("tlf-button-tile", TlfButtonTile, { extends: 'a' })
-customElements.define("tlf-background-tile", TlfBackgroundTile)
+customElements.define("tlf-resizable-tile", TlfResizableTile, { extends: 'a' });
+customElements.define("tlf-button-tile", TlfButtonTile, { extends: 'a' });
+customElements.define("tlf-background-tile", TlfBackgroundTile);
+customElements.define("tlf-combobox", TlfCombobox);
 
 // Forms
 function tlfOpenForm(fields, callback, config)

@@ -6,6 +6,11 @@ body {
     --tlf-bg-cyan:    #448888;
     --tlf-bg-magenta: #884488;
     --tlf-bg-yellow:  #888844;
+    
+    --tlf-widget-height: 30px;
+    --tlf-widget-width: 250px;
+    
+    --tlf-color-widget-bg: #444448;
 }
 
 div.app-list {
@@ -19,7 +24,7 @@ div.small {
 
 div.resizable-tile {
     align-items: center;
-    background-color: #444448;
+    background-color: var(--tlf-color-widget-bg);
     border-radius: 4px;
     color: #bbbbbf;
     display: flex;
@@ -65,8 +70,54 @@ div.resizable-tile:hover {
     height: 150px;
 }
 
+tlf-combobox {
+    background-color: var(--tlf-color-widget-bg);
+    border-radius: 4px;
+    height: var(--tlf-widget-height);
+    display: inline-block;
+    width: var(--tlf-widget-width);
+}
+
+tlf-combobox option {
+    display: none;
+}
+
+tlf-combobox .tlf-selectbox {
+    border-radius: 4px;
+    display: inline-block;
+    height: var(--tlf-widget-height);
+    padding-left: 5px;
+}
+
+tlf-combobox .tlf-optionbox {
+    background-color: #555558;
+    border-radius: 4px;
+    display: none;
+    left: 0px;
+    max-height: 300px;
+    overflow-y: auto;
+    position: relative;
+    top: 0px;
+    width: var(--tlf-widget-width);
+}
+
+tlf-combobox .tlf-option {
+    padding: 3px 3px 3px 6px;
+}
+
+tlf-combobox .tlf-option:hover {
+    background-color: #656568;
+}
+
+tlf-combobox button {
+    height: var(--tlf-widget-height);
+    float: right;
+    margin: 0;
+    width: var(--tlf-widget-height);
+}
+
 div.background-tile, tlf-background-tile {
-    background-color: #444448;
+    background-color: var(--tlf-color-widget-bg);
     border-radius: 4px;
     color: #bbbbbf;
     display: block;
