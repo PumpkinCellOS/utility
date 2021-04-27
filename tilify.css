@@ -98,7 +98,7 @@ tlf-combobox .tlf-optionbox {
     overflow-y: auto;
     position: relative;
     top: 0px;
-    width: var(--tlf-widget-width);
+    width: 100%;
 }
 
 tlf-combobox .tlf-option {
