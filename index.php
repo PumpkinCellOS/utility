@@ -127,9 +127,8 @@ const pcuEntries = [
 const utilityEntries = [
     {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/misc/timer.html"},
     {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/misc/timer-gui.php"},
-    {"icon": "#128308", "units": 1, "color": "#555577", "displayName": "Twitch Overlay", "path": "/u/misc/twitch-redirect.html"},
+    {"icon": "#128308", "units": 1, "color": "#5b3e84", "displayName": "Twitch Overlay", "path": "/u/misc/twitch-redirect.html"},
     {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
-    {"icon": "#11123",  "units": 1, "color": "#776666", "displayName": "Files", "path": "/u/files"},
     <?php if($login) { ?>
         {"icon": "#8613",   "units": 1, "state": "alpha", "color": "#667766", "displayName": "Cloud Storage", "path": "/u/cloud"},
         {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
@@ -139,7 +138,7 @@ const utilityEntries = [
 
 const linkEntries = [
     {"displayName": "GitHub", "color": "#825f4b", "units": 1, "path": "https://github.com/sppmacd"},
-    {"displayName": "Twitch", "color": "#555577", "units": 1, "path": "https://twitch.tv/pumpkin_cell"},
+    {"displayName": "Twitch", "color": "#6f43a8", "units": 1, "path": "https://twitch.tv/pumpkin_cell"},
     {"displayName": "YouTube", "color": "#aa4444", "units": 1, "path": "https://youtube.com/sppmacd"},
     {"icon": "",   "units": 1, "color": "#864e39", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
 ];
