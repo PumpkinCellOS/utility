@@ -8,7 +8,7 @@ body {
     --tlf-bg-yellow:  #888844;
     
     --tlf-widget-height: 30px;
-    --tlf-widget-width: 250px;
+    --tlf-widget-width: 300px;
     
     --tlf-color-widget-bg: #444448;
 }
@@ -76,44 +76,6 @@ tlf-combobox {
     height: var(--tlf-widget-height);
     display: inline-block;
     width: var(--tlf-widget-width);
-}
-
-tlf-combobox option {
-    display: none;
-}
-
-tlf-combobox .tlf-selectbox {
-    border-radius: 4px;
-    display: inline-block;
-    height: var(--tlf-widget-height);
-    padding-left: 5px;
-}
-
-tlf-combobox .tlf-optionbox {
-    background-color: #555558;
-    border-radius: 4px;
-    display: none;
-    left: 0px;
-    max-height: 300px;
-    overflow-y: auto;
-    position: relative;
-    top: 0px;
-    width: 100%;
-}
-
-tlf-combobox .tlf-option {
-    padding: 3px 3px 3px 6px;
-}
-
-tlf-combobox .tlf-option:hover {
-    background-color: #656568;
-}
-
-tlf-combobox button {
-    height: var(--tlf-widget-height);
-    float: right;
-    margin: 0;
-    width: var(--tlf-widget-height);
 }
 
 div.background-tile, tlf-background-tile {
