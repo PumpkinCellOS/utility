@@ -197,7 +197,7 @@ function pcu_rmsession()
     }
 }
 
-function pcu_mkuser($json, $conn, $userName, $password)
+function pcu_mkuser($json, $conn, $userName, $password, $email)
 {
     session_start();
     
@@ -209,7 +209,7 @@ function pcu_mkuser($json, $conn, $userName, $password)
     if(pcu_load_user_data($conn, $userName))
         pcu_cmd_fatal("The user already exists");
     
-    if(!$conn->query("INSERT INTO users (userName, password) VALUES ('$userName', '$hash')"))
+    if(!$conn->query("INSERT INTO users (userName, password, email) VALUES ('$userName', '$hash', '$email')"))
         pcu_cmd_fatal("Failed to add user");
     
     pcu_authuser($json, $conn, $userName, $password);

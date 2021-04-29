@@ -69,6 +69,7 @@ var g_data = {
         {"date": "2021-05-11", "reason": "Matury"},
         {"date": "2021-05-19", "reason": "Matury"},
         {"date": ["2021-06-03", "2021-06-04"], "reason": "Boże Ciało"},
+        {"date": "2021-06-22", "reason": "Egzamin zawodowy"},
         {"date": ["2021-06-25", "2021-09-01"], "reason": "Wakacje"},
         {"date": "2021-12-23", "reason": "Przerwa świąteczna"},
         {"date": ["2021-12-24", "2021-12-26"], "reason": "Boże Narodzenie"},

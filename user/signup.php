@@ -1,6 +1,7 @@
 <?php
 require_once("../lib/generator.php");
 $generator = new PCUGenerator("Sign up");
+$generator->scripts = ["login.js"];
 $generator->start_content();
 ?>
     <h2>PumpkinCell.net Account</h2>
@@ -8,9 +9,9 @@ $generator->start_content();
         <!-- TODO: Use custom elements! -->
         <div class="background-tile-padding text-align-center">
             <h3>Sign up to get all free PumpkinCell services</h3>
-            <form method="POST" action="/api/login.php" onsubmit="return validate(this)">
+            <form method="POST" action="/api/login.php" onsubmit="if(validate(this)) signup(this); return false;">
                 <input type="hidden" name="command" value="create-user"></input>
-                <input type="email" name="userName" placeholder="E-mail address"></input><br>
+                <input type="email" name="email" placeholder="E-mail address"></input><br>
                 <input type="text" name="userName" placeholder="Username (will be used to log in)"></input><br>
                 <input type="password" name="password" placeholder="Password"></input><br>
                 <input type="password" name="password2" placeholder="Retype password"></input><br>
@@ -18,7 +19,7 @@ $generator->start_content();
             </form>
             <p>Already have an account? <a href="/user/login.php">Log in</a> here.</p>
             <p>By creating an account, you agree to <a href="/terms.php#use">terms of use</a> and <a href="/terms.php#privacy">privacy policy</a>.</p>
-            <p><b>Note that email address is not really required for now :)</b></p>
+            <p><b>Note: Email address is not really required, but saved in our database. If you ever forget a password, you can give that address for verification.</b></p>
         </div>
     </div>
     

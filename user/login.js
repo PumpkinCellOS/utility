@@ -3,6 +3,7 @@ var api = new TlfAPI({
     endpoint: "/api/login.php",
     calls: {
         "auth-user": { method: "POST" },
+        "create-user": { method: "POST" }
     }
 });
 
@@ -14,5 +15,15 @@ function login(userName, password) {
         {
             tlfOpenForm([], null, { title:"Invalid credentials", noCancel: true });
         }
+    });
+}
+
+function signup(form)
+{
+    var email = form["email"].value;
+    var userName = form["userName"].value;
+    var password = form["password"].value;
+    api.call("create-user", { email: email, userName: userName, password: password }, function() {
+        window.location.href = "/";
     });
 }

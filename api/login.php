@@ -26,7 +26,8 @@ $api->register_command("create-user", function($api) {
     $conn = $api->require_database("pcutil");
     $userName = $conn->real_escape_string($api->required_arg("userName"));
     $password = $api->required_arg("password");
-    pcu_mkuser($json, $conn, $userName, $password);
+    $email = $conn->real_escape_string($api->optional_arg("email", "not-given"));
+    pcu_mkuser($json, $conn, $userName, $password, $email);
     return $json;
 });
 $api->register_command("query-user", function($api) {
