@@ -84,15 +84,17 @@ ul {
 }
 
 a {
+    color: #b0c0d0;
     font-weight: bold;
     text-decoration: none;
-    color: #b0c0d0;
+    transition: color 0.15s;
 }
 
 a:hover {
+    color: #ccddee;
     font-weight: bold;
     text-decoration: underline;
-    color: #ccddee;
+    transition: color 0.15s;
 }
 
 span.app-tile-wip {
@@ -208,6 +210,16 @@ transition: color 0.1s;
     padding: 10px;
     text-align: center;
 }
+
+#logo {
+    transition: transform 0.15s, background-color 0.15s;
+}
+
+#logo:hover {
+    transform: scale(1.02, 1.02);
+    transition: transform 0.15s, background-color 0.15s;
+}
+
 button.msgbox {
     background-color: #bbbbbb;
     border: 1px solid #777777;
