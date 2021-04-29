@@ -5,7 +5,7 @@
       'expires' => 2147483647,
       'samesite' => 'Lax',
       'path' => '/',
-      'domain' => '192.168.1.36'
+      'domain' => 'pumpkincell.duckdns.org'
     ]))
     {
       http_response_code(405);
@@ -81,7 +81,7 @@
     "client_secret" => $secret,
     "code" => $code,
     "grant_type" => "authorization_code",
-    "redirect_uri" => "http://192.168.1.36/api/twitch-oauth.php/"
+    "redirect_uri" => "https://pumpkincell.duckdns.org/api/twitch-oauth.php/"
   ));
 
   echo $data;
