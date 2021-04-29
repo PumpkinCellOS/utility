@@ -20,10 +20,18 @@ class TlfResizableTile extends HTMLAnchorElement {
         if(color == undefined || color.length == 0)
             colorHTML = "";
         else
-            colorHTML = "style='background-color: " + color + "'";
+            colorHTML = "--tlf-color: " + color + ";";
+
+        // hovercolor
+        var hovercolorHTML = "";
+        var hovercolor = this.getAttribute("hovercolor");
+        if(hovercolor == undefined || hovercolor.length == 0)
+            hovercolorHTML = "";
+        else
+            hovercolorHTML = "--tlf-hover-color: " + hovercolor + ";";
 
         // apply
-        this.innerHTML = "<div class='resizable-tile'" + colorHTML + ">" + name + "</div>"
+        this.innerHTML = "<div class='resizable-tile' style='" + colorHTML + hovercolorHTML + "'>" + name + "</div>"
     }
 }
 

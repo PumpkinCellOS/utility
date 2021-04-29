@@ -11,6 +11,9 @@ body {
     --tlf-widget-width: 300px;
     
     --tlf-color-widget-bg: #444448;
+    
+    --tlf-color: var(--tlf-color-widget-bg);
+    --tlf-hover-color: #555559;
 }
 
 div.app-list {
@@ -24,7 +27,7 @@ div.small {
 
 div.resizable-tile {
     align-items: center;
-    background-color: var(--tlf-color-widget-bg);
+    background-color: var(--tlf-color);
     border-radius: 4px;
     color: #bbbbbf;
     display: flex;
@@ -37,7 +40,7 @@ div.resizable-tile {
 }
 
 div.resizable-tile:hover {
-    background-color: #555559;
+    background-color: var(--tlf-hover-color);
     transform: scale(1.02, 1.02);
     transition: transform 0.15s, background-color 0.15s;
 }

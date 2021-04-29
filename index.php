@@ -78,10 +78,15 @@ function generateUtilityEntry(entry) {
         
     var list_link = path;
     
+    if(entry.color === undefined)
+        entry.color = "inherit";
+    if(entry.hovercolor === undefined)
+        entry.hovercolor = entry.color;
+    
     if(entry.noblank === undefined)
         entry.noblank = true;
         
-    var html = `<a is="tlf-resizable-tile" style="${entry.disabled ? "" : ""}" noblank="${entry.noblank}" color="${entry.color}" href="`;
+    var html = `<a is="tlf-resizable-tile" style="${entry.disabled ? "" : ""}" noblank="${entry.noblank}" color="${entry.color}" hovercolor="${entry.hovercolor}" href="`;
     html += list_link + '">' + list_name + '</a>';
 
     return html;
@@ -117,30 +122,30 @@ function swapEntries(arrId, list, ix1, ix2)
 const pcuEntries = [
     <?php if(!pcu_role_less($userData["role"], "member")) { ?>
     {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
-    {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
+    {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "hovercolor": "#536092", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
     <?php } ?>
     <?php if(!pcu_role_less($userData["role"], "admin")) { ?>
-    {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "state": "beta", "path": "/u/admin"},
+    {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "hovercolor": "#658787", "state": "beta", "path": "/u/admin"},
     <?php } ?>
 ];
 
 const utilityEntries = [
-    {"icon": "#9200",   "units": 1, "color": "#666644", "displayName": "Timer", "path": "/u/misc/timer.html"},
-    {"icon": "#9200",   "units": 1, "state": "alpha", "color": "#666644", "displayName": "Timer GUI", "path": "/u/misc/timer-gui.php"},
-    {"icon": "#128308", "units": 1, "color": "#5b3e84", "displayName": "Twitch Overlay", "path": "/u/misc/twitch-redirect.html"},
-    {"icon": "#127760", "units": 1, "color": "#555566", "displayName": "Network Builder", "path": "/u/network-builder"},
+    {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "displayName": "Timer", "path": "/u/misc/timer.html"},
+    {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "state": "alpha", "displayName": "Timer GUI", "path": "/u/misc/timer-gui.php"},
+    {"icon": "#128308", "units": 1, "color": "#5b3e84", "hovercolor": "#6b4e94", "displayName": "Twitch Overlay", "path": "/u/misc/twitch-redirect.html"},
+    {"icon": "#127760", "units": 1, "color": "#555566", "hovercolor": "#656576", "displayName": "Network Builder", "path": "/u/network-builder"},
     <?php if($login) { ?>
-        {"icon": "#8613",   "units": 1, "state": "alpha", "color": "#667766", "displayName": "Cloud Storage", "path": "/u/cloud"},
-        {"icon": "",        "units": 1, "state": "beta", "color": "#704444", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
-        {"icon": "#128394", "units": 1, "color": "#653939", "displayName": "HW Planner", "path": "/u/hw-planner"},
+        {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "alpha", "displayName": "Cloud Storage", "path": "/u/cloud"},
+        {"icon": "",        "units": 1, "color": "#704444", "hovercolor": "#805454", "state": "beta", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
+        {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/u/hw-planner"},
     <?php } ?>
 ]; 
 
 const linkEntries = [
-    {"displayName": "GitHub", "color": "#825f4b", "units": 1, "path": "https://github.com/sppmacd"},
-    {"displayName": "Twitch", "color": "#6f43a8", "units": 1, "path": "https://twitch.tv/pumpkin_cell"},
-    {"displayName": "YouTube", "color": "#aa4444", "units": 1, "path": "https://youtube.com/sppmacd"},
-    {"icon": "",   "units": 1, "color": "#864e39", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
+    {"displayName": "GitHub",  "color": "#825f4b", "hovercolor": "#926f5b", "units": 1, "path": "https://github.com/sppmacd"},
+    {"displayName": "Twitch",  "color": "#6f43a8", "hovercolor": "#7f53b8", "units": 1, "path": "https://twitch.tv/pumpkin_cell"},
+    {"displayName": "YouTube", "color": "#aa4444", "hovercolor": "#ba5454", "units": 1, "path": "https://youtube.com/sppmacd"},
+    {"icon": "",   "units": 1, "color": "#864e39", "hovercolor": "#965e49", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
 ];
 
 generateEntries("pcu-app-list", pcuEntries);
