@@ -27,7 +27,7 @@ var g_data = {
         {"sub": "SYS", "class": 57,  "tunit": 5, "tday": 2},
         {"sub": "PSY", "class": 56,  "tunit": 6, "tday": 2},
         {"sub": "MAT", "class": 17,  "tunit": 7, "tday": 2},
-        {"sub": "MAT", "class": 17,  "tunit": 8, "tday": 2},
+        {"sub": "GWC", "class": 17,  "tunit": 8, "tday": 2},
         {"sub": "PPO", "class": 51,  "tunit": 9, "tday": 2},
         
         {"sub": "PUT", "class": 62,  "tunit": 1, "tday": 3},
@@ -183,7 +183,7 @@ function generateBlockText(data, hwPlannerData)
     return inner;
 }
 
-const SCALE = 1;
+const SCALE = 1.2;
 const SPACING = 20;
 
 var g_currentLesson = null;
@@ -266,7 +266,7 @@ function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
 function generateBlock(data, hwPlannerData)
 {
     var realDayDate = new Date(g_startDay.getTime() + data.tday * 86400000);
-    var freeDay = findFreeDay(realDayDate);
+    var freeDay = data.type != "hourDisplay" ? findFreeDay(realDayDate) : null;
     
     var inner = "";
     var tunitdb = getUnitDB(data);
