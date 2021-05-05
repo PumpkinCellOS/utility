@@ -19,45 +19,43 @@ var g_data = {
         {"sub": "<<<", "class": "*", "tunit": 6, "tday": 1, "type": "window"},
         {"sub": "NIE", "class": 34,  "tunit": 7, "tday": 1},
         {"sub": "NIE", "class": 34,  "tunit": 8, "tday": 1},
+        {"sub": "HIS", "class": 38,  "tunit": 9, "tday": 1},
         
         {"sub": "POL", "class": 23,  "tunit": 2, "tday": 2},
         {"sub": "POL", "class": 23,  "tunit": 3, "tday": 2},
         {"sub": "ANG", "class": 20,  "tunit": 4, "tday": 2},
-        {"sub": "SYS", "class": 36,  "tunit": 5, "tday": 2},
+        {"sub": "SYS", "class": 57,  "tunit": 5, "tday": 2},
         {"sub": "PSY", "class": 56,  "tunit": 6, "tday": 2},
-        {"sub": "MAT", "class": 37,  "tunit": 7, "tday": 2},
-        {"sub": "MAT", "class": 37,  "tunit": 8, "tday": 2},
+        {"sub": "MAT", "class": 17,  "tunit": 7, "tday": 2},
+        {"sub": "MAT", "class": 17,  "tunit": 8, "tday": 2},
         {"sub": "PPO", "class": 51,  "tunit": 9, "tday": 2},
         
         {"sub": "PUT", "class": 62,  "tunit": 1, "tday": 3},
         {"sub": "PUT", "class": 62,  "tunit": 2, "tday": 3},
-        {"sub": "PRO", "class": 32,  "tunit": 3, "tday": 3},
+        {"sub": "PSY", "class": 41,  "tunit": 3, "tday": 3},
         {"sub": "PPR", "class": 33,  "tunit": 4, "tday": 3},
-        {"sub": "HIS", "class": 38,  "tunit": 5, "tday": 3},
-        {"sub": "SIE", "class": 31,  "tunit": 6, "tday": 3},
-        {"sub": "UTK", "class": 22,  "tunit": 7, "tday": 3},
+        {"sub": "MAT", "class": 26,  "tunit": 5, "tday": 3},
+        {"sub": "SIE", "class": 57,  "tunit": 6, "tday": 3},
+        {"sub": "MAT", "class": 37,  "tunit": 7, "tday": 3},
         {"sub": "MAT", "class": 37,  "tunit": 8, "tday": 3},
-        {"sub": "GWC", "class": 37,  "tunit": 9, "tday": 3},
+        {"sub": "INF", "class": 58,  "tunit": 9, "tday": 3},
         
         {"sub": "ANG", "class": 20,  "tunit": 2, "tday": 4},
         {"sub": "JIN", "class": 32,  "tunit": 3, "tday": 4},
-        {"sub": "MAT", "class": 0,   "tunit": 4, "tday": 4},
+        {"sub": "UTK", "class": 36,  "tunit": 4, "tday": 4},
         {"sub": "POL", "class": 23,  "tunit": 5, "tday": 4},
         {"sub": ">>>", "class": "*", "tunit": 6, "tday": 4, "type": "window"},
         {"sub": "WFI", "class": "*", "tunit": 7, "tday": 4},
         {"sub": "WFI", "class": "*", "tunit": 8, "tday": 4},
         {"sub": "<<<", "class": "*", "tunit": 9, "tday": 4, "type": "window"},
         
-        {"sub": "PSY", "class": 41,  "tunit": 0, "tday": 5},
         {"sub": "PSI", "class": 43,  "tunit": 1, "tday": 5},
         {"sub": "PSI", "class": 43,  "tunit": 2, "tday": 5},
-        {"sub": "INF", "class": 58,  "tunit": 3, "tday": 5},
+        {"sub": "PRO", "class": 23,  "tunit": 3, "tday": 5},
         {"sub": "PRO", "class": 28,  "tunit": 4, "tday": 5},
         {"sub": "UTK", "class": 36,  "tunit": 5, "tday": 5},
-        {"sub": "SYS", "class": 57,  "tunit": 6, "tday": 5},
-        {"sub": "INF", "class": 57,  "tunit": 7, "tday": 5},
-        {"sub": "NI*", "class": 34,  "tunit": 8, "tday": 5, "type": "optional"},
-        {"sub": "NI*", "class": 34,  "tunit": 9, "tday": 5, "type": "optional"}
+        {"sub": "SYS", "class": 26,  "tunit": 6, "tday": 5},
+        {"sub": "INF", "class": 58,  "tunit": 7, "tday": 5}
     ],
     "freeDays": [
         {"date": ["2021-04-01", "2021-04-02"], "reason": "Przerwa świąteczna"},
@@ -161,7 +159,10 @@ function statusToImp(status)
 
 function generateBlockText(data, hwPlannerData)
 {
-    var inner = "<b>" + data.sub + "</b>&nbsp;" + data.class;
+    var inner = "<b>" + data.sub + "</b>";
+    if(data.type != "hourDisplay")
+        inner += "&nbsp;" + data.class;
+
     var title = "";
     if(hwPlannerData.length == 1)
     {
@@ -218,9 +219,9 @@ function generateCurrent()
     var current = new Date();
     
     var top = ((current.getHours() - g_data.tunit[0][0]) * 60 + current.getMinutes()) * SCALE;
-    var left_pc = 100 * ((current.getDay() - g_data.dayrange[0]) / (g_data.dayrange[1] - g_data.dayrange[0] + 1));
+    var left_pc = 100 * ((current.getDay() - g_data.dayrange[0] + 0.5) / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5));
     var left_spacing = 0;
-    var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1) * 100;
+    var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5) * 100;
     var width_spacing = 0;
     
     var inner = "";
@@ -281,11 +282,17 @@ function generateBlock(data, hwPlannerData)
     enddate.setHours(unit[2]);
     enddate.setMinutes(unit[3]);
     
-    var left_pc = 100 * ((data.tday - g_data.dayrange[0]) / (g_data.dayrange[1] - g_data.dayrange[0] + 1));
+    var left_pc = 100 * ((data.tday - g_data.dayrange[0] + 0.5) / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5));
     var left_spacing = SPACING / 2;
     var top = ((startdate.getHours() - g_data.tunit[0][0]) * 60 + startdate.getMinutes()) * SCALE;
-    var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1) * 100;
+    var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5) * 100;
     var width_spacing = SPACING;
+    if(data.type == "hourDisplay")
+    {
+        left_pc += width_pc / 2;
+        width_pc = 100;
+        width_spacing -= 20;
+    }
     var height = (enddate - startdate) * SCALE / 60000;
     
     var text;
@@ -338,6 +345,14 @@ function generateTlt(data)
     g_currentLesson = null;
     for(var lsn of g_data.lessons)
     {
+        inner += generateBlock(lsn, data);
+    }
+    for(var unit in g_data.tunit)
+    {
+        var unit_inst = g_data.tunit[unit];
+        var lsn = {sub: unit_inst[0].toString().padStart(2, "0") + ":" + unit_inst[1].toString().padStart(2, "0")
+            + "<br>" + unit_inst[2].toString().padStart(2, "0") + ":" + unit_inst[3].toString().padStart(2, "0"), tunit: unit, tday: 0,
+            type: "hourDisplay"};
         inner += generateBlock(lsn, data);
     }
     

@@ -2,18 +2,24 @@
     background-color: var(--color);
     box-shadow: 1px 1px 4px black;
     box-sizing: border-box;
+    color: black;
     text-align: center;
     position: absolute;
 }
 
 .tlt-inner {
     align-items: center;
-    color: black;
     display: flex;
     font-size: 150%;
     height: calc(100% - 10px);
     justify-content: center;
     margin: 5px;
+}
+
+.tt-hourDisplay .tlt-inner {
+    font-size: 0.8em;
+    justify-content: left;
+    padding-left: 10px;
 }
 
 .tlt-topic-label {
@@ -90,6 +96,14 @@
 
 .tt-window {
     --color: #dd9999;
+}
+
+.tt-hourDisplay {
+    --color: transparent;
+    box-shadow: none;
+    border: dashed #aaaaaa;
+    border-width: 1px 0px 1px 0px;
+    color: #cccccc;
 }
 
 @keyframes tt-current {
