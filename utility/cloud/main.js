@@ -218,7 +218,7 @@ function generateFileEntry(file)
 function generateBreadcrumb()
 {
     var breadcrumb = document.getElementById("breadcrumb");
-    var inner = "";
+    var inner = `<b>${PCU_USER_DATA.userName}'s main directory</b> &gt; `;
     for(var dir in g_currentDir)
     {
         // TODO: Make it a link!
