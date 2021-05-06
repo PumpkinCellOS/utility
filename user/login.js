@@ -13,7 +13,8 @@ function login(userName, password) {
     }, function(data) {
         if(data.message !== undefined)
         {
-            tlfOpenForm([], null, { title: data.message, noCancel: true });
+            tlfNotification(data.message, TlfNotificationType.Error);
+            //tlfOpenForm([], null, { title: data.message, noCancel: true });
         }
     });
 }
@@ -28,7 +29,8 @@ function signup(form)
     }, function(data) {
         if(data.message !== undefined)
         {
-            tlfOpenForm([], null, { title: data.message, noCancel: true });
+            tlfNotification(data.message, TlfNotificationType.Error);
+            //tlfOpenForm([], null, { title: data.message, noCancel: true });
         }
     });
 }
