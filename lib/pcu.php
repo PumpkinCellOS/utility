@@ -133,6 +133,14 @@ function pcu_user_session()
     return $_SESSION["userData"];
 }
 
+function pcu_safe_user_session()
+{
+    session_start();
+    $sess_safe = $_SESSION["userData"];
+    $sess_safe["password"] = "****";
+    return $sess_safe;
+}
+
 function pcu_is_logged_in_as($userName)
 {
     session_start();
