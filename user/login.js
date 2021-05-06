@@ -13,7 +13,7 @@ function login(userName, password) {
     }, function(data) {
         if(data.message !== undefined)
         {
-            tlfOpenForm([], null, { title:"Invalid credentials", noCancel: true });
+            tlfOpenForm([], null, { title: data.message, noCancel: true });
         }
     });
 }
@@ -28,7 +28,7 @@ function signup(form)
     }, function(data) {
         if(data.message !== undefined)
         {
-            tlfOpenForm([], null, { title:"Error: " + data.message, noCancel: true });
+            tlfOpenForm([], null, { title: data.message, noCancel: true });
         }
     });
 }
