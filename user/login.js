@@ -25,5 +25,10 @@ function signup(form)
     var password = form["password"].value;
     api.call("create-user", { email: email, userName: userName, password: password }, function() {
         window.location.href = "/";
+    }, function(data) {
+        if(data.message !== undefined)
+        {
+            tlfOpenForm([], null, { title:"Error: " + data.message, noCancel: true });
+        }
     });
 }
