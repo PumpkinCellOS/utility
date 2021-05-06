@@ -6,6 +6,11 @@ $generator = new PCUGenerator("Admin panel");
 $userData = pcu_require_role("admin");
 $uid = $userData["id"];
 
+if(!pcu_allow_insecure_operations())
+{
+    pcu_page_error("Admin Panel disabled for non-local IPs due to security reasons", 403);
+}
+
 $generator->scripts = ["app.js"];
 $generator->start_content();
 
