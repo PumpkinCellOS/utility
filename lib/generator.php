@@ -32,6 +32,9 @@ class PCUGenerator
                             echo "<link rel='stylesheet' href=$stylesheet>";
                         echo $this->head_suffix;
                     ?>
+                    <script>
+                    window.PCU_USER_DATA = <?php echo json_encode(pcu_safe_user_session()); ?>
+                    </script>
                 </head>
                 <body>
         <?php
