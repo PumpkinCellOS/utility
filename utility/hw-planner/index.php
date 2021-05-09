@@ -99,6 +99,7 @@ $generator->start_pre_content();
             <h4>{field.subject}</h4>
             <input type="checkbox" name="sub-"/><label>{todo}</label><br>
             <input type="submit" value="Save" onclick="document.getElementById('form-filters').style.display = 'none'" style="background-color: var(--tlf-bg-green)">
+            <input type="button" style="background-color: var(--tlf-bg-yellow)" value="{form.cancel}" onclick="document.getElementById('form-filters').style.display = 'none'"></input>
         </form>
     </div>
     <div id="statistics" class="fullscreen-form" style="display: none">
