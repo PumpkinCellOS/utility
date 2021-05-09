@@ -3,7 +3,8 @@ var api = new TlfAPI({
     endpoint: "/api/login.php",
     calls: {
         "auth-user": { method: "POST" },
-        "create-user": { method: "POST" }
+        "create-user": { method: "POST" },
+        "change-password": { method: "POST" }
     }
 });
 
@@ -33,4 +34,20 @@ function signup(form)
             //tlfOpenForm([], null, { title: data.message, noCancel: true });
         }
     });
+}
+
+function changePassword()
+{
+    tlfOpenForm([{type: "password", name: "password", placeholder: "Password"}, {type: "password", name: "password2", placeholder: "Repeat password"}], function(args) {
+        if(args.password != args.password2)
+        {
+            tlfNotification("Passwords do not match", TlfNotificationType.Error);
+            return false;
+        }
+            
+        api.call("change-password", {"password": args.password}, (data)=>{
+            this.close();
+        });
+        return false;
+    }, {title: "Change password"});
 }
