@@ -238,6 +238,16 @@ function tlfOpenForm(fields, callback, config)
             }
         }
         
+        var formObject = {
+            callback: callback,
+            
+            close: function() {
+                this.element.parentNode.removeChild(this.element);
+            },
+            
+            element: fullScreenForm
+        };
+        
         var submit = document.createElement("input");
         submit.type = "submit";
         submit.value = config.submitName ?? "Ok";
@@ -249,12 +259,12 @@ function tlfOpenForm(fields, callback, config)
                     args[field.name] = fullScreenForm[field.name].value;
             }
             
-            if(callback(args) === false)
+            if(formObject.callback(args) === false)
             {
                 // FIXME: Allow setting some error message
                 return false;
             }
-            fullScreenForm.parentNode.removeChild(fullScreenForm);
+            formObject.close();
             return false;
         }
         fullScreenForm.appendChild(submit);
@@ -265,7 +275,7 @@ function tlfOpenForm(fields, callback, config)
             cancel.type = "submit";
             cancel.value = config.cancelName ?? "Cancel";
             cancel.onclick = function() {
-                fullScreenForm.parentNode.removeChild(fullScreenForm);
+                formObject.close();
                 return false;
             }
             fullScreenForm.appendChild(cancel);
