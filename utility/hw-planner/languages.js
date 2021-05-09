@@ -67,7 +67,8 @@ en_US : {
         },
         ok: "OK",
         cancel: "Cancel",
-        save: "Save"
+        save: "Save",
+        delete: "Delete"
     },
     field: {
         description: {
@@ -184,7 +185,8 @@ pl_PL : {
         },
         ok: "OK",
         cancel: "Anuluj",
-        save: "Zapisz"
+        save: "Zapisz",
+        delete: "Usuń"
     },
     field: {
         description: {
