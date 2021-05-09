@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PCU_SOURCE_DIR=~/Prog/Big/www/html
+PCU_SOURCE_DIR=$(realpath $0)
 
 # Ensure that html-build is up-to-date
 cd ${PCU_SOURCE_DIR}
