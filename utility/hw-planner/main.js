@@ -121,10 +121,11 @@ var loadSteps = 0;
 window.generateLabel = function(tl, customImp)
 {
     if(tl.length == 0)
-        return L(label.noLabel);
-    
+        return L("label.noLabel");
+
     var topicLabelHTML = "";
     var label = LABELS[tl];
+    
     if(label == undefined)
     {
         if(customImp != undefined)
