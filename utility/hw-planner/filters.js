@@ -48,7 +48,6 @@ filter: function(hw, filters)
     if(filters.exercise_list && hw.topicFormat != "N")
         return false;
 
-    console.log(hw.optional);
     if(filters.optional && hw.optional == '0')
         return false;
     

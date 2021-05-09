@@ -649,7 +649,6 @@ function generateDataTable()
     for(var t in g_hws)
     {
         var f = filters.filter(g_hws[t], g_filters);
-        console.log(f);
         if(f)
             arr.push(g_hws[t]);
     }
