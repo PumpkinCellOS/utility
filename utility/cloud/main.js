@@ -19,9 +19,11 @@ function getParam(name)
 var uid_url = getParam("u");
 if(uid_url == "")
     uid_url = uid;
+
 console.log("Request UID is " + uid_url);
 var currentDir = getParam("cd");
 window.g_currentDir = (currentDir != "" ? currentDir.split() : []);
+
 if(window.g_currentDir[0] != ".")
     window.g_currentDir.unshift(".");
 
@@ -218,7 +220,7 @@ function generateFileEntry(file)
 function generateBreadcrumb()
 {
     var breadcrumb = document.getElementById("breadcrumb");
-    var inner = `<b>${PCU_USER_DATA.userName}'s main directory</b> &gt; `;
+    var inner = `<b>${PHP_requestUserData.userName}'s main directory</b> &gt; `;
     for(var dir in g_currentDir)
     {
         // TODO: Make it a link!

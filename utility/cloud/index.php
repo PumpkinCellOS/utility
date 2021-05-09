@@ -9,6 +9,9 @@ if(!pcu_is_logged_in())
     $userData["userName"] = "[[public]]";
 }
 
+$json = new stdClass();
+$requestUserData = pcu_user_by_id(pcu_cmd_connect_db($json, "pcutil"), isset($_REQUEST["u"]) ? $_REQUEST["u"] : $userData["id"]);
+
 $PCU_CLOUD = "/var/pcu-cloud";
 
 switch($_SERVER["REQUEST_METHOD"])
@@ -51,6 +54,7 @@ switch($_SERVER["REQUEST_METHOD"])
                 var lastProcessed = 0;
                 var lastProcessedTimestamp = 0;
                 var uid = <?php echo $userData["id"]; ?>;
+                window.PHP_requestUserData = <?php echo json_encode($requestUserData); ?>;
                 
                 function generateUploadProgress(file)
                 {
