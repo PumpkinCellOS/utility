@@ -48,6 +48,8 @@
     z-index: 100;
 }
 
+    <div id="container">
+    </div>
 #tlt-current-box {
     position: absolute;
 }
@@ -56,6 +58,8 @@
     background-color: #aaaaff;
     height: 1px;
     outline: 1px solid black;
+    <div id="container">
+    </div>
 }
 
 #tlt-current-label {
@@ -117,12 +121,33 @@
     animation: tt-current 1s infinite ease-in-out;
 }
 
-#container {
+#container, #date-container {
     position: relative;
-    margin: 50px 10% 0px 10%;
+    margin: 0px 10% 0px 10%;
     width: 80%;
+}
+
+#date-container {
+    margin-top: 50px;
+}
+
+#container {
+    margin-top: 20px;
 }
 
 #container-wrapper {
     margin-bottom: 40px;
+}
+
+#date-container-wrapper {
+    height: 20px;
+}
+
+.date-block {
+    color: #dddddd;
+    font-size: 1.5em;
+    font-weight: bold;
+    height: 30px;
+    position: absolute;
+    text-align: center;
 }

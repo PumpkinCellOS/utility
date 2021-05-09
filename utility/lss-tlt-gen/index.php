@@ -24,6 +24,10 @@ $generator->start_content();
         &gt;
     </a>
 </div>
+<div id="date-container-wrapper">
+    <div id="date-container">
+    </div>
+</div>
 <div id="container-wrapper">
     <div id="container">
     </div>

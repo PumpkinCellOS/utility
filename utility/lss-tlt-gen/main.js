@@ -330,6 +330,27 @@ function generateBlock(data, hwPlannerData)
     return inner;
 }
 
+function generateDates()
+{
+    var inner = "";
+    for(var i = g_data.dayrange[0]; i <= g_data.dayrange[1]; i++)
+    {
+        var left_pc = 100 * ((i - g_data.dayrange[0] + 0.5) / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5));
+        var left_spacing = SPACING / 2;
+        var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5) * 100;
+        var width_spacing = SPACING;
+    
+        var realDayDate = new Date(g_startDay.getTime() + (i - g_data.dayrange[0]) * 86400000);
+        
+        inner += 
+            `<div class="date-block" style="left: calc(${left_pc}% + ${left_spacing}px); width: calc(${width_pc}% - ${width_spacing}px);">
+                ${dateNoTimeString(realDayDate)}
+            </div>`;
+    }
+    
+    return inner;
+}
+
 function generateTlt(data)
 {
     // configure
@@ -360,6 +381,8 @@ function generateTlt(data)
     
     inner += generateCurrent();
     document.getElementById("container").innerHTML = inner;
+    
+    document.getElementById("date-container").innerHTML = generateDates();
     
     var diffMinutes = constructMinutes(g_data.tunit[g_data.tunit.length - 1].slice(2)) - constructMinutes(g_data.tunit[0]);
     document.getElementById("container-wrapper").style.height = ((diffMinutes * SCALE) + 10) + "px";
