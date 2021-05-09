@@ -48,8 +48,6 @@
     z-index: 100;
 }
 
-    <div id="container">
-    </div>
 #tlt-current-box {
     position: absolute;
 }
@@ -58,8 +56,6 @@
     background-color: #aaaaff;
     height: 1px;
     outline: 1px solid black;
-    <div id="container">
-    </div>
 }
 
 #tlt-current-label {
