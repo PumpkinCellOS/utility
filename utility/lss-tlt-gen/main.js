@@ -213,10 +213,10 @@ function generateCurrentLabelText()
 
 function generateCurrent()
 {
-    if(g_weekOffset != 0)
-        return "";
-    
     var current = new Date();
+
+    if(g_weekOffset != 0 || current.getDay() < g_data.dayrange[0] || current.getDay() > g_data.dayrange[1])
+        return "";
     
     var top = ((current.getHours() - g_data.tunit[0][0]) * 60 + current.getMinutes()) * SCALE;
     var left_pc = 100 * ((current.getDay() - g_data.dayrange[0] + 0.5) / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5));
@@ -287,12 +287,14 @@ function generateBlock(data, hwPlannerData)
     var top = ((startdate.getHours() - g_data.tunit[0][0]) * 60 + startdate.getMinutes()) * SCALE;
     var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5) * 100;
     var width_spacing = SPACING;
+    
     if(data.type == "hourDisplay")
     {
         left_pc += width_pc / 2;
         width_pc = 100;
         width_spacing -= 20;
     }
+
     var height = (enddate - startdate) * SCALE / 60000;
     
     var text;
@@ -312,7 +314,7 @@ function generateBlock(data, hwPlannerData)
     var b2 = currentMinutes >= startMinutes;
     var b3 = currentMinutes <= endMinutes;
 
-    if(b1 && b2 && b3 && g_weekOffset == 0)
+    if(b1 && b2 && b3 && g_weekOffset == 0 && data.type != "hourDisplay")
     {
         type += " tt-current";
         g_currentLesson = data;
