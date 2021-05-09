@@ -617,9 +617,9 @@ function generateDataTable()
             subSort = " &#9660;&nbsp;";
     }
         
-    inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + `${L("field.subject")}</td>`;
+    inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + `${L("field.subject.name")}</td>`;
     
-    inner += `<td>${L("field.topic")}</td>`;
+    inner += `<td>${L("field.topic.name")}</td>`;
     
     var dateSort = "";
     if(g_sortBy == "date")

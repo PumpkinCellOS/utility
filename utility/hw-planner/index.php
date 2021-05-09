@@ -15,10 +15,10 @@ $generator->start_pre_content();
                 <div class="column">
                     <input type="hidden" name="tid"></input>
                     <input type="hidden" name="mode"></input>
-                    <label for="sub">{field.subject}</label><br>
-                    <input type="text" name="sub" placeholder="3-Character Subject Identifier" oninput="updateTopicDisplay()"></input><br>
-                    <label for="topic">{field.topic}</label><br>
-                    <input type="text" name="topic" placeholder="Topic" oninput="updateTopicDisplay()"></input><br>
+                    <label for="sub">{field.subject.name}</label><br>
+                    <input type="text" name="sub" placeholder="{field.subject.placeholder}" oninput="updateTopicDisplay()"></input><br>
+                    <label for="topic">{field.topic.name}</label><br>
+                    <input type="text" name="topic" placeholder="{field.topic.placeholder}" oninput="updateTopicDisplay()"></input><br>
                     <input type="checkbox" name="optional" oninput="updateTopicDisplay()"></input><label for="optional">{field.optional}</label><br>
                     <label for="topicLabel">{field.topicLabel}</label><br>
                     <select name="topicLabel" onchange="updateTopicDisplay()">
@@ -90,15 +90,15 @@ $generator->start_pre_content();
                 <option value="h">{time.hours}</option>
                 <option value="d">{time.days}</option>
             </select>ago<br>
-            <h4>{field.topic}</h4>
+            <h4>{field.topic.name}</h4>
             <input type="checkbox" name="exercise-list"/><label>{field.isExerciseList}</label><br>
             <input type="checkbox" name="optional"/><label>{field.optional}</label><br>
             <input type="checkbox" name="description"/><label>{field.description.has}</label><br>
             <h4>{field.topicLabel}</h4>
             <input type="checkbox" name="label-"/><label>{todo}</label><br>
-            <h4>{field.subject}</h4>
+            <h4>{field.subject.name}</h4>
             <input type="checkbox" name="sub-"/><label>{todo}</label><br>
-            <input type="submit" value="Save" onclick="document.getElementById('form-filters').style.display = 'none'" style="background-color: var(--tlf-bg-green)">
+            <input type="submit" value="{form.save}" onclick="document.getElementById('form-filters').style.display = 'none'" style="background-color: var(--tlf-bg-green)">
             <input type="button" style="background-color: var(--tlf-bg-yellow)" value="{form.cancel}" onclick="document.getElementById('form-filters').style.display = 'none'"></input>
         </form>
     </div>
@@ -106,13 +106,13 @@ $generator->start_pre_content();
         <h3>{form.statistics.name}</h3>
         <div id="statistics-container">
         </div>
-        <input type="button" value="OK" onclick="document.getElementById('statistics').style.display = 'none'" style="background-color:  var(--tlf-bg-green)">
+        <input type="button" value="{form.ok}" onclick="document.getElementById('statistics').style.display = 'none'" style="background-color:  var(--tlf-bg-green)">
     </div>
     <div id="request-log" class="fullscreen-form" style="display: none">
         <h3>{form.requestLog.name}</h3>
         <div id="request-log-container" class="background-tile">
         </div>
-        <input type="button" value="OK" onclick="document.getElementById('request-log').style.display = 'none'" style="background-color: var(--tlf-bg-green)">
+        <input type="button" value="{form.ok}" onclick="document.getElementById('request-log').style.display = 'none'" style="background-color: var(--tlf-bg-green)">
     </div>
 <?php
 $generator->start_content();

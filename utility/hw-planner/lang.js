@@ -79,10 +79,21 @@ module.exports = {
 
     translatePage: function()
     {
-        var n, walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        var n, walk = document.createTreeWalker(document.body);
         while(n = walk.nextNode())
         {
-            n.nodeValue = this.translateAll(n.nodeValue);
+            if(n.nodeType == Node.TEXT_NODE)
+            {
+                n.nodeValue = this.translateAll(n.nodeValue);
+            }
+            if(n.value != undefined)
+            {
+                n.value = this.translateAll(n.value);
+            }
+            if(n.placeholder != undefined)
+            {
+                n.placeholder = this.translateAll(n.placeholder);
+            }
         }
     }
 };

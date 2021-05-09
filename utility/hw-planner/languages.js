@@ -64,7 +64,10 @@ en_US : {
         },
         statistics: {
             name: "Statistics"
-        }
+        },
+        ok: "OK",
+        cancel: "Cancel",
+        save: "Save"
     },
     field: {
         description: {
@@ -75,8 +78,14 @@ en_US : {
         addTime: "Add time",
         isExerciseList: "Is exercise list",
         optional: "Optional",
-        subject: "Subject",
-        topic: "Topic",
+        subject: {
+            name: "Subject",
+            placeholder: "3-character Subject ID"
+        },
+        topic: {
+            name: "Topic",
+            placeholder: "Topic"
+        },
         topicLabel: "Label (task type)",
         turnInTime: "Turn-in time",
         status: "Status"
@@ -173,6 +182,9 @@ pl_PL : {
         statistics: {
             name: "Statystyki"
         },
+        ok: "OK",
+        cancel: "Anuluj",
+        save: "Zapisz"
     },
     field: {
         description: {
@@ -183,8 +195,14 @@ pl_PL : {
         isExerciseList: "Jest listą zadań",
         optional: "Dla chętnych",
         status: "Status",
-        subject: "Przedmiot",
-        topic: "Temat",
+        subject: {
+            name: "Przedmiot",
+            placeholder: "3-znakowy ID przedmiotu"
+        },
+        topic: {
+            name: "Temat",
+            placeholder: "Temat"
+        },
         topicLabel: "Etykieta (typ zadania)",
         turnInTime: "Zwrot"
     },
