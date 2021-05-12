@@ -14,7 +14,7 @@ if(!pcu_is_logged_in())
     $userData["id"] = "0";
     $userData["userName"] = "[[public]]";
 }
-    
+
 $uid = $_GET["u"];
 $name = basename($_GET["f"]);
 
@@ -28,6 +28,7 @@ if(!$conn)
     pcu_cmd_fatal("Failed to connect to db", 500);
     
 $result = $conn->query("SELECT targetUid FROM shares WHERE uid='$uid' AND file='$name'");
+$shared = false;
 if($result && $result->num_rows > 0)
 {
     $row = $result->fetch_assoc();
@@ -37,7 +38,7 @@ if($result && $result->num_rows > 0)
 }
 
 if($userData["id"] != $uid && !isset($shared))
-    pcu_cmd_fatal("Access denied for user " . $userData["userName"] . ". Ask file owner for sharing it", 403);
+    pcu_cmd_fatal("Access denied for user " . $userData["userName"] . ". Ask file owner for sharing it." . json_encode($result), 403);
 
 $fileName = "$PCU_CLOUD/files/$uid/$name";
 

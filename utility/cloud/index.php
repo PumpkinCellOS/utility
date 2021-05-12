@@ -18,7 +18,6 @@ switch($_SERVER["REQUEST_METHOD"])
 {
     case "GET":
         require_once("../../lib/generator.php");
-            
         $generator = new PCUGenerator("Cloud");
 
         $generator->scripts = ["/plupload.full.min.js", "app.js"];
