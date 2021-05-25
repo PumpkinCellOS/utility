@@ -656,7 +656,7 @@ function generateDataTable()
     var DIR = g_sortMode;
     var SORT_FUNCTIONS = {
         sub :    function(a, b) { return DIR * a.sub.localeCompare(b.sub); },
-        date :   function(a, b) { return DIR * (new Date(a.untilTime + " " + a.untilTimeT) - new Date(b.untilTime + "T" + b.untilTimeT + "Z")); },
+        date :   function(a, b) { return DIR * (new Date(a.untilTime + "T" + a.untilTimeT + "Z") - new Date(b.untilTime + "T" + b.untilTimeT + "Z")); },
         status : function(a, b) { return DIR * (sortStatus(a.status) - sortStatus(b.status)); }
     };
     
