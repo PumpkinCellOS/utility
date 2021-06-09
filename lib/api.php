@@ -32,6 +32,11 @@ class PCUAPI
         $this->args = $args;
         return $out;
     }
+
+    function args()
+    {
+        return $args;
+    }
     
     function run()
     {
