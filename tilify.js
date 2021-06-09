@@ -320,12 +320,15 @@ function tlfNotification(text, type = TlfNotificationType.Info, config = { displ
 }
 
 class TlfAPI {
-    // config:
-    //   endpoint:
-    //   calls:
-    //     {
-    //       method
+    // config: {
+    //   endpoint: string
+    //   calls: {
+    //     <name>: {
+    //       method: GET|POST
     //     }
+    //   }
+    //   onerror: function(response: object, msg: string)
+    // }
     constructor(config)
     {
         if(config === undefined)
@@ -335,6 +338,8 @@ class TlfAPI {
     
     _doXHR(xhr, args, method, callback, errorCallback)
     {
+        // HACK
+        var _this = this;
         xhr.onreadystatechange = function() {
             if(this.readyState == 4)
             {
@@ -344,13 +349,23 @@ class TlfAPI {
                         callback(JSON.parse(this.responseText)); 
                     else
                     {
-                        var response = JSON.parse(this.responseText);
+                        var response;
+                        try
+                        {
+                            response = JSON.parse(this.responseText);
+                        }
+                        catch(e)
+                        {
+                            console.log(e);
+                            response = {};
+                        }
                         var serverMessage = response.message;
                         if(serverMessage === undefined)
                             serverMessage = "Server error :(";
                         var msg = serverMessage + " (" + this.status + ")";
                         console.log(msg);
                         errorCallback(response);
+                        _this.config.onerror(response, msg);
                     }
                 }
                 catch(e)
