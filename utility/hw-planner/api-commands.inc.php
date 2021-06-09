@@ -151,16 +151,16 @@ function cmd_modify_hw($json, $uid, $data)
     if(!$conn)
         return;
     
-    $tid =           $conn->real_escape_string($data->tid);
-    $_sub =          $conn->real_escape_string($data->sub);
-    $_type =         $conn->real_escape_string($data->type);
-    $_untilTime =    $conn->real_escape_string($data->untilTime);
-    $_untilTimeT =   $conn->real_escape_string($data->untilTimeT);
-    $_topicFormat =  $conn->real_escape_string($data->topicFormat);
-    $_topic =        $conn->real_escape_string($data->topic);
-    $_topicLabel =   $conn->real_escape_string($data->topicLabel);
-    $_status =       $conn->real_escape_string($data->status);
-    $_description =  $conn->real_escape_string($data->description);
+    $tid =           $conn->real_escape_string($data["tid"]);
+    $_sub =          $conn->real_escape_string($data["sub"]);
+    $_type =         $conn->real_escape_string($data["type"]);
+    $_untilTime =    $conn->real_escape_string($data["untilTime"]);
+    $_untilTimeT =   $conn->real_escape_string($data["untilTimeT"]);
+    $_topicFormat =  $conn->real_escape_string($data["topicFormat"]);
+    $_topic =        $conn->real_escape_string($data["topic"]);
+    $_topicLabel =   $conn->real_escape_string($data["topicLabel"]);
+    $_status =       $conn->real_escape_string($data["status"]);
+    $_description =  $conn->real_escape_string($data["description"]);
     $_optional =     ($data->optional == "true" ? "1" : "0");
     
     if(!$conn->query("update hws set
@@ -242,7 +242,7 @@ function cmd_modify_turn_in_time($json, $uid, $data)
 //  new - The new status
 function cmd_modify_status($json, $uid, $data)
 {
-    if(!isset($data->status))
+    if(!isset($data["status"]))
     {
         pcu_cmd_error($json, "{error.noDataCustom}(status)");
         return;
@@ -252,8 +252,8 @@ function cmd_modify_status($json, $uid, $data)
     if(!$conn)
         return;
     
-    $_tid = $conn->real_escape_string($data->tid);
-    $_status = $conn->real_escape_string($data->status);
+    $_tid = $conn->real_escape_string($data["tid"]);
+    $_status = $conn->real_escape_string($data["status"]);
     
     $hw = hwplanner_get_hw($conn, $uid, $_tid);
     if(!$hw)
