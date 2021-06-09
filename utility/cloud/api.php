@@ -121,8 +121,10 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     
     // actually glob the files
     $out = array();
-    error_log("GLOBBING: " . cloud_path($targetUid, $currentDir) . "/*");
-    $listing = glob(cloud_path($targetUid, $currentDir) . "/*");
+    $path = cloud_path($targetUid, $currentDir);
+    if(!file_exists($path))
+        pcu_cmd_fatal("Invalid user ID", 404);
+    $listing = glob($path . "/*");
     
     $conn = $api->require_database("pcu-cloud");
     
