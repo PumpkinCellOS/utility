@@ -35,7 +35,7 @@ class PCUAPI
 
     function args()
     {
-        return $args;
+        return $this->args;
     }
     
     function run()
