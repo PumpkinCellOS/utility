@@ -580,54 +580,56 @@ function generateDataTable()
 {
     // Generate layout.
     var divData = document.getElementById("data");
-    var inner = "";
+    divData.innerHTML = "";
     
     if(g_hws.length == 0)
     {
-        inner += `<div class='data-table'>${L("dataTable.nothing")}</div>`;
-        divData.innerHTML = inner;
+        tableWrapper.innerHTML = L("dataTable.nothing");
+        divData.appendChild(tableWrapper);
         return;
     }
     
-    inner += "<table class='data-table'>";
-    inner += "<thead>"
+    var table = document.createElement("table");
+    table.classList.add("data-table");
     
-    var subSort = "";
-    if(g_sortBy == "sub")
+    var thead = document.createElement("thead");
+
     {
-        if(g_sortMode == 1)
-            subSort = " &#9650;&nbsp;";
-        else
-            subSort = " &#9660;&nbsp;";
+        var columnSub = document.createElement("td");
+        columnSub.innerHTML = L("field.subject.name");
+        columnSub.onclick = () => toggleSortMode("sub");
+        
+        var columnTopic = document.createElement("td");
+        columnTopic.innerHTML = L("field.topic.name");
+        //columnTopic.onclick = () => toggleSortMode("topic"); // TODO
+    
+        var columnTurnIn = document.createElement("td");
+        columnTurnIn.innerHTML = L("field.turnInTime");
+        columnTurnIn.onclick = () => toggleSortMode("date");
+    
+        var columnStatus = document.createElement("td");
+        columnStatus.innerHTML = L("field.status");
+        columnStatus.onclick = () => toggleSortMode("status");
+
+        var sortIndicator = g_sortMode == 1 ? " &#9650;&nbsp;" : " &#9660;&nbsp;";
+
+        switch(g_sortBy)
+    {
+            case "date": columnTurnIn.innerHTML += sortIndicator; break;
+            case "status": columnStatus.innerHTML += sortIndicator; break;
+            case "sub": columnSub.innerHTML += sortIndicator; break;
     }
         
-    inner += "<td onclick='toggleSortMode(\"sub\")'>" + subSort + `${L("field.subject.name")}</td>`;
-    
-    inner += `<td>${L("field.topic.name")}</td>`;
-    
-    var dateSort = "";
-    if(g_sortBy == "date")
-    {
-        if(g_sortMode == 1)
-            dateSort = " &#9650;&nbsp;";
-        else
-            dateSort = " &#9660;&nbsp;";
+        thead.appendChild(columnSub);
+        thead.appendChild(columnTopic);
+        thead.appendChild(columnTurnIn);
+        thead.appendChild(columnStatus);
     }
-        
-    inner += "<td onclick='toggleSortMode(\"date\")'>" + dateSort + `${L("field.turnInTime")}</td>`;
     
-    var statusSort = "";
-    if(g_sortBy == "status")
+    var tbody = document.createElement("tbody");
+    
     {
-        if(g_sortMode == 1)
-            statusSort = "&#9650;&nbsp;";
-        else
-            statusSort = "&#9660;&nbsp;";
-    }
-    inner += "<td onclick='toggleSortMode(\"status\")'>" + statusSort + `${L("field.status")}</td>`;
-    
-    inner += "</thead><tbody>";
-    
+        // Sort hws.
     var arr = [];
     
     for(var t in g_hws)
@@ -646,15 +648,20 @@ function generateDataTable()
     
     arr.sort(SORT_FUNCTIONS[g_sortBy]);
     
-    for(var t of arr)
+        // Add hws to table.
+        for(var hw of arr)
     {
-        inner += "<tr>";
-        inner += generateEntry(t);
-        inner += "</tr>";
+            var tr = document.createElement("tr");
+
+            // TODO: Generate it also with the DOM way
+            tr.innerHTML = generateEntry(hw);
+            tbody.appendChild(tr);
+        }
     }
     
-    inner += "</tbody></table>";
-    divData.innerHTML = inner;
+    table.appendChild(thead);
+    table.appendChild(tbody)
+    divData.appendChild(table);
 }
 
 function generateStatistics(stats)
