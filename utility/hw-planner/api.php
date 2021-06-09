@@ -24,7 +24,7 @@ $api->register_command("get-data", function($api) use($json, $uid) {
 });
 $api->register_command("modify-hw", function($api) use($json, $uid) {
     $api->require_method("POST");
-    cmd_get_data($json, $uid, $api->required_arg("data"));
+    cmd_modify_hw($json, $uid, $api->required_arg("data"));
     return $json;
 });
 $api->register_command("modify-details", function($api) use($json, $uid) {
