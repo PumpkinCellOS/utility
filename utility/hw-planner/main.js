@@ -7,7 +7,6 @@ const I18n = require("./lang.js");
 const EXEParser = require("./exe-parser.js");
 const EXEStringify = require("./exe-stringify.js");
 const LANG = require("./languages.js");
-const api = require("./api.js");
 const filters = require("./filters.js");
 
 I18n.LANG = LANG.pl_PL;
@@ -28,15 +27,12 @@ const API_COMMANDS = {
     "version": {"method": "GET"}
 };
 
-function errorLoading(msg)
+function errorLoading(response, msg)
 {
-    var divData = document.getElementById("data");
-    var divLoading = document.getElementById("loading");
-    divData.innerHTML = "<span class='error-code'>" + msg + "</span>";
-    divLoading.style.display = "none";
+    tlfNotification(msg, TlfNotificationType.Error);
 }
 
-api.setup( { commands: API_COMMANDS, onError: errorLoading } );
+var api = new TlfAPI( { endpoint: "/u/hw-planner/api.php", calls: API_COMMANDS, onerror: errorLoading } );
 
 // TODO: Make it configurable
 var LABELS = 
@@ -86,7 +82,7 @@ var g_serverVersion = "Unknown";
 var g_showDones = false;
 var g_sortBy = "date"; // "sub", "date", "status"
 var g_sortMode = 1;  // 1, -1
-var g_filters = { status: ["f", "i", "e", "p", "n"] }; // TODO: Make some default filters
+var g_filters = { status: ["f", "i", "e", "p", "n"] };
 var g_requestLog = null;
 var g_userCache = {};
 
@@ -102,18 +98,6 @@ window.toggleSortMode = function(field)
         g_sortBy = field;
 
     generateDataTable();
-}
-
-function getUserData(uid, callback)
-{
-    // try find in cache
-    var user = g_userCache[uid];
-    if(!user)
-    {
-        api.pculogin_apiCall("query-user", `id=${uid}`, "GET", data => callback(data.data)); 
-    }
-    else
-        callback(user);
 }
 
 var loadSteps = 0;
@@ -443,12 +427,12 @@ window.submitTopicEditor = function(form)
     switch(form["mode"].value)
     {
         case "modify":
-            api.apiCall("modify-hw", JSON.stringify(_data), function() { 
+            api.call("modify-hw", _data, function() { 
                 requestLoading(g_showDones);
             });
             break;
         case "add":
-            api.apiCall("add-hw", JSON.stringify(_data), function() { 
+            api.call("add-hw", _data, function() { 
                 requestLoading(g_showDones);
             });
             break;
@@ -497,7 +481,7 @@ window.submitModifyStatus = function(tid, value)
     var _data = {};
     _data.tid = tid;
     _data.status = value;
-    api.apiCall("modify-status", JSON.stringify(_data), function() { 
+    api.call("modify-status", _data, function() { 
         requestLoading(g_showDones);
     });
 }
@@ -561,15 +545,15 @@ window.deleteEntry = function(tid)
 {
     var data = {};
     data.tid = tid;
-    api.apiCall("remove-hw", JSON.stringify(data), function() { 
+    api.call("remove-hw", data, function() { 
         requestLoading(g_showDones);
     });
 }
 
 window.requestLoading = function()
 {
-    api.apiCall("get-data", "q=hws" + (g_showDones ? "+done" : ""), loadData);
-    api.apiCall("get-request-log", "", function(data) { g_requestLog = data.data; });
+    api.call("get-data", {q: "hws" + (g_showDones ? "+done" : "")}, loadData);
+    api.call("get-request-log", {}, function(data) { g_requestLog = data.data; });
 }
 
 function sortStatus(status)
@@ -871,15 +855,13 @@ function loadData(data)
 
 function finishLoading()
 {
-    var divLoading = document.getElementById("loading");
-    divLoading.style.display = "none";
 }
 
 function load()
 {
     // Load tasks
-    api.apiCall("version", "", function(data) { g_serverVersion = data.version; } );
-    api.apiCall("get-labels", "", loadLabels);
+    api.call("version", {}, function(data) { g_serverVersion = data.version; } );
+    api.call("get-labels", {}, loadLabels);
     
     var inv = setInterval(function()
     {

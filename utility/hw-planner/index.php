@@ -6,7 +6,6 @@ $generator->stylesheets = ["style.css"];
 
 $generator->start_pre_content();
 ?>
-    <div id="loading"><span id="loading-text">{progress.loading}</span></div>
     <div id="form-topic-editor" class="fullscreen-form" style="display: none">
     
         <form action="#" onsubmit="submitTopicEditor(this); return false" name="topic-editor">
