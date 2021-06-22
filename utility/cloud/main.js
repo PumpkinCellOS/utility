@@ -1,14 +1,16 @@
 // PCU Cloud
 // Sppmacd (c) 2021
 
-// TODO: Move it finally into some file instead of copying!!!!!!!
-
 const API_COMMANDS = {
     "list-files": {"method": "GET"},
     "remove-file": {"method": "POST"},
     "file-share": {"method": "POST"},
     "make-directory": {"method": "POST"},
 };
+
+// TODO: Actually use it everywhere
+const api = new TlfAPI({endpoint: "/u/cloud/api.php", calls: API_COMMANDS});
+const pcuLoginApi = require("../../user/login").api;
 
 function getParam(name)
 {
@@ -27,87 +29,23 @@ window.g_currentDir = (currentDir != "" ? currentDir.split() : []);
 if(window.g_currentDir[0] != ".")
     window.g_currentDir.unshift(".");
 
-function api_doXHR(xhr, args, method, callback)
-{
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4)
-        {
-            try
-            {
-                if(this.status == 200 && callback instanceof Function)
-                    callback(JSON.parse(this.responseText)); 
-                else
-                {
-                    var response = JSON.parse(this.responseText);
-                    var serverMessage = response.message;
-                    if(serverMessage === undefined)
-                        serverMessage = "Server error :("
-                    var msg = serverMessage + " (" + this.status + ")";
-                    console.log(msg);
-                }
-            }
-            catch(e)
-            {
-                console.log(e);
-            }
-        }
-    };
-    
-    if(method == "POST")
-        xhr.send(args); // args in JSON
-    else
-        xhr.send(); // args in URL
-}
-
-function pculogin_apiCall(command, args, method, callback)
-{
-    console.log(command, args, method, callback);
-    var xhr = new XMLHttpRequest();
-    var url = "/api/login.php?command=" + command;
-    if(method != "POST")
-        url += "&" + args;
-
-    xhr.open(method, url);
-    api_doXHR(xhr, args, method, callback);
-}
-
-//callback: function(responseText)
-function apiCall(command, args, callback, urlprefix)
-{
-    var xhr = new XMLHttpRequest();
-    var method = API_COMMANDS[command].method;
-    
-    var url = "api.php";
-    if(method != "POST")
-        url += `?command=${command}&${args}`;
-    else
-    {
-        args.command = command;
-        args = JSON.stringify(args);
-    }
-    
-    xhr.open(method, url);
-    api_doXHR(xhr, args, method, callback);
-}
-
 function fileListing(callback)
 {
-    var uid_arg = uid_url != "" ? `&uid=${uid_url}` : "";
-    apiCall("list-files", `currentDir=${g_currentDir.join("/")}` + uid_arg, callback);
+    api.call("list-files", {currentDir: g_currentDir.join("/"), uid: uid_url}, callback);
 }
 
 function deleteFile(name)
 {
     tlfOpenForm([ {"value": `Do you really want to delete ${name}?`, "type": "label"} ], function() {
-        apiCall("remove-file", {file: `${g_currentDir.join("/")}/${name}`}, reload);
+        api.call("remove-file", {file: `${g_currentDir.join("/")}/${name}`}, reload);
     }, { title: "Confirm deletion", submitName: "Yes", cancelName: "No" });
 }
 
 function shareFile(file, targetUid)
 {
-    apiCall("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: false}, function() {
+    api.call("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: false}, function() {
         reload();
-        tlfOpenForm ([{ type: "label", value: "Anyone can see this file using that link:"},
+        tlfOpenForm([{ type: "label", value: "Anyone can see this file using that link:"},
                    { type: "link", value: "http://" + document.location.hostname + file.link }], null,
                    { title: "Share", noCancel: true });
     });
@@ -115,12 +53,12 @@ function shareFile(file, targetUid)
 
 function unshareFile(file, targetUid)
 {
-    apiCall("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: true}, reload);
+    api.call("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: true}, reload);
 }
 
 function makeDirectory(name)
 {
-    apiCall("make-directory", {name: `${g_currentDir.join("/")}/${name}`}, reload);
+    api.call("make-directory", {name: `${g_currentDir.join("/")}/${name}`}, reload);
 }
 
 function downloadFile(name, path)
