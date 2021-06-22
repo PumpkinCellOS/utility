@@ -182,6 +182,11 @@ customElements.define("tlf-background-tile", TlfBackgroundTile);
 customElements.define("tlf-combobox", TlfCombobox);
 
 // Forms
+// config: {
+//   title: string
+//   submitName: string
+//   cancelName: string
+//   noCancel: boolean
 function tlfOpenForm(fields, callback, config)
 {
     try
@@ -202,6 +207,10 @@ function tlfOpenForm(fields, callback, config)
         var title = document.createElement("h3");
         title.innerHTML = config.title ?? "Form";
         fullScreenForm.appendChild(title);
+        
+        var description = document.createElement("p");
+        description.innerHTML = config.description ?? "";
+        fullScreenForm.appendChild(description);
         
         for(var field of fields)
         {
