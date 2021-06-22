@@ -55,7 +55,7 @@ class PCUGenerator
                 </a>
                 <div style="float: right; display: flex; align-items: center">
                     <?php
-                        if(pcu_is_logged_in())
+                        if(pcu_is_authenticated())
                         {
                             echo "<div class='title-link-right'><a href='/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
                             echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/`; })'>Log out</a></div>";

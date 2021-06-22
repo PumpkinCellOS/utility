@@ -121,10 +121,15 @@ function pcu_load_user_data($conn, $userName)
     return null;
 }
 
-function pcu_is_logged_in()
+function pcu_is_authenticated()
 {
     session_start();
     return isset($_SESSION["userData"]);
+}
+
+function pcu_is_logged_in()
+{
+    return pcu_is_authenticated() && !$_SESSION["userData"]["passwordExpired"];
 }
 
 function pcu_user_session()
@@ -145,23 +150,39 @@ function pcu_is_logged_in_as($userName)
 {
     session_start();
     $sess = $_SESSION["userData"];
-    return isset($sess) && $sess->userName == $userName;
+    return pcu_is_logged_in() && $sess->userName == $userName;
 }
 
 function pcu_mksession($json, $data)
 {
     session_start();
+    
+    // NOTE: The account is considered *authenticated*, but not *logged in*
+    // if password expired. Therefore, only basic account operations
+    // (logging out and changing password) are allowed. This can be checked
+    // with pcu_is_authenticated().
     if($data["passwordExpired"])
     {
-        pcu_page_error("Password expired. Ask admin for assistance", 400);
-        return;
+        // The client checks for this flag set to display
+        // "change password" form.
+        $json->passwordExpired = true;
     }
-    if(pcu_is_logged_in_as($data["userName"]))
+
+    if(pcu_is_authenticated())
     {
         pcu_cmd_info($json, "Already logged in");
         return;
     }
     $_SESSION["userData"] = $data;
+}
+
+function pcu_require_auth()
+{
+    if(!pcu_is_authenticated())
+    {
+        pcu_cmd_fatal("An authentication is required to access this resource", 401);
+    }
+    return $_SESSION["userData"];
 }
 
 function pcu_require_login()
@@ -233,7 +254,8 @@ function pcu_change_password($json, $conn, $password)
     $hash = hash('sha256', $password);
     
     $uid = pcu_user_session()["id"];
-    if(!$conn->query("UPDATE users SET password='$hash' WHERE id='$uid'"))
+    // NOTE: This clears passwordExpired flag.
+    if(!$conn->query("UPDATE users SET password='$hash', passwordExpired='0' WHERE id='$uid'"))
         pcu_cmd_fatal("Failed to change password");
 }
 
