@@ -1,4 +1,3 @@
-
 var api = new TlfAPI({
     endpoint: "/api/login.php",
     calls: {
