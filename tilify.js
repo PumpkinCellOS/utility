@@ -296,7 +296,7 @@ const TlfNotificationType = {
     Warning: "warning"
 };
 
-function tlfNotification(text, type = TlfNotificationType.Info, config = { displayTime: 1500 })
+function tlfNotification(text, type = TlfNotificationType.Info, config = { displayTime: 3500 })
 {
     var box = document.getElementById("tlf-notification-box");
     
