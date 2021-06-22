@@ -42,14 +42,14 @@ function cmd_add_hw($json, $uid, $data)
     if(!$conn)
         return;
     
-    $_sub =          $conn->real_escape_string($data->sub);
-    $_type =         $conn->real_escape_string($data->type);
-    $_untilTime =    $conn->real_escape_string($data->untilTime);
-    $_untilTimeT =   $conn->real_escape_string($data->untilTimeT);
-    $_topicFormat =  $conn->real_escape_string($data->topicFormat);
-    $_topic =        $conn->real_escape_string($data->topic);
-    $_topicLabel =   $conn->real_escape_string($data->topicLabel);
-    $_description =  $conn->real_escape_string($data->description);
+    $_sub =          $conn->real_escape_string($data["sub"]);
+    $_type =         $conn->real_escape_string($data["type"]);
+    $_untilTime =    $conn->real_escape_string($data["untilTime"]);
+    $_untilTimeT =   $conn->real_escape_string($data["untilTimeT"]);
+    $_topicFormat =  $conn->real_escape_string($data["topicFormat"]);
+    $_topic =        $conn->real_escape_string($data["topic"]);
+    $_topicLabel =   $conn->real_escape_string($data["topicLabel"]);
+    $_description =  $conn->real_escape_string($data["description"]);
     $_optional =     ($data->optional == "true" ? "1" : "0");
     
     if(!$conn->query("insert into hws (sub,type,addTime,untilTime,untilTimeT,topicFormat,topic,topicLabel,description,optional,userId) values
