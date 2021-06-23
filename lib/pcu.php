@@ -3,6 +3,17 @@
 require_once("generator.php");
 //require_once("pcu-errors.php");
 
+$sessionStarted = false;
+function pcu_session_start()
+{
+    global $sessionStarted;
+    if(!$sessionStarted)
+    {
+        session_start();
+        $sessionStarted = true;
+    }
+}
+
 abstract class PCUPageType
 {
     const Display = "text/html";
@@ -124,7 +135,7 @@ function pcu_load_user_data($conn, $userName)
 
 function pcu_is_authenticated()
 {
-    session_start();
+    pcu_session_start();
     return isset($_SESSION["userData"]);
 }
 
@@ -135,14 +146,14 @@ function pcu_is_logged_in()
 
 function pcu_user_session()
 {
-    session_start();
-    return $_SESSION["userData"];
+    pcu_session_start();
+    return isset($_SESSION["userData"]) ? $_SESSION["userData"] : [];
 }
 
 function pcu_safe_user_session()
 {
-    session_start();
-    return pcu_safe_user_data($_SESSION["userData"]);
+    pcu_session_start();
+    return pcu_safe_user_data(isset($_SESSION["userData"]) ? $_SESSION["userData"] : []);
 }
 
 function pcu_safe_user_data($data)
@@ -154,14 +165,14 @@ function pcu_safe_user_data($data)
 
 function pcu_is_logged_in_as($userName)
 {
-    session_start();
+    pcu_session_start();
     $sess = $_SESSION["userData"];
     return pcu_is_logged_in() && $sess->userName == $userName;
 }
 
 function pcu_mksession($json, $data)
 {
-    session_start();
+    pcu_session_start();
     
     // NOTE: The account is considered *authenticated*, but not *logged in*
     // if password expired. Therefore, only basic account operations
@@ -220,7 +231,7 @@ function pcu_require_role($roleName)
 
 function pcu_rmsession()
 {
-    session_start();
+    pcu_session_start();
     $_SESSION = array();
     if (ini_get("session.use_cookies"))
     {
@@ -234,7 +245,7 @@ function pcu_rmsession()
 
 function pcu_mkuser($json, $conn, $userName, $password, $email)
 {
-    session_start();
+    pcu_session_start();
     
     if(strlen($password) < 1)
         pcu_cmd_fatal("Your password must not be empty");
@@ -252,7 +263,7 @@ function pcu_mkuser($json, $conn, $userName, $password, $email)
 
 function pcu_change_password($json, $conn, $password)
 {
-    session_start();
+    pcu_session_start();
     
     if(strlen($password) < 1)
         pcu_cmd_fatal("Your password must not be empty");

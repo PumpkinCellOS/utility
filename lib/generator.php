@@ -10,7 +10,6 @@ class PCUGenerator
 
     public function __construct(string $title = "", string $head_suffix = "", string $body_suffix = "")
     {
-        session_start();
         $this->title = $title;
         $this->head_suffix = $head_suffix;
         $this->body_suffix = $body_suffix;
@@ -47,7 +46,7 @@ class PCUGenerator
             $this->start_pre_content();
           
         $this->state = 2;
-        $this->userData = $_SESSION["userData"];
+        $this->userData = pcu_user_session();
         ?>
             <!-- TODO: Use custom elements -->
             <h1>

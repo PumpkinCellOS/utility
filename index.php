@@ -1,7 +1,7 @@
 <?php
 require_once("lib/generator.php");
 $login = pcu_is_logged_in();
-$userData = $_SESSION["userData"];
+$userData = pcu_user_session();
 $generator = new PCUGenerator();
 $generator->start_content();
 ?>
@@ -120,11 +120,11 @@ function swapEntries(arrId, list, ix1, ix2)
 }
 
 const pcuEntries = [
-    <?php if(!pcu_role_less($userData["role"], "member")) { ?>
+    <?php if($userData && !pcu_role_less($userData["role"], "member")) { ?>
     {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
     {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "hovercolor": "#536092", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
     <?php } ?>
-    <?php if(!pcu_role_less($userData["role"], "admin")) { ?>
+    <?php if($userData && !pcu_role_less($userData["role"], "admin")) { ?>
     {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "hovercolor": "#658787", "state": "beta", "path": "/u/admin"},
     <?php } ?>
 ];
