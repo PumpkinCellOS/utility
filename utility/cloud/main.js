@@ -203,7 +203,7 @@ function generateFileTable(data)
 function setupEvents()
 {
     document.getElementById("file-mkdir").addEventListener("click", function() {
-        tlfOpenForm([{name: "dirname", placeholder: "Directory name"}], (args) => { makeDirectory(args.dirname) });
+        tlfOpenForm([{name: "dirname", placeholder: "Name"}], (args) => { makeDirectory(args.dirname) }, { title: "Create new directory" });
     });
     
     if(uid_url != uid)
