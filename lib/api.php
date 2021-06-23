@@ -83,8 +83,21 @@ class PCUAPI
             pcu_cmd_fatal("Failed to connect to database $name, which is required by command");
         return $conn;
     }
-    
-    // TODO: require_login, require_login_as, require_role, ...
+
+    function require_auth()
+    {
+        return pcu_require_auth();
+    }
+
+    function require_login()
+    {
+        return pcu_require_login();
+    }
+
+    function require_role(string $role)
+    {
+        return pcu_require_role($role);
+    }
 }
 
 ?>
