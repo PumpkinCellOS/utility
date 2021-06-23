@@ -123,7 +123,7 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     $out = array();
     $path = cloud_path($targetUid, $currentDir);
     if(!file_exists($path))
-        pcu_cmd_fatal("Invalid user ID", 404);
+        return $out;
     $listing = glob($path . "/*");
     
     $conn = $api->require_database("pcu-cloud");
