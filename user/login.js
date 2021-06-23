@@ -2,8 +2,9 @@ var api = new TlfAPI({
     endpoint: "/api/login.php",
     calls: {
         "auth-user": { method: "POST" },
-        "create-user": { method: "POST" },
+        "change-email": { method: "POST" },
         "change-password": { method: "POST" },
+        "create-user": { method: "POST" },
         "set-property": { method: "POST" },
         "get-properties": { method: "GET" }
     },

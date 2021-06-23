@@ -276,6 +276,18 @@ function pcu_change_password($json, $conn, $password)
         pcu_cmd_fatal("Failed to change password");
 }
 
+function pcu_change_email($json, $conn, $email)
+{
+    pcu_require_login();
+    
+    if(strlen($email) < 1)
+        pcu_cmd_fatal("Your email must not be empty");
+    
+    $uid = pcu_user_session()["id"];
+    if(!$conn->query("UPDATE users SET email='$email' WHERE id='$uid'"))
+        pcu_cmd_fatal("Failed to change email");
+}
+
 function pcu_authuser($json, $conn, $userName, $password)
 {
     $userName = $conn->real_escape_string($userName);

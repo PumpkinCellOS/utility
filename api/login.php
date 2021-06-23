@@ -21,10 +21,26 @@ $api->register_command("remove-session", function($api) {
     pcu_rmsession();
     return null;
 });
+$api->register_command("change-email", function($api) {
+    $json = new stdClass();
+    $conn = $api->require_database("pcutil");
+    $email = $conn->real_escape_string($api->required_arg("email"));
+    pcu_change_email($json, $conn, $email);
+    return $json;
+});
+$api->register_command("change-password", function($api) {
+    $json = new stdClass();
+    $conn = $api->require_database("pcutil");
+    // NOTE: We don't need to escape SQL because it will be SHA256-hashed in pcu_change_password.
+    $password = $api->required_arg("password");
+    pcu_change_password($json, $conn, $password);
+    return $json;
+});
 $api->register_command("create-user", function($api) {
     $json = new stdClass();
     $conn = $api->require_database("pcutil");
     $userName = $conn->real_escape_string($api->required_arg("userName"));
+    // NOTE: We don't need to escape SQL because it will be SHA256-hashed in pcu_mkuser.
     $password = $api->required_arg("password");
     $email = $conn->real_escape_string($api->optional_arg("email", "not-given"));
     pcu_mkuser($json, $conn, $userName, $password, $email);
@@ -40,13 +56,6 @@ $api->register_command("query-user", function($api) {
     {
         $json->data = $result->fetch_assoc();
     }
-    return $json;
-});
-$api->register_command("change-password", function($api) {
-    $json = new stdClass();
-    $conn = $api->require_database("pcutil");
-    $password = $api->required_arg("password");
-    pcu_change_password($json, $conn, $password);
     return $json;
 });
 

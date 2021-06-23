@@ -67,6 +67,13 @@ function queriedUserGetProperty(key)
     return window.queriedUserProperties[key];
 }
 
+function changeEmail()
+{
+    tlfOpenForm([{type: "email", name: "email", placeholder: "New e-mail address"}], function(args) {
+        api.call("change-email", {email: args.email});
+    }, {title: "Change e-mail address"});
+}
+
 function reload()
 {
     api.call("get-properties", {uid: window.queriedUID}, function(data) {
