@@ -255,8 +255,8 @@ function pcu_mkuser($json, $conn, $userName, $password, $email)
     if(pcu_load_user_data($conn, $userName))
         pcu_cmd_fatal("The user already exists");
     
-    if(!$conn->query("INSERT INTO users (userName, password, email) VALUES ('$userName', '$hash', '$email')"))
-        pcu_cmd_fatal("Failed to add user");
+    if(!$conn->query("INSERT INTO users (userName, password, email, properties) VALUES ('$userName', '$hash', '$email', '{}')"))
+        pcu_cmd_fatal("Failed to add user: " . $conn->error);
     
     pcu_authuser($json, $conn, $userName, $password);
 }
