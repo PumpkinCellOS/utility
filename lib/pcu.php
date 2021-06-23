@@ -185,7 +185,7 @@ function pcu_mksession($json, $data)
         $json->passwordExpired = true;
     }
 
-    if(pcu_is_authenticated())
+    if(pcu_is_logged_in())
     {
         pcu_cmd_info($json, "Already logged in");
         return;
