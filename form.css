@@ -27,14 +27,8 @@ select {
     width: 300px;
 }
 
-button, input[type="submit"], input[type="button"] {
-}
-
 input[type="submit"], input[type="button"] {
     width: 300px;
-}
-
-input[type="checkbox"] {
 }
 
 .fullscreen-form {
@@ -46,4 +40,9 @@ input[type="checkbox"] {
     text-align: center;
     width: 100%;
     z-index: 1;
+}
+
+textarea {
+    height: 100px;
+    width: 50%;
 }

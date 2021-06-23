@@ -236,6 +236,14 @@ function tlfOpenForm(fields, callback, config)
                 fullScreenForm.appendChild(widget);
                 fullScreenForm.appendChild(document.createElement("br"));
             }
+            else if(field.type == "textarea")
+            {
+                var widget = document.createElement("textarea");
+                widget.value = field.value ?? "";
+                widget.name = field.name ?? widget.type;
+                fullScreenForm.appendChild(widget);
+                fullScreenForm.appendChild(document.createElement("br"));
+            }
             else
             {
                 var widget = document.createElement("input");
