@@ -2,6 +2,7 @@
 // Sppmacd (c) 2021
 
 const API_COMMANDS = {
+    "get-account-quota": {"method": "GET"},
     "list-files": {"method": "GET"},
     "remove-file": {"method": "POST"},
     "file-share": {"method": "POST"},
@@ -35,9 +36,30 @@ pcuLoginApi.call("get-properties", {uid: uid_url}, function(data) {
 if(window.g_currentDir[0] != ".")
     window.g_currentDir.unshift(".");
 
+function byteDisplay(value)
+{
+    if(value < 512)
+        return (value).toPrecision(3) + " B";
+    else if(value < 512 * 1024)
+        return (value / 1024).toPrecision(3) + " KiB";
+    else if(value < 512 * 1024 * 1024)
+        return (value / 1024 / 1024).toPrecision(3) + " MiB";
+    else if(value < 512 * 1024 * 1024 * 1024)
+        return (value / 1024 / 1024 / 1024).toPrecision(3) + " GiB";
+    else
+        return (value / 1024 / 1024 / 1024 / 1024).toPrecision(3) + " TiB";
+}
+
 function fileListing(callback)
 {
     api.call("list-files", {currentDir: g_currentDir.join("/"), uid: uid_url}, callback);
+    api.call("get-account-quota", {}, function(data) {
+        var percent = data.used * 100 / data.quota;
+        var element = document.getElementById("quota-string");
+        element.innerHTML = `${byteDisplay(data.used)} of ${byteDisplay(data.quota)} (${Math.round(percent, 2)}%)`;
+        var r = (100 - percent) / 100 * 120;
+        element.style.color = `hsl(${r}, 50%, 50%)`;
+    });
 }
 
 function deleteFile(name)

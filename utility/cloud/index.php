@@ -1,6 +1,7 @@
 <?php
 // TODO: Merge this and 'download.php' and rename to 'cloud.php'
 require_once("../../lib/pcu.php");
+require_once("util.php");
 
 $userData = pcu_user_session();
 if(!pcu_is_logged_in())
@@ -17,8 +18,6 @@ if($requestUserData == 0)
     pcu_page_type(PCUPageType::Display);
     pcu_require_login();
 }
-
-$PCU_CLOUD = "/var/pcu-cloud";
 
 switch($_SERVER["REQUEST_METHOD"])
 {
@@ -51,6 +50,7 @@ switch($_SERVER["REQUEST_METHOD"])
                         <table id="file-listing">
                         </table>
                     </div>
+                    <div id="quota">Used space: <span id="quota-string">Loading...</span></div>
                 </div>
             </div>
 
@@ -112,7 +112,7 @@ switch($_SERVER["REQUEST_METHOD"])
                                 try
                                 {
                                     console.log(err);
-                                    document.querySelector(`#${err.file.id} strong`).innerHTML = `<span>${JSON.parse(err.response).message}</span>`;
+                                    tlfNotification(JSON.parse(err.response).message, TlfNotificationType.Warning);
                                 }
                                 catch(e)
                                 {
@@ -162,25 +162,41 @@ switch($_SERVER["REQUEST_METHOD"])
         if($chunk == 0)
             unlink($targetTmp);
 
-        $out = @fopen($targetTmp, $chunk == 0 ? "wb" : "ab");
-        
-        echo json_encode($_FILES);
-        echo "tmp_name: " . $_FILES['file']['tmp_name'] . " name: " . $target;
+        $out = fopen($targetTmp, $chunk == 0 ? "wb" : "ab");
+
+        $usedSpace = calculate_space_usage_dir(cloud_path($uid, "."));
         
         if($out) 
         {
-            $in = @fopen($_FILES['file']['tmp_name'], "rb");
+            $in = fopen($_FILES['file']['tmp_name'], "rb");
             if($in) 
             {
-                while($buff = fread($in, 16384)) { fwrite($out, $buff); }
+                while($buff = fread($in, 16384))
+                {
+                    fwrite($out, $buff);
+                }
+                if(filesize($targetTmp) >= 4294967296)
+                {
+                    unlink($targetTmp);
+                    fclose($in);
+                    fclose($out);
+                    pcu_cmd_fatal("File too big, must be <4GiB.");
+                }
+                if($usedSpace + filesize($targetTmp) > account_quota($userData["role"]))
+                {
+                    unlink($targetTmp);
+                    fclose($in);
+                    fclose($out);
+                    pcu_cmd_fatal("Account quota exceeded.");
+                }
             }
             else 
             {
                 pcu_cmd_fatal("Failed to open input stream");
             }
-            @fclose($in);
-            @fclose($out);
-            @unlink($_FILES['file']['tmp_name']);
+            fclose($in);
+            fclose($out);
+            unlink($_FILES['file']['tmp_name']);
         }
         else
         {
