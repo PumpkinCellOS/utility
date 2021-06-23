@@ -1,0 +1,23 @@
+.property-edit-icon {
+    color: #ffbbbb;
+    cursor: pointer;
+    font-size: 12pt;
+}
+
+.property-edit-icon:hover {
+    color: #ffdddd;
+}
+
+#property-displayName {
+    display: inline
+}
+
+#username {
+    display: block;
+    font-size: 75%;
+    font-weight: normal;
+}
+
+#property-description .property-value {
+    display: block;
+}

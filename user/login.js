@@ -3,7 +3,9 @@ var api = new TlfAPI({
     calls: {
         "auth-user": { method: "POST" },
         "create-user": { method: "POST" },
-        "change-password": { method: "POST" }
+        "change-password": { method: "POST" },
+        "set-property": { method: "POST" },
+        "get-properties": { method: "GET" }
     },
     onerror: function(response, msg) {
         if(msg !== undefined)
@@ -57,4 +59,9 @@ function changePassword(message = "", callback = function() {})
         });
         return false;
     }, {title: "Change password", description: message});
+}
+
+function userGetProperty(key)
+{
+    return window.PCU_USER_DATA.properties[key];
 }

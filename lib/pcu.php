@@ -1,6 +1,7 @@
 <?php
 
 require_once("generator.php");
+//require_once("pcu-errors.php");
 
 abstract class PCUPageType
 {
@@ -141,9 +142,14 @@ function pcu_user_session()
 function pcu_safe_user_session()
 {
     session_start();
-    $sess_safe = $_SESSION["userData"];
-    $sess_safe["password"] = "****";
-    return $sess_safe;
+    return pcu_safe_user_data($_SESSION["userData"]);
+}
+
+function pcu_safe_user_data($data)
+{
+    $data["password"] = "****";
+    $data["email"] = "i.wont.give.you.hacker@example.com";
+    return $data;
 }
 
 function pcu_is_logged_in_as($userName)

@@ -14,13 +14,18 @@ $conn = pcu_cmd_connect_db($json, "pcutil");
 $qUserData = pcu_user_by_id($conn, $qUid);
 
 $generator = new PCUGenerator("User profile");
-$generator->scripts = ["login.js"];
+$generator->scripts = ["login.js", "profile.js"];
+$generator->stylesheets = ["profile-style.css"];
 
 if(!isset($qUserData))
     pcu_cmd_fatal("Invalid user");
     
 $generator->start_content();
 ?>
+<script>
+window.queriedUID = <?php echo $qUid; ?>;
+window.queriedData = <?php echo json_encode(pcu_safe_user_data($qUserData)); ?>;
+</script>
 
 <h2>User Profile</h2>
 
@@ -33,21 +38,20 @@ $generator->start_content();
 <tlf-background-tile padding="big">
     <?php
     
-    echo "<h3>" . $qUserData["userName"];
+    echo "<h3><div id='property-displayName'></div><div id='username'>" . $qUserData["userName"];
     $roles = [
-        "default" => "User",
-        "trusted" => "Trusted user",
-        "moderator" => "Moderator",
-        "member" => "Staff member",
-        "owner" => "Owner",
-        "admin" => "Administration",
+        "default" => ["User", "inherit"],
+        "trusted" => ["Trusted user", "#ffaaaa"],
+        "moderator" => ["Moderator", "#aaffff"],
+        "member" => ["Staff member", "#aaaaff"],
+        "owner" => ["Owner", "orange"],
+        "admin" => ["Admin", "red"],
     ];
-    echo "</h3><p class='pcu-user-role'>" . $roles[$qUserData["role"]] . "</p>";
-    echo "</h3><p>Joined " . $qUserData["createTime"] . "</p>";
+    $role = $roles[$qUserData["role"]];
+    echo "</div></h3><p><span class='pcu-user-role' style='color: " . $role[1] . "'>" . $role[0] . "</span> • Joined " . $qUserData["createTime"] . "</p>";
     ?>
+    <div id="property-description">
+    </div>
 </tlf-background-tile>
-
-<script>
-</script>
 <?php
 $generator->finish();

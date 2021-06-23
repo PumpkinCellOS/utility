@@ -57,7 +57,8 @@ CREATE TABLE `users` (
   `role` enum('member','owner','admin','default') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'default',
   `password` tinytext NOT NULL,
   `passwordExpired` tinyint(1) NOT NULL DEFAULT '0',
-  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `properties` JSON NOT NULL COMMENT 'User properties'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
