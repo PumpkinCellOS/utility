@@ -1,4 +1,6 @@
-var api = new TlfAPI({
+module.exports = {
+
+api: new TlfAPI({
     endpoint: "/api/login.php",
     calls: {
         "auth-user": { method: "POST" },
@@ -14,7 +16,9 @@ var api = new TlfAPI({
             tlfNotification(msg, TlfNotificationType.Error);
         }
     }
-});
+})
+
+}
 
 function login(userName, password) {
     api.call("auth-user", {userName: userName, password: password}, function(data) {
