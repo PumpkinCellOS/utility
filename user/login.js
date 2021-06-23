@@ -1,6 +1,5 @@
-module.exports = {
-
-api: new TlfAPI({
+// HACK: CLients of these should use require() instead of including this directly
+const api = new TlfAPI({
     endpoint: "/api/login.php",
     calls: {
         "auth-user": { method: "POST" },
@@ -17,7 +16,15 @@ api: new TlfAPI({
         }
     }
 })
-
+try
+{
+    module.exports = {
+        api: api
+    }
+}
+catch(e)
+{
+    ;
 }
 
 function login(userName, password) {
