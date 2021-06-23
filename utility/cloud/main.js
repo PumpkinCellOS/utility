@@ -26,6 +26,12 @@ console.log("Request UID is " + uid_url);
 var currentDir = getParam("cd");
 window.g_currentDir = (currentDir != "" ? currentDir.split() : []);
 
+var userDisplayName = PHP_requestUserData.userName;
+pcuLoginApi.call("get-properties", {uid: uid_url}, function(data) {
+    userDisplayName = data.data.displayName;
+    generateBreadcrumb();
+});
+
 if(window.g_currentDir[0] != ".")
     window.g_currentDir.unshift(".");
 
@@ -158,7 +164,7 @@ function generateFileEntry(file)
 function generateBreadcrumb()
 {
     var breadcrumb = document.getElementById("breadcrumb");
-    var inner = `<b>${PHP_requestUserData.userName}'s main directory</b> &gt; `;
+    var inner = `<b>${userDisplayName}'s</b> main directory &gt; `;
     for(var dir in g_currentDir)
     {
         // TODO: Make it a link!
@@ -182,8 +188,6 @@ function generateFileTable(data)
             sharedFor: [],
         });
     }
-    
-    generateBreadcrumb();
     
     console.log("Regenerating file table", data);
     
