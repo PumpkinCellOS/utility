@@ -168,6 +168,7 @@ function generateBreadcrumb()
     for(var dir in g_currentDir)
     {
         // TODO: Make it a link!
+        if(g_currentDir[dir] != ".")
             inner += `${g_currentDir[dir]} &gt; `;
     }
     breadcrumb.innerHTML = inner;
