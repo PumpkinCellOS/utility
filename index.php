@@ -135,7 +135,7 @@ const utilityEntries = [
     {"icon": "#128308", "units": 1, "color": "#5b3e84", "hovercolor": "#6b4e94", "displayName": "Twitch Overlay", "path": "/u/misc/twitch-redirect.html"},
     {"icon": "#127760", "units": 1, "color": "#555566", "hovercolor": "#656576", "displayName": "Network Builder", "path": "/u/network-builder"},
     <?php if($login) { ?>
-        {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "alpha", "displayName": "Cloud Storage", "path": "/u/cloud"},
+        {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "beta", "displayName": "Cloud Storage", "path": "/u/cloud"},
         {"icon": "",        "units": 1, "color": "#704444", "hovercolor": "#805454", "state": "beta", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
         {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/u/hw-planner"},
     <?php } ?>
