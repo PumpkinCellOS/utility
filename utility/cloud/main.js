@@ -168,7 +168,7 @@ function generateBreadcrumb()
     for(var dir in g_currentDir)
     {
         // TODO: Make it a link!
-        inner += `${g_currentDir[dir]} &gt; `;
+            inner += `${g_currentDir[dir]} &gt; `;
     }
     breadcrumb.innerHTML = inner;
 }
@@ -190,6 +190,7 @@ function generateFileTable(data)
     }
     
     console.log("Regenerating file table", data);
+    generateBreadcrumb();
     
     for(var file of data)
     {
