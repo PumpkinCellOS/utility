@@ -5,12 +5,18 @@ require_once("../../lib/pcu.php");
 $userData = pcu_user_session();
 if(!pcu_is_logged_in())
 {
-    $userData["id"] = "0";
+    $userData["id"] = 0;
     $userData["userName"] = "[[public]]";
 }
 
 $json = new stdClass();
 $requestUserData = pcu_user_by_id(pcu_cmd_connect_db($json, "pcutil"), isset($_REQUEST["u"]) ? $_REQUEST["u"] : $userData["id"]);
+
+if($requestUserData == 0)
+{
+    pcu_page_type(PCUPageType::Display);
+    pcu_require_login();
+}
 
 $PCU_CLOUD = "/var/pcu-cloud";
 

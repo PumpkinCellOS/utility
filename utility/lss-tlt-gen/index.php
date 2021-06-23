@@ -3,12 +3,12 @@
 require_once("../../lib/generator.php");
 require_once("../../lib/pcu.php");
 
-if(!pcu_allow_insecure_operations())
-    $userData = pcu_require_role("member");
-
 $generator = new PCUGenerator("Lesson Table Generator");
 $generator->scripts = ["../hw-planner/app.js", "app.js"];
 $generator->stylesheets = ["style.css", "../hw-planner/style.css"];
+
+if(!pcu_allow_insecure_operations())
+    $userData = pcu_require_role("member");
 
 $generator->start_content();
 ?>
