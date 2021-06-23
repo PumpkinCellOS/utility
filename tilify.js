@@ -182,6 +182,14 @@ customElements.define("tlf-background-tile", TlfBackgroundTile);
 customElements.define("tlf-combobox", TlfCombobox);
 
 // Forms
+// fields: [
+//   {
+//     type: string, label|link|<type as in input element>
+//     name: string, the property name in object passwd to callback
+//     value: string, the preset value
+//     placeholder: string, <as in input element>
+//   }
+// ]
 // config: {
 //   title: string
 //   submitName: string
