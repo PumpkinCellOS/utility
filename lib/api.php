@@ -8,11 +8,15 @@ class PCUAPI
     private $args;
     private bool $requireMethod;
 
-    // handler is function(PCUAPI $api, array $args), returns array
+    // handler is function(PCUAPI $api), returns array
     // that will be encoded to JSON.
     function register_command($name, $handler)
     {
         $this->commands[$name] = $handler;
+    }
+    function register_unimplemented_command($name)
+    {
+        $this->commands[$name] = function($api) { pcu_cmd_fatal("Unimplemented command: '$name'", 501); };
     }
     
     function run_command($command, $args, $requireMethod = true)
@@ -49,7 +53,7 @@ class PCUAPI
         $command = $args["command"];
         $out = $this->run_command($command, $args);
         if($out === false)
-            pcu_cmd_fatal("Invalid command: $command");
+            pcu_cmd_fatal("Invalid command: '$command'");
         echo json_encode($out);
     }
     
@@ -57,7 +61,7 @@ class PCUAPI
     {
         $val = $this->args[$arg];
         if(!isset($val))
-            pcu_cmd_fatal("Missing required argument for command: $arg", 400);
+            pcu_cmd_fatal("Missing required argument for command: '$arg'", 400);
         return $val;
     }
     
@@ -71,8 +75,8 @@ class PCUAPI
     
     function require_method($method)
     {
-        if($_SERVER["REQUEST_METHOD"] != $method && $this->requireMethod)
-            pcu_cmd_fatal("Method not allowed: " . $_SERVER["REQUEST_METHOD"] . ", required: $method", 405);
+        if($this->requireMethod && $_SERVER["REQUEST_METHOD"] != $method)
+            pcu_cmd_fatal("Method not allowed: '" . $_SERVER["REQUEST_METHOD"] . "', required: '$method'", 405);
     }
     
     function require_database($name)
@@ -80,7 +84,7 @@ class PCUAPI
         $json = new stdClass();
         $conn = pcu_cmd_connect_db($json, $name);
         if($conn == null)
-            pcu_cmd_fatal("Failed to connect to database $name, which is required by command");
+            pcu_cmd_fatal("Failed to connect to database '$name', which is required by command");
         return $conn;
     }
 
