@@ -11,6 +11,10 @@ const API_COMMANDS = {
     "version": {"method": "GET"}
 };
 
+const api = new TlfAPI({ endpoint: "/api/admin.php", calls: API_COMMANDS, onerror: function(data, msg) {
+    tlfNotification(msg, TlfNotificationType.Error);
+}});
+
 function findUser(uid)
 {
     for(var user of window.g_dataTable)
@@ -19,50 +23,6 @@ function findUser(uid)
             return user;
     }
     return null;
-}
-
-//callback: function(responseText)
-function apiCall(command, args, callback)
-{
-    var xhr = new XMLHttpRequest();
-    var method = API_COMMANDS[command].method;
-    
-    var url = "/api/admin.php?command=" + command;
-    if(method != "POST")
-        url += "&" + args;
-    
-    xhr.open(method, url);
-        
-    xhr.onreadystatechange = function() {
-        if(this.readyState == 4)
-        {
-            if(this.status == 200 && callback)
-                callback(JSON.parse(this.responseText)); 
-            else
-            {
-                var response = JSON.parse(this.responseText);
-                var serverMessage = response.message;
-                if(serverMessage === undefined)
-                    serverMessage = "Unknown error";
-                var msg = serverMessage + " (" + this.status + ")";
-                console.log(msg);
-                errorLoading(msg);
-            }
-        }
-    };
-    
-    if(method == "POST")
-        xhr.send(args); // args in JSON
-    else
-        xhr.send(); // args in URL
-}
-
-function errorLoading(msg)
-{
-    var divData = document.getElementById("data");
-    var divLoading = document.getElementById("loading");
-    divData.innerHTML = "<span class='error-code'>" + msg + "</span>";
-    divLoading.style.display = "none";
 }
 
 function getStatus(data)
@@ -83,13 +43,13 @@ window.UserManagement =
     },
     expire: function(uid) {
         console.log("expire", uid);
-        apiCall("expire-password-user", JSON.stringify({uid: uid, state: findUser(uid).passwordExpired == "0"}), function() {
+        api.call("expire-password-user", {uid: uid, state: findUser(uid).passwordExpired == "0"}, function() {
             updateUserList(document.getElementById("username-box").value);
         });
     },
     changePassword: function(uid) {
         tlfOpenForm([{type:"password", name:"password", placeholder:"Enter new password"}], function(args) {
-            apiCall("change-password-user", JSON.stringify({uid: uid, password: args.password}), null);
+            api.call("change-password-user", {uid: uid, password: args.password}, null);
         }, {title: "Change password"});
     }
 };
@@ -136,7 +96,7 @@ window.updateUserList = function(value)
 {
     if(value.length >= 3)
     {
-        apiCall("search-users", "q=" + value, function(data) {
+        api.call("search-users", {q: value}, function(data) {
             generateUserDataTable(data);
         });
     }
@@ -149,7 +109,7 @@ window.updateUserList = function(value)
 
 function load()
 {
-    apiCall("version", "", function(data) {
+    api.call("version", {}, function(data) {
         var divVersionData = document.getElementById("version-data");
         divVersionData.innerHTML += data.version;
     });
