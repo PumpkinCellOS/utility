@@ -53,13 +53,20 @@ function byteDisplay(value)
 function fileListing(callback)
 {
     api.call("list-files", {currentDir: g_currentDir.join("/"), uid: uid_url}, callback);
-    api.call("get-account-quota", {}, function(data) {
-        var percent = data.used * 100 / data.quota;
-        var element = document.getElementById("quota-string");
-        element.innerHTML = `${byteDisplay(data.used)} of ${byteDisplay(data.quota)} (${Math.round(percent, 2)}%)`;
-        var r = (100 - percent) / 100 * 120;
-        element.style.color = `hsl(${r}, 50%, 50%)`;
-    });
+    if(uid_url == uid)
+    {
+        api.call("get-account-quota", {}, function(data) {
+            var percent = data.used * 100 / data.quota;
+            var element = document.getElementById("quota-string");
+            element.innerHTML = `${byteDisplay(data.used)} of ${byteDisplay(data.quota)} (${Math.round(percent, 2)}%)`;
+            var r = (100 - percent) / 100 * 120;
+            element.style.color = `hsl(${r}, 50%, 50%)`;
+        });
+    }
+    else
+    {
+        document.getElementById("quota").style.display = "none";
+    }
 }
 
 function deleteFile(name)
