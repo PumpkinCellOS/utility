@@ -8,7 +8,7 @@ $generator->start_content();
 <h2>PumpkinCell.net</h2>
 <div class="app-list" id="pcu-app-list">
 </div>
-<h2>Utilities (Log in for more!)</h2>
+<h2>Utilities<?php if(!$login) echo " (Log in for more!)"; ?></h2>
 <div class="app-list" id="utility-app-list">
 </div>
 <h2>Links</h2>
@@ -120,11 +120,11 @@ function swapEntries(arrId, list, ix1, ix2)
 }
 
 const pcuEntries = [
-    <?php if($userData && !pcu_role_less($userData["role"], "member")) { ?>
+    <?php if($login && !pcu_role_less($userData["role"], "member")) { ?>
     {"displayName": "Development", "units": 1, "icon": "#9881", "state": "alpha", "path": "/dev.php"},
     {"icon": "",        "units": 1, "state": "beta", "color": "#435082", "hovercolor": "#536092", "displayName": "Nexus", "path": "http://192.168.1.36:82/login.php"},
     <?php } ?>
-    <?php if($userData && !pcu_role_less($userData["role"], "admin")) { ?>
+    <?php if($login && !pcu_role_less($userData["role"], "admin")) { ?>
     {"displayName": "Admin Panel", "units": 2, "icon": "", "color": "#557777", "hovercolor": "#658787", "state": "beta", "path": "/u/admin"},
     <?php } ?>
 ];
@@ -136,7 +136,9 @@ const utilityEntries = [
     {"icon": "#127760", "units": 1, "color": "#555566", "hovercolor": "#656576", "displayName": "Network Builder", "path": "/u/network-builder"},
     <?php if($login) { ?>
         {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "beta", "displayName": "Cloud Storage", "path": "/u/cloud"},
-        {"icon": "",        "units": 1, "color": "#704444", "hovercolor": "#805454", "state": "beta", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
+        <?php if($login && !pcu_role_less($userData["role"], "member")) { ?>
+            {"icon": "",        "units": 1, "color": "#704444", "hovercolor": "#805454", "state": "beta", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
+        <?php } ?>
         {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/u/hw-planner"},
     <?php } ?>
 ]; 
