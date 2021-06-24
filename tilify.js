@@ -181,13 +181,20 @@ customElements.define("tlf-button-tile", TlfButtonTile, { extends: 'a' });
 customElements.define("tlf-background-tile", TlfBackgroundTile);
 customElements.define("tlf-combobox", TlfCombobox);
 
-// Forms
+// -- tlfOpenForm(fields: Array, callback: Function(data), config: Object)
+//
 // fields: [
 //   {
-//     type: string, label|link|<type as in input element>
-//     name: string, the property name in object passwd to callback
+//     type: string, label|link|textarea|select|<type as in input element>
+//     name: string, the property name in object passed to callback
 //     value: string, the preset value
 //     placeholder: string, <as in input element>
+//     options: [, the options for `select` type
+//       {
+//         displayName: string, the displayed name
+//         value: string, the value passed to callback
+//       }
+//     ]
 //   }
 // ]
 // config: {
@@ -195,6 +202,12 @@ customElements.define("tlf-combobox", TlfCombobox);
 //   submitName: string
 //   cancelName: string
 //   noCancel: boolean
+//
+// Special field types:
+//  - label - The label. No output. Uses `value` as text.
+//  - link - The link. No output. Uses `name` as text and `value` as href (or as fallback text, if `name` is not specified).
+//  - textarea - The <textarea> element. Uses properties like normal input element.
+//  - select - The combobox (<select> element). Uses `options` as options. Other properties are used like in normal input element.
 function tlfOpenForm(fields, callback, config)
 {
     try
@@ -241,6 +254,21 @@ function tlfOpenForm(fields, callback, config)
                 var widget = document.createElement("textarea");
                 widget.value = field.value ?? "";
                 widget.name = field.name ?? widget.type;
+                fullScreenForm.appendChild(widget);
+                fullScreenForm.appendChild(document.createElement("br"));
+            }
+            else if(field.type == "select")
+            {
+                var widget = document.createElement("select");
+                for(var option of field.options)
+                {
+                    var optionElement = document.createElement("option");
+                    optionElement.value = option.value;
+                    optionElement.innerText = option.displayName;
+                    widget.appendChild(optionElement);
+                }
+                widget.name = field.name ?? widget.type;
+                widget.value = field.value;
                 fullScreenForm.appendChild(widget);
                 fullScreenForm.appendChild(document.createElement("br"));
             }
