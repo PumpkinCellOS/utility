@@ -80,26 +80,33 @@ function generateUserData(data)
     var tr = document.createElement("tr");
     tr.userData = data;
 
-    var tdId = document.createElement("td");
-    tdId.innerHTML = data.id;
-    tr.appendChild(tdId);
+    {
+        var tdId = document.createElement("td");
+        tdId.innerHTML = data.id;
+        tr.appendChild(tdId);
 
-    var tdUserName = document.createElement("td");
-    tdUserName.innerHTML = data.userName;
-    tr.appendChild(tdUserName);
+        var tdUserName = document.createElement("td");
+        {
+            var aUserName = document.createElement("a");
+            aUserName.innerHTML = data.userName;
+            aUserName.href = `/user/profile.php?uid=${data.id}`;
+            tdUserName.appendChild(aUserName);
+        }
+        tr.appendChild(tdUserName);
 
-    var tdRole = document.createElement("td");
-    tdRole.innerHTML = data.role;
-    tr.appendChild(tdRole);
+        var tdRole = document.createElement("td");
+        tdRole.innerHTML = data.role;
+        tr.appendChild(tdRole);
 
-    var tdStatus = document.createElement("td");
-    tdStatus.innerHTML = getStatus(data).join(", ");
-    tr.appendChild(tdStatus);
+        var tdStatus = document.createElement("td");
+        tdStatus.innerHTML = getStatus(data).join(", ");
+        tr.appendChild(tdStatus);
 
-    tr.appendChild(buttonTD("Remove", function(data) { UserManagement.remove(data); }));
-    tr.appendChild(buttonTD("Make expired", function(data) { UserManagement.expire(data); }));
-    tr.appendChild(buttonTD("Change password", function(data) { UserManagement.changePassword(data); }));
-    tr.appendChild(buttonTD("Change role", function(data) { UserManagement.changeRole(data); }));
+        tr.appendChild(buttonTD("Remove", function(data) { UserManagement.remove(data); }));
+        tr.appendChild(buttonTD("Make expired", function(data) { UserManagement.expire(data); }));
+        tr.appendChild(buttonTD("Change password", function(data) { UserManagement.changePassword(data); }));
+        tr.appendChild(buttonTD("Change role", function(data) { UserManagement.changeRole(data); }));
+    }
     return tr;
 }
 
