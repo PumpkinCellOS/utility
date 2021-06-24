@@ -79,11 +79,11 @@ gulp.task("lib", function() {
 });
 
 gulp.task("res", function() {
-    return gulp.src(["res/*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/res`));
+    return gulp.src("res/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/res`));
 });
 
 gulp.task("res-fonts", function() {
-    return gulp.src(["res/fonts/*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/res/fonts`));
+    return gulp.src("res/fonts/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/res/fonts`));
 });
 
 gulp.task("misc", function() {
@@ -98,4 +98,8 @@ gulp.task("user", function() {
     return gulp.src("user/*.*").pipe(gulp.dest(`${OUTPUT_DIR}/user`));
 });
 
-gulp.task("default", gulp.series("assets", "api", "lib", "res", "res-fonts", "misc", "errors", "user", "utilities"));
+gulp.task("profile", function() {
+    return gulp.src(["profile/.htaccess", "profile/*"]).pipe(gulp.dest(`${OUTPUT_DIR}/profile`));
+});
+
+gulp.task("default", gulp.series("assets", "api", "lib", "res", "res-fonts", "misc", "errors", "user", "profile", "utilities"));

@@ -1,0 +1,7 @@
+# Rewrite Syntax:
+#  /profile -> /user/profile.php
+#  /profile/$USER -> /user/shortlink.php?name=$USER&page=profile
+#  /profile/$USER/$PAGE -> /user/shortlink.php?name=$USER&page=$PAGE
+
+RewriteEngine on
+RewriteRule ([^/]*)(?:/(.*))?$ /user/shortlink.php?name=$1&page=$2
