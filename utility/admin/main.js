@@ -38,19 +38,30 @@ function getStatus(data)
 
 window.UserManagement = 
 {
-    remove: function(uid) {
-        console.log("remove", uid);
+    remove: function(data) {
+        console.log("remove", data.id);
     },
-    expire: function(uid) {
-        console.log("expire", uid);
-        api.call("expire-password-user", {uid: uid, state: findUser(uid).passwordExpired == "0"}, function() {
+    expire: function(data) {
+        api.call("expire-password-user", {uid: data.id, state: findUser(data.id).passwordExpired == "0"}, function() {
             updateUserList(document.getElementById("username-box").value);
         });
     },
-    changePassword: function(uid) {
-        tlfOpenForm([{type:"password", name:"password", placeholder:"Enter new password"}], function(args) {
-            api.call("change-password-user", {uid: uid, password: args.password}, null);
+    changePassword: function(data) {
+        tlfOpenForm([{type: "password", name: "password", placeholder: "Enter new password"}], function(args) {
+            api.call("change-password-user", {uid: data.id, password: args.password}, null);
         }, {title: "Change password"});
+    },
+    changeRole: function(data) {
+        tlfOpenForm([{type: "select", name: "role", value: data.role, options: [
+            { value: "owner", displayName: "Owner" },
+            { value: "admin", displayName: "Admin" },
+            { value: "member", displayName: "Staff member" },
+            { value: "default", displayName: "User" },
+        ]}], function(args) {
+            api.call("change-role-user", {uid: data.id, role: args.role}, function() {
+                updateUserList(document.getElementById("username-box").value);
+            });
+        }, {title: "Change user role"});
     }
 };
 
@@ -58,38 +69,67 @@ function generateUserData(data)
 {
     function buttonTD(label, callback)
     {
-        return "<td><button onclick='(" + callback + ")(this)'>" + label + "</button></td>"
+        var td = document.createElement("td");
+        var button = document.createElement("button");
+        button.onclick = function() { callback(data); };
+        button.innerHTML = label;
+        td.appendChild(button);
+        return td;
     }
     
-    var inner = "";
-    inner += "<td>" + data.id + "</td>";
-    inner += "<td>" + data.userName + "</td>";
-    inner += "<td>" + data.role + "</td>";
-    inner += "<td>" + getStatus(data).join(", ") + "</td>";
-    inner += buttonTD("Remove", function(button) { console.log("remove", button); UserManagement.remove(button.parentNode.parentNode.firstChild.innerHTML); });
-    inner += buttonTD("Make expired", function(button) { console.log("expire", button); UserManagement.expire(button.parentNode.parentNode.firstChild.innerHTML); });
-    inner += buttonTD("Change password", function(button) { console.log("chpwd", button); UserManagement.changePassword(button.parentNode.parentNode.firstChild.innerHTML); });
-    return inner;
+    var tr = document.createElement("tr");
+    tr.userData = data;
+
+    var tdId = document.createElement("td");
+    tdId.innerHTML = data.id;
+    tr.appendChild(tdId);
+
+    var tdUserName = document.createElement("td");
+    tdUserName.innerHTML = data.userName;
+    tr.appendChild(tdUserName);
+
+    var tdRole = document.createElement("td");
+    tdRole.innerHTML = data.role;
+    tr.appendChild(tdRole);
+
+    var tdStatus = document.createElement("td");
+    tdStatus.innerHTML = getStatus(data).join(", ");
+    tr.appendChild(tdStatus);
+
+    tr.appendChild(buttonTD("Remove", function(data) { UserManagement.remove(data); }));
+    tr.appendChild(buttonTD("Make expired", function(data) { UserManagement.expire(data); }));
+    tr.appendChild(buttonTD("Change password", function(data) { UserManagement.changePassword(data); }));
+    tr.appendChild(buttonTD("Change role", function(data) { UserManagement.changeRole(data); }));
+    return tr;
 }
 
 function generateUserDataTable(data)
 {
-    var divData = document.getElementById("user-data");
-    var inner = "<table class='data-table'>";
-    inner += "<thead><tr>";
-    inner += "<td>ID</td><td>User name</td><td>Role</td><td>Status</td>";
-    inner += "</tr></thead><tbody>";
     g_dataTable = data.data;
+
+    var divData = document.getElementById("user-data");
+    divData.innerHTML = "";
+
+    var dataTable = document.createElement("table");
+    dataTable.className = "data-table";
+
+    var thead = document.createElement("thead");
+    var tr = document.createElement("tr");
+
+    tr.innerHTML += "<td>ID</td><td>User name</td><td>Role</td><td>Status</td>";
+
+    thead.appendChild(tr);
+    dataTable.appendChild(thead);
     
+    var tbody = document.createElement("tbody");
+
     for(var user of data.data)
     {
-        inner += "<tr>";
-        inner += generateUserData(user);
-        inner += "</tr>";
+        tbody.appendChild(generateUserData(user));
     }
     
-    inner += "</tbody></table>";
-    divData.innerHTML = inner;
+    dataTable.appendChild(tbody);
+    divData.appendChild(dataTable);
 }
 
 window.updateUserList = function(value)

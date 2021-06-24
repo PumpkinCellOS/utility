@@ -71,6 +71,14 @@ $api->register_command("expire-password-user", function($api) {
     if(!$result)
         pcu_cmd_fatal("Query failed");
 });
-$api->register_unimplemented_command("change-role-user");
+$api->register_command("change-role-user", function($api) {
+    $api->require_method("POST");
+    $conn = $api->require_database("pcutil");
+    $uid = $conn->real_escape_string($api->required_arg("uid"));
+    $role = $conn->real_escape_string($api->required_arg("role"));
+    $result = $conn->query("UPDATE users SET role='$role' WHERE id='$uid'");
+    if(!$result)
+        pcu_cmd_fatal("Query failed");
+});
 $api->run();
 ?>
