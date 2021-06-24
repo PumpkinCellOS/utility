@@ -138,6 +138,7 @@ const utilityEntries = [
         {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "beta", "displayName": "Cloud Storage", "path": "/u/cloud"},
         <?php if($login && !pcu_role_less($userData["role"], "member")) { ?>
             {"icon": "",        "units": 1, "color": "#704444", "hovercolor": "#805454", "state": "beta", "displayName": "LSS Lesson Table", "path": "/u/lss-tlt-gen"},
+            {"icon": "", "units": 1, "color": "#4a758c", "hovercolor": "#5a859c", "state": "alpha", "displayName": "Support", "path": "/u/support"},
         <?php } ?>
         {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/u/hw-planner"},
     <?php } ?>

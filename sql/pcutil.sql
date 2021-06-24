@@ -42,7 +42,8 @@ CREATE TABLE `modules` (
 INSERT INTO `modules` (`id`, `name`, `commandURL`, `maintainerUserId`) VALUES
 (1, 'pcu-login', 'http://localhost/api/login-module.php', 1),
 (2, 'pcu-hw-planner', 'http://localhost/u/hwplanner/api-module.php', 1),
-(3, 'pcu-cloud', 'http://localhost/api/module/cloud.php', 1);
+(3, 'pcu-cloud', 'http://localhost/api/module/cloud.php', 1),
+(4, 'pcu-support', 'http://localhost/u/support/api.php', 1);
 
 -- --------------------------------------------------------
 

@@ -57,6 +57,7 @@ moduleTask("hw-planner");
 utilityTask("hw-planner");
 utilityTask("lss-tlt-gen");
 utilityTask("cloud");
+utilityTask("support");
 
 utilityTasks.push("utilities/network-builder");
 
