@@ -1,4 +1,4 @@
-// HACK: CLients of these should use require() instead of including this directly
+// HACK: Clients of these should use require() instead of including this directly
 const api = new TlfAPI({
     endpoint: "/api/login.php",
     calls: {
@@ -7,7 +7,8 @@ const api = new TlfAPI({
         "change-password": { method: "POST" },
         "create-user": { method: "POST" },
         "set-property": { method: "POST" },
-        "get-properties": { method: "GET" }
+        "get-properties": { method: "GET" },
+        "get-roles": { method: "GET" }
     },
     onerror: function(response, msg) {
         if(msg !== undefined)

@@ -91,4 +91,8 @@ $api->register_command("get-properties", function($api) {
     $json->data = get_properties($conn, $uid);
     return $json;
 });
+$api->register_command("get-roles", function($api) {
+    $api->require_method("GET");
+    return pcu_roles();
+});
 $api->run();
