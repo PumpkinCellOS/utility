@@ -1,8 +1,9 @@
 // config {
 //   type: see tlfOpenForm() > config > type
 //   generator: function
+//   editOnTop: bool
 // }
-function insertProperty(key, config = {})
+function insertProperty(key, config = { editOnTop: false })
 {
     if(!config.generator)
         config.generator = generator = function(value) { return value; };
@@ -16,27 +17,35 @@ function insertProperty(key, config = {})
         return;
     }
     container.innerHTML = "";
+
+    var appendEdit = (container) => {
+        if(this.isLoggedIn)
+        {
+            var edit = document.createElement("span");
+            edit.classList.add("property-edit-icon");
+            edit.innerText = " 🖊 Edit";
+            edit.title = `Edit ${key}`;
+
+            edit.onclick = function() {
+                // TODO: Pretty print title
+                console.log(`setProperty ${key}`);
+                tlfOpenForm([{name: "value", type: "text", placeholder: "Value", value: value, type: config.type}], function(data) {
+                    userSetProperty(key, data.value);
+                }, { title: `Set property: ${key}` });
+            };
+            container.appendChild(edit);
+        }
+    }
+
+    if(config.editOnTop)
+        appendEdit(container);
     var dataContainer = document.createElement("span");
     var value = this.data[key] ?? "";
     dataContainer.innerHTML = config.generator(value);
     dataContainer.classList.add("property-value");
     container.appendChild(dataContainer);
-    if(this.isLoggedIn)
-    {
-        var edit = document.createElement("span");
-        edit.classList.add("property-edit-icon");
-        edit.innerText = " 🖊 Edit";
-        edit.title = `Edit ${key}`;
-
-        edit.onclick = function() {
-            // TODO: Pretty print title
-            console.log(`setProperty ${key}`);
-            tlfOpenForm([{name: "value", type: "text", placeholder: "Value", value: value, type: config.type}], function(data) {
-                userSetProperty(key, data.value);
-            }, { title: `Set property: ${key}` });
-        };
-        container.appendChild(edit);
-    }
+    if(!config.editOnTop)
+        appendEdit(container);
 }
 
 function userSetProperty(key, value)
@@ -61,7 +70,7 @@ function insertProperties(data, isLoggedIn)
     dataObject.insertProperty("displayName", {generator: function(value) { return value == "" ? window.queriedData.userName : value }});
     dataObject.insertProperty("description", {generator: function(value) {
         return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>");
-    }, type: "textarea"});
+    }, type: "textarea", editOnTop: true});
 }
 
 function queriedUserGetProperty(key)
