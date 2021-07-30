@@ -1,6 +1,7 @@
 <?php
 require_once("lib/generator.php");
 $generator = new PCUGenerator("Tilify Sandbox");
+$generator->scripts = ["tilify-sandbox.js"];
 $generator->start_content();
 ?>
 <h2>Tilify Sandbox</h2>
@@ -28,7 +29,12 @@ $generator->start_content();
     <option value="3">option3</option>
     <option value="4">option4</option>
 </tlf-combobox>
-<tlf-background-tile>test</tlf-background-tile>
+<tlf-background-tile>
+test
+<div id="data">
+
+</div>
+</tlf-background-tile>
 <tlf-background-tile padding="big">
     <h3>H3 in BPBT</h3>
     <p>
