@@ -108,7 +108,7 @@ function generateUserData(data)
         tr.appendChild(tdUserName);
 
         var tdRole = document.createElement("td");
-        tdRole.innerHTML = data.role;
+        tdRole.innerHTML = g_roles[data.role].displayName;
         tr.appendChild(tdRole);
 
         var tdStatus = document.createElement("td");
