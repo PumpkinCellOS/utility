@@ -46,7 +46,7 @@ div.resizable-tile {
 div.resizable-tile:hover {
     background-color: var(--tlf-hover-color);
     transform: scale(1.02, 1.02);
-    transition: transform 0.15s, background-color 0.15s;
+    transition: transform 0.05s, background-color 0.05s;
 }
 
 .button-tile {
