@@ -39,6 +39,7 @@ function getStatus(data)
 }
 
 var g_rolesOptions = null;
+var g_roles = null;
 
 function generateRolesOptions(data)
 {
@@ -47,6 +48,7 @@ function generateRolesOptions(data)
     {
         g_rolesOptions.push({value: i, displayName: data[i].displayName});
     }
+    g_roles = data;
 }
 
 window.UserManagement = 
@@ -65,7 +67,7 @@ window.UserManagement =
         }, {title: "Change password"});
     },
     changeRole: function(data) {
-        if(g_rolesOptions == null)
+        if(g_roles == null)
             tlfNotification("Wait for roles to be loaded", TlfNotificationType.Warning)
         tlfOpenForm([{type: "select", name: "role", value: data.role, options: g_rolesOptions}], function(args) {
             api.call("change-role-user", {uid: data.id, role: args.role}, function() {
@@ -100,6 +102,7 @@ function generateUserData(data)
             var aUserName = document.createElement("a");
             aUserName.innerHTML = data.userName;
             aUserName.href = `/user/profile.php?uid=${data.id}`;
+            aUserName.style.color = g_roles[data.role].color;
             tdUserName.appendChild(aUserName);
         }
         tr.appendChild(tdUserName);
