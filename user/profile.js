@@ -2,8 +2,9 @@
 //   type: see tlfOpenForm() > config > type
 //   generator: function
 //   editOnTop: bool
+//   editName: string
 // }
-function insertProperty(key, config = { editOnTop: false })
+function insertProperty(key, config = { editOnTop: false, editName: "Edit" })
 {
     if(!config.generator)
         config.generator = generator = function(value) { return value; };
@@ -23,7 +24,7 @@ function insertProperty(key, config = { editOnTop: false })
         {
             var edit = document.createElement("span");
             edit.classList.add("property-edit-icon");
-            edit.innerText = " 🖊 Edit";
+            edit.innerText = ` 🖊 ${config.editName ?? "Edit"}`;
             edit.title = `Edit ${key}`;
 
             edit.onclick = function() {
@@ -70,7 +71,7 @@ function insertProperties(data, isLoggedIn)
     dataObject.insertProperty("displayName", {generator: function(value) { return value == "" ? window.queriedData.userName : value }});
     dataObject.insertProperty("description", {generator: function(value) {
         return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>");
-    }, type: "textarea", editOnTop: true});
+    }, type: "textarea", editOnTop: true, editName: "Edit description"});
 }
 
 function queriedUserGetProperty(key)
