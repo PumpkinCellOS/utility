@@ -72,6 +72,9 @@ function insertProperties(data, isLoggedIn)
     dataObject.insertProperty("description", {generator: function(value) {
         return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>");
     }, type: "textarea", editOnTop: true, editName: "Edit description"});
+    dataObject.insertProperty("status", {generator: function(value) {
+        return value == "" ? "" : " • " + value;
+    }, editName: "Edit status"});
 }
 
 function queriedUserGetProperty(key)

@@ -41,7 +41,7 @@ window.queriedData = <?php echo json_encode(pcu_safe_user_data($qUserData)); ?>;
     <?php
     $role = pcu_role_by_name($qUserData["role"]);
     echo "<h3><div id='property-displayName' style='color: " . $role["color"] . "'></div><div id='username'>" . $qUserData["userName"];
-    echo "</div></h3><p><span class='pcu-user-role' style='color: " . $role["color"] . "'>" . $role["displayName"] . "</span> • Joined " . $qUserData["createTime"] . "</p>";
+    echo "</div></h3><p><span class='pcu-user-role' style='color: " . $role["color"] . "'>" . $role["displayName"] . "</span> • Joined " . $qUserData["createTime"] . "<span id='property-status'></span></p>";
     if($queryingSelf && strlen($qUserData["email"]) > 0)
         echo "<p>E-mail: " . $qUserData["email"] . "</p>";
     ?>

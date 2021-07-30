@@ -21,3 +21,8 @@
 #property-description .property-value {
     display: block;
 }
+
+#property-status .property-value {
+    color: #eeeeee;
+    font-weight: bold;
+}
