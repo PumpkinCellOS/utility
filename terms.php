@@ -53,18 +53,19 @@ $generator->start_content();
 [Mon Mar 15 14:36:18 2021] [error] [pid 44839] mod_proxy_fcgi.c(859): AH01071: Got error 'PHP message: PHP Notice:  Undefined index: sort in /mnt/hdd_ext4/prog/Big/www/html/utility/hw-planner/api.php on line 23'
     </pre>
     <h4>When you are logged in</h4>
-    <p>The following information are public:</p>
+    <p>The following information are public (can be seen by everybody):</p>
     <ul id="privacy-public-content">
-        <li><b>Basic account information</b> (username, display name, account description, role, join date)</li>
+        <li><b>Basic account information</b> (username, display name, account description, role, status, join date)</li>
     </ul>
+    <p>The public data can be retrieved using unique user ID (UID) or username.</p>
     <p>We store all public data, plus the following:</p>
     <ul>
-        <li><b>Username</b> (required)</li>
+        <li><b>Unique user ID (UID)</b> (required)</li>
         <li><b>SHA256 hashed password</b> (required)</li>
         <li><b>All data you give in services</b> (optional). This includes:
             <ul>
                 <li>Cloud files</li>
-                <li>HW Planner tasks + request log</li>
+                <li>HW Planner tasks with change log</li>
             </ul>
         </li>
     </ul>
