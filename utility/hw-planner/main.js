@@ -578,35 +578,42 @@ function sortStatus(status)
 
 function generateDataTable()
 {
+
     // Generate layout.
     var divData = document.getElementById("data");
     divData.innerHTML = "";
+
+    function error(value) {
+        var element = document.createElement("div");
+        element.classList.add("error-box");
+        element.innerHTML = value;
+        return element;
+    }
     
     if(g_hws.length == 0)
     {
-        tableWrapper.innerHTML = L("dataTable.nothing");
-        divData.appendChild(tableWrapper);
+        divData.appendChild(error(L("dataTable.nothing")));
         return;
     }
-    
+
     var table = document.createElement("table");
     table.classList.add("data-table");
-    
+
     var thead = document.createElement("thead");
 
     {
         var columnSub = document.createElement("td");
         columnSub.innerHTML = L("field.subject.name");
         columnSub.onclick = () => toggleSortMode("sub");
-        
+
         var columnTopic = document.createElement("td");
         columnTopic.innerHTML = L("field.topic.name");
         //columnTopic.onclick = () => toggleSortMode("topic"); // TODO
-    
+
         var columnTurnIn = document.createElement("td");
         columnTurnIn.innerHTML = L("field.turnInTime");
         columnTurnIn.onclick = () => toggleSortMode("date");
-    
+
         var columnStatus = document.createElement("td");
         columnStatus.innerHTML = L("field.status");
         columnStatus.onclick = () => toggleSortMode("status");
@@ -614,43 +621,50 @@ function generateDataTable()
         var sortIndicator = g_sortMode == 1 ? " &#9650;&nbsp;" : " &#9660;&nbsp;";
 
         switch(g_sortBy)
-    {
+        {
             case "date": columnTurnIn.innerHTML += sortIndicator; break;
             case "status": columnStatus.innerHTML += sortIndicator; break;
             case "sub": columnSub.innerHTML += sortIndicator; break;
-    }
-        
+        }
+
         thead.appendChild(columnSub);
         thead.appendChild(columnTopic);
         thead.appendChild(columnTurnIn);
         thead.appendChild(columnStatus);
     }
-    
+
     var tbody = document.createElement("tbody");
-    
+
     {
         // Sort hws.
-    var arr = [];
-    
-    for(var t in g_hws)
-    {
-        var f = filters.filter(g_hws[t], g_filters);
-        if(f)
-            arr.push(g_hws[t]);
-    }
-    
-    var DIR = g_sortMode;
-    var SORT_FUNCTIONS = {
-        sub :    function(a, b) { return DIR * a.sub.localeCompare(b.sub); },
-        date :   function(a, b) { return DIR * (new Date(a.untilTime + "T" + a.untilTimeT + "Z") - new Date(b.untilTime + "T" + b.untilTimeT + "Z")); },
-        status : function(a, b) { return DIR * (sortStatus(a.status) - sortStatus(b.status)); }
-    };
-    
-    arr.sort(SORT_FUNCTIONS[g_sortBy]);
-    
+        var arr = [];
+        
+        for(var t in g_hws)
+        {
+            var f = filters.filter(g_hws[t], g_filters);
+            if(f)
+                arr.push(g_hws[t]);
+        }
+
+        if(arr.length == 0)
+        {
+            // TODO: Localize it
+            divData.appendChild(error("All data was filtered out. Check your filters."));
+            return;
+        }
+        
+        var DIR = g_sortMode;
+        var SORT_FUNCTIONS = {
+            sub :    function(a, b) { return DIR * a.sub.localeCompare(b.sub); },
+            date :   function(a, b) { return DIR * (new Date(a.untilTime + "T" + a.untilTimeT + "Z") - new Date(b.untilTime + "T" + b.untilTimeT + "Z")); },
+            status : function(a, b) { return DIR * (sortStatus(a.status) - sortStatus(b.status)); }
+        };
+        
+        arr.sort(SORT_FUNCTIONS[g_sortBy]);
+
         // Add hws to table.
         for(var hw of arr)
-    {
+        {
             var tr = document.createElement("tr");
 
             // TODO: Generate it also with the DOM way
@@ -658,7 +672,7 @@ function generateDataTable()
             tbody.appendChild(tr);
         }
     }
-    
+
     table.appendChild(thead);
     table.appendChild(tbody)
     divData.appendChild(table);

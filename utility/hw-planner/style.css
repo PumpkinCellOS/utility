@@ -18,9 +18,6 @@ body {
     z-index: 10;
 }
 
-#loading-text {
-}
-
 .added {
     background-color: #888888;
     transition: background-color 2s;
@@ -101,16 +98,9 @@ body {
     line-height: 40px;
 }
 
-
 .exe-value {
     color: #ffdddd;
 }
-
-
-.modify-button {
-    
-}
-
 
 .status-u {
     color: white;
@@ -138,8 +128,6 @@ body {
 }
 
 
-.tf-r {
-}
 .tf-x {
     color: #ffaaaa;
 }
@@ -205,4 +193,9 @@ body {
 
 .rqlog-time {
     min-width: 200px;
+}
+
+.error-box {
+    margin: 10px;
+    color: #e29393;
 }
