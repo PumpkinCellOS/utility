@@ -55,7 +55,7 @@ CREATE TABLE `users` (
   `id` int NOT NULL,
   `userName` tinytext NOT NULL,
   `email` TEXT NOT NULL DEFAULT 'not-given' COMMENT 'The e-mail address (optional)',
-  `role` enum('member','owner','admin','default') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'default',
+  `role` enum('member','owner','admin','default','trusted','moderator') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'default',
   `password` tinytext NOT NULL,
   `passwordExpired` tinyint(1) NOT NULL DEFAULT '0',
   `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

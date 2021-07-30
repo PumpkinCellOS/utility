@@ -39,18 +39,9 @@ window.queriedData = <?php echo json_encode(pcu_safe_user_data($qUserData)); ?>;
 
 <tlf-background-tile padding="big">
     <?php
-    
-    echo "<h3><div id='property-displayName'></div><div id='username'>" . $qUserData["userName"];
-    $roles = [
-        "default" => ["User", "inherit"],
-        "trusted" => ["Trusted user", "#ffaaaa"],
-        "moderator" => ["Moderator", "#aaffff"],
-        "member" => ["Staff member", "#aaaaff"],
-        "owner" => ["Owner", "orange"],
-        "admin" => ["Admin", "red"],
-    ];
-    $role = $roles[$qUserData["role"]];
-    echo "</div></h3><p><span class='pcu-user-role' style='color: " . $role[1] . "'>" . $role[0] . "</span> • Joined " . $qUserData["createTime"] . "</p>";
+    $role = pcu_role_by_name($qUserData["role"]);
+    echo "<h3><div id='property-displayName' style='color: " . $role["color"] . "'></div><div id='username'>" . $qUserData["userName"];
+    echo "</div></h3><p><span class='pcu-user-role' style='color: " . $role["color"] . "'>" . $role["displayName"] . "</span> • Joined " . $qUserData["createTime"] . "</p>";
     if($queryingSelf && strlen($qUserData["email"]) > 0)
         echo "<p>E-mail: " . $qUserData["email"] . "</p>";
     ?>

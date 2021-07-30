@@ -211,12 +211,29 @@ function pcu_require_login()
     return $_SESSION["userData"];
 }
 
+function pcu_roles()
+{
+    return [
+        "default" =>   ["level" => 0, "displayName" => "User",          "color" => "inherit"],
+        "trusted" =>   ["level" => 1, "displayName" => "Trusted user",  "color" => "#ffaaaa"],
+        "moderator" => ["level" => 2, "displayName" => "Moderator",     "color" => "#aaffff"],
+        "member" =>    ["level" => 3, "displayName" => "Staff member",  "color" => "#aaaaff"],
+        "admin" =>     ["level" => 4, "displayName" => "Admin",         "color" => "#ff5555"],
+        "owner" =>     ["level" => 5, "displayName" => "Owner",         "color" => "orange" ],
+    ];
+}
+
+function pcu_role_by_name($name)
+{
+    return pcu_roles()[$name];
+}
+
 function pcu_role_less($_1, $_2)
 {
-    $roles = array("default", "member", "admin", "owner");
-    $s1 = array_search($_1, $roles);
-    $s2 = array_search($_2, $roles);
-    if($s1 < $s2)
+    $roles = pcu_roles();
+    $s1 = $roles[$_1];
+    $s2 = $roles[$_2];
+    if($s1["level"] < $s2["level"])
         return true;
     return false;
 }
