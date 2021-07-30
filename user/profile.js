@@ -59,7 +59,9 @@ function insertProperties(data, isLoggedIn)
     dataObject.isLoggedIn = isLoggedIn;
 
     dataObject.insertProperty("displayName", {generator: function(value) { return value == "" ? window.queriedData.userName : value }});
-    dataObject.insertProperty("description", {type: "textarea"});
+    dataObject.insertProperty("description", {generator: function(value) {
+        return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>");
+    }, type: "textarea"});
 }
 
 function queriedUserGetProperty(key)
