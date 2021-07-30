@@ -1,5 +1,7 @@
 window.g_dataTable = {};
 
+const loginApi = require("../../user/login").api;
+
 const API_COMMANDS = {
     "search-users": {"method": "GET"},
     "user-info": {"method": "GET"},
@@ -36,6 +38,17 @@ function getStatus(data)
     return arr;
 }
 
+var g_rolesOptions = null;
+
+function generateRolesOptions(data)
+{
+    g_rolesOptions = [];
+    for(let i in data)
+    {
+        g_rolesOptions.push({value: i, displayName: data[i].displayName});
+    }
+}
+
 window.UserManagement = 
 {
     remove: function(data) {
@@ -52,12 +65,9 @@ window.UserManagement =
         }, {title: "Change password"});
     },
     changeRole: function(data) {
-        tlfOpenForm([{type: "select", name: "role", value: data.role, options: [
-            { value: "owner", displayName: "Owner" },
-            { value: "admin", displayName: "Admin" },
-            { value: "member", displayName: "Staff member" },
-            { value: "default", displayName: "User" },
-        ]}], function(args) {
+        if(g_rolesOptions == null)
+            tlfNotification("Wait for roles to be loaded", TlfNotificationType.Warning)
+        tlfOpenForm([{type: "select", name: "role", value: data.role, options: g_rolesOptions}], function(args) {
             api.call("change-role-user", {uid: data.id, role: args.role}, function() {
                 updateUserList(document.getElementById("username-box").value);
             });
@@ -156,6 +166,9 @@ window.updateUserList = function(value)
 
 function load()
 {
+    loginApi.call("get-roles", {}, function(data) {
+        generateRolesOptions(data);
+    });
     api.call("version", {}, function(data) {
         var divVersionData = document.getElementById("version-data");
         divVersionData.innerHTML += data.version;
