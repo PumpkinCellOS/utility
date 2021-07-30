@@ -118,9 +118,7 @@ $generator->start_content();
 ?>
     <h2>HW Planner</h2>
     <div id="controls" class="small app-list">
-        <a is="tlf-button-tile" style="width: 16.666%" onclick="openTopicEditor('add'); return false;">
-            {controls.addObject}
-        </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('form-filters').style.display='block'; updateTopicDisplay(); return false;">
+        <a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('form-filters').style.display='block'; updateTopicDisplay(); return false;">
             {controls.filters}
         </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('statistics').style.display='block'; calcStatistics(); return false;">
             {controls.statistics}
@@ -132,8 +130,15 @@ $generator->start_content();
         <!-- TODO: filters -->
     </div>
 
-    <div id="data" class="data background-tile" style="width: calc(100% - 30px); margin: 15px;">
-        {progress.loading}
+    <div class="data background-tile" style="width: calc(100% - 30px);">
+        <div class="small app-list" style="margin: 0; margin-top: 10px !important;">
+            <a is="tlf-button-tile" style="width: 16.666%;" onclick="openTopicEditor('add'); return false;">
+                {controls.addObject}
+            </a>
+        </div>
+        <div id="data">
+            {progress.loading}
+        </div>
     </div>
 <?php
 $generator->finish();
