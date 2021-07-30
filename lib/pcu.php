@@ -160,6 +160,7 @@ function pcu_safe_user_data($data)
 {
     $data["password"] = "****";
     $data["email"] = "i.wont.give.you.hacker@example.com";
+    $data["properties"] = "<optimized out>";
     return $data;
 }
 

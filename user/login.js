@@ -72,8 +72,3 @@ function changePassword(message = "", callback = function() {})
         return false;
     }, {title: "Change password", description: message});
 }
-
-function userGetProperty(key)
-{
-    return window.PCU_USER_DATA.properties[key];
-}
