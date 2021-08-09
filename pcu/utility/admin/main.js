@@ -101,7 +101,7 @@ function generateUserData(data)
         {
             var aUserName = document.createElement("a");
             aUserName.innerHTML = data.userName;
-            aUserName.href = `/user/profile.php?uid=${data.id}`;
+            aUserName.href = `/pcu/user/profile.php?uid=${data.id}`;
             aUserName.style.color = g_roles[data.role].color;
             tdUserName.appendChild(aUserName);
         }
