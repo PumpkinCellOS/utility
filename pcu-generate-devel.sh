@@ -23,9 +23,10 @@ pushd pcu
 popd
 
 cp -r \
+    .htaccess \
+    errors \
     index.html \
     res \
-    errors \
     build
 
 # TODO: Setup database if it was not done before

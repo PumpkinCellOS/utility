@@ -1,6 +1,6 @@
 <?php
 
-require_once("../lib/pcu.php");
+require_once("../pcu/lib/pcu.php");
 
 $status = $_SERVER["REDIRECT_STATUS"];
 

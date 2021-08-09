@@ -68,7 +68,7 @@ gulp.task("utilities/network-builder", function() {
 gulp.task("utilities", gulp.series(utilityTasks));
 
 gulp.task("assets", function() {
-    return gulp.src([".htaccess", "*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/`));
+    return gulp.src(["*.*"]).pipe(gulp.dest(`${OUTPUT_DIR}/`));
 });
 
 gulp.task("api", function() {
