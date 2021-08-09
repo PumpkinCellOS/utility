@@ -37,6 +37,6 @@ else if($page == "cloud")
 else
     pcu_cmd_fatal("Invalid page", 404);
 
-header("Location: /$url");
+header("Location: /pcu/$url");
 
 ?>

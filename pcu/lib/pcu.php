@@ -82,10 +82,9 @@ function pcu_allow_insecure_operations()
 }
 
 $PCU_PATH = realpath(__DIR__ . "/..");
-$PCU_MYSQL_PASSWORD = file_get_contents($GLOBALS["PCU_PATH"] . "/lib/mysql-password.txt");
+$PCU_MYSQL_PASSWORD = file_get_contents(__DIR__ . "/mysql-password.txt");
 if(!$PCU_MYSQL_PASSWORD)
     pcu_cmd_fatal("Failed to open database connection. Ensure that /lib/mysql_password.txt file was created.", 500);
-$PCU_MYSQL_PASSWORD = substr($PCU_MYSQL_PASSWORD, 0, strlen($PCU_MYSQL_PASSWORD) - 1);
 
 function pcu_path()
 {

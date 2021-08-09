@@ -43,11 +43,11 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
         
         if($object->isDir)
         {
-            $link = "/u/cloud/?u=$targetUid&cd=$currentDir/$file_bn";
+            $link = "/pcu/u/cloud/?u=$targetUid&cd=$currentDir/$file_bn";
         }
         else
         {
-            $link = "/u/cloud/download.php?u=$targetUid&f=$currentDir/$file_bn";
+            $link = "/pcu/u/cloud/download.php?u=$targetUid&f=$currentDir/$file_bn";
         }
         $object->link = $link;
         

@@ -25,7 +25,7 @@ switch($_SERVER["REQUEST_METHOD"])
         require_once("../../lib/generator.php");
         $generator = new PCUGenerator("Cloud");
 
-        $generator->scripts = ["/plupload.full.min.js", "app.js"];
+        $generator->scripts = ["/pcu/plupload.full.min.js", "app.js"];
         $generator->stylesheets = ["style.css"];
         $generator->start_content();
         ?>

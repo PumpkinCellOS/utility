@@ -1,0 +1,8 @@
+api/timer-data.json
+
+node_modules
+files
+
+# TODO: move it to some 'secret' directory
+lib/mysql-password.txt
+lib/twitch-secret.txt

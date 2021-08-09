@@ -2,20 +2,30 @@
 
 # Development build generation.
 
-echo Generating build...
-PCU_SOURCE_DIR=$(dirname $(realpath $0))
+# Setup useful variables
+export PCU_BUILD_DIR=`realpath $PWD/build`
+export PCU_DEPLOY_DIR=`realpath $PWD/build-prod`
 
-# Ensure that html-build is up-to-date
-cd ${PCU_SOURCE_DIR}
-echo Running Gulp...
-gulp
-
-# Install Apache config files (only devel)
-echo Copying Apache config files...
-sudo cp -r apache/sites-available/pcu-devel.conf /etc/apache2/sites-available/pcu-devel.conf
-sudo cp -r apache/sites-enabled/pcu-devel.conf /etc/apache2/sites-enabled/pcu-devel.conf
-
-# TODO: Setup database if it was not done before
+# NOTE: This doesn't reload apache!
+# We need to do this manually.
+. ./install-apache.sh
 echo Reloading Apache...
 sudo systemctl reload apache2
-echo Done!
+
+# Ensure that build is up-to-date
+echo Generating build...
+PCU_SOURCE_DIR=$(dirname $(realpath $0))
+cd ${PCU_SOURCE_DIR}
+echo Running Gulp for PCU...
+pushd pcu
+    npm install
+    gulp
+popd
+
+cp -r \
+    index.html \
+    res \
+    errors \
+    build
+
+# TODO: Setup database if it was not done before

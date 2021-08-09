@@ -37,7 +37,7 @@ function login(userName, password) {
             });
         }
         else
-            window.location.href = "/";
+            window.location.href = "/pcu";
     });
 }
 
@@ -47,7 +47,7 @@ function signup(form)
     var userName = form["userName"].value;
     var password = form["password"].value;
     api.call("create-user", { email: email, userName: userName, password: password }, function() {
-        window.location.href = "/";
+        window.location.href = "/pcu";
     }, function(data) {
         if(data.message !== undefined)
         {

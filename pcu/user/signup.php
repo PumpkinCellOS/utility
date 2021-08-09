@@ -9,7 +9,7 @@ $generator->start_content();
         <!-- TODO: Use custom elements! -->
         <div class="background-tile-padding text-align-center">
             <h3>Sign up to get all free PumpkinCell services</h3>
-            <form method="POST" action="/api/login.php" onsubmit="if(validate(this)) signup(this); return false;">
+            <form method="POST" action="/pcu/api/login.php" onsubmit="if(validate(this)) signup(this); return false;">
                 <input type="hidden" name="command" value="create-user"></input>
                 <input type="email" name="email" placeholder="E-mail address"></input><br>
                 <input type="text" name="userName" placeholder="Username (will be used to log in)"></input><br>
@@ -17,8 +17,8 @@ $generator->start_content();
                 <input type="password" name="password2" placeholder="Retype password"></input><br>
                 <input type="submit" value="Create Account"></input>
             </form>
-            <p>Already have an account? <a href="/user/login.php">Log in</a> here.</p>
-            <p>By creating an account, you agree to <a href="/terms.php#use">terms of use</a> and <a href="/terms.php#privacy">privacy policy</a>.</p>
+            <p>Already have an account? <a href="/pcu/user/login.php">Log in</a> here.</p>
+            <p>By creating an account, you agree to <a href="/pcu/terms.php#use">terms of use</a> and <a href="/pcu/terms.php#privacy">privacy policy</a>.</p>
             <p><b>Note: Email address is not really required, but saved in our database. If you ever forget a password, you can give that address for verification.</b></p>
         </div>
     </div>

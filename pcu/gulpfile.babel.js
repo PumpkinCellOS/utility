@@ -5,7 +5,7 @@ const source = require('vinyl-source-stream');
 const babelify = require('babelify');
 const uglify = require('gulp-uglify');
 
-const OUTPUT_DIR = "../html-build";
+const OUTPUT_DIR = "../build/pcu";
 
 var utilityTasks = [];
 function utilityTask(name, entry = "main.js")

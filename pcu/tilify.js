@@ -449,6 +449,8 @@ class TlfAPI {
         var method = this.config.calls[command].method;
         
         var url = this.config.endpoint;
+        if(url[0] == '/')
+            url = "/pcu" + url;
         args.command = command;
         if(method != "POST")
             url += `?${this.json2uri(args)}`;

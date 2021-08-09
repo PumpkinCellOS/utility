@@ -25,7 +25,7 @@ class PCUGenerator
                     <!-- Generated with PCUGenerator -->
                     <meta charset="utf-8">
                     <title><?php if(strlen($this->title) == 0) echo "PumpkinCell.net"; else echo $this->title . " | PumpkinCell.net" ?></title>
-                    <link rel="stylesheet" href="/style.css"/>
+                    <link rel="stylesheet" href="/pcu/style.css"/>
                     <meta name="viewport" content="width=device-width, initial-scale=1">
                     <?php 
                         foreach($this->stylesheets as $stylesheet)
@@ -50,20 +50,20 @@ class PCUGenerator
         ?>
             <!-- TODO: Use custom elements -->
             <h1>
-                <a href="/" class="title-link">
+                <a href="/pcu" class="title-link">
                     <img id="logo" src="/res/pumpkin2-beta.png" style="height: 50px"/>
                 </a>
                 <div style="float: right; display: flex; align-items: center">
                     <?php
                         if(pcu_is_authenticated())
                         {
-                            echo "<div class='title-link-right'><a href='/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
-                            echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/`; })'>Log out</a></div>";
+                            echo "<div class='title-link-right'><a href='/pcu/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
+                            echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/pcu/api/login.php`,`remove-session`, {}, function() { window.location.href = `/`; })'>Log out</a></div>";
                         }
                         else
                         {
-                            echo "<div class='title-link-right'><a href='/user/login.php'>Log in</a></div>";
-                            echo "<div class='title-link-right'><a href='/user/signup.php'>Sign up</a></div>";
+                            echo "<div class='title-link-right'><a href='/pcu/user/login.php'>Log in</a></div>";
+                            echo "<div class='title-link-right'><a href='/pcu/user/signup.php'>Sign up</a></div>";
                         }
                     ?>
                     <!--<iframe width=395 height=50 style="overflow: hidden; border: none;" src="/u/timer.html?embed=1&mode=3"></iframe>-->
@@ -86,7 +86,7 @@ class PCUGenerator
                     </div>
                     <div id="tlf-notification-box">
                     </div>
-                    <script src="/tilify.js"></script>
+                    <script src="/pcu/tilify.js"></script>
                     <?php
                         foreach($this->scripts as $script)
                             echo "<script src=$script></script>";

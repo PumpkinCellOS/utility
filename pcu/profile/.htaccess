@@ -4,4 +4,4 @@
 #  /profile/$USER/$PAGE -> /user/shortlink.php?name=$USER&page=$PAGE
 
 RewriteEngine on
-RewriteRule ([^/]*)(?:/(.*))?$ /user/shortlink.php?name=$1&page=$2
+RewriteRule ([^/]*)(?:/(.*))?$ /pcu/user/shortlink.php?name=$1&page=$2
