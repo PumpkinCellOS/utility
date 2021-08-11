@@ -6,6 +6,10 @@ class PCUGenerator
 {
     public array $stylesheets = [];
     public array $scripts = [];
+    public string $main_stylesheet = "/pcu/style.css";
+    public string $main_title = "PumpkinCell.net";
+    public bool $login_controls = true;
+
     private int $state = 0; // States: 0-Before HTML, 1-After HEAD, BODY opened, 2-After header, content opened, 3-Finished
 
     public function __construct(string $title = "", string $head_suffix = "", string $body_suffix = "")
@@ -22,10 +26,10 @@ class PCUGenerator
         ?>
             <html>
                 <head>
-                    <!-- Generated with PCUGenerator -->
+                    <!-- Generated with <?php echo static::class; ?> -->
                     <meta charset="utf-8">
-                    <title><?php if(strlen($this->title) == 0) echo "PumpkinCell.net"; else echo $this->title . " | PumpkinCell.net" ?></title>
-                    <link rel="stylesheet" href="/pcu/style.css"/>
+                    <title><?php if(strlen($this->title) == 0) echo $this->main_title; else echo $this->title . " | $this->main_title" ?></title>
+                    <link rel="stylesheet" href="<?php echo $this->main_stylesheet; ?>"/>
                     <meta name="viewport" content="width=device-width, initial-scale=1">
                     <?php 
                         foreach($this->stylesheets as $stylesheet)
@@ -55,15 +59,18 @@ class PCUGenerator
                 </a>
                 <div style="float: right; display: flex; align-items: center">
                     <?php
-                        if(pcu_is_authenticated())
+                        if($this->login_controls)
                         {
-                            echo "<div class='title-link-right'><a href='/pcu/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
-                            echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/`; })'>Log out</a></div>";
-                        }
-                        else
-                        {
-                            echo "<div class='title-link-right'><a href='/pcu/user/login.php'>Log in</a></div>";
-                            echo "<div class='title-link-right'><a href='/pcu/user/signup.php'>Sign up</a></div>";
+                            if(pcu_is_authenticated())
+                            {
+                                echo "<div class='title-link-right'><a href='/pcu/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
+                                echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/`; })'>Log out</a></div>";
+                            }
+                            else
+                            {
+                                echo "<div class='title-link-right'><a href='/pcu/user/login.php'>Log in</a></div>";
+                                echo "<div class='title-link-right'><a href='/pcu/user/signup.php'>Sign up</a></div>";
+                            }
                         }
                     ?>
                     <!--<iframe width=395 height=50 style="overflow: hidden; border: none;" src="/u/timer.html?embed=1&mode=3"></iframe>-->
@@ -95,6 +102,17 @@ class PCUGenerator
                 </body>
             </html>
         <?php
+    }
+}
+
+class PCUGeneratorStatic extends PCUGenerator
+{
+    public function __construct(string $title = "", string $head_suffix = "", string $body_suffix = "")
+    {
+        parent::__construct($title, $head_suffix, $body_suffix);
+        $this->main_stylesheet = "/style.css";
+        $this->main_title = "PumpkinCell";
+        $this->login_controls = false;
     }
 }
 
