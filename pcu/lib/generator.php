@@ -25,6 +25,7 @@ class PCUGenerator
     {
         $this->state = 1;
         ?>
+            <!DOCTYPE html>
             <html>
                 <head>
                     <!-- Generated with <?php echo static::class; ?> -->
