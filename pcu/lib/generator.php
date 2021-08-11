@@ -8,6 +8,7 @@ class PCUGenerator
     public array $scripts = [];
     public string $main_stylesheet = "/pcu/style.css";
     public string $main_title = "PumpkinCell.net";
+    public string $index_link = "/pcu";
     public bool $login_controls = true;
 
     private int $state = 0; // States: 0-Before HTML, 1-After HEAD, BODY opened, 2-After header, content opened, 3-Finished
@@ -54,7 +55,7 @@ class PCUGenerator
         ?>
             <!-- TODO: Use custom elements -->
             <h1>
-                <a href="/pcu" class="title-link">
+                <a href="<?php echo $this->index_link; ?>" class="title-link">
                     <img id="logo" src="/res/pumpkin2-beta.png" style="height: 50px"/>
                 </a>
                 <div style="float: right; display: flex; align-items: center">
@@ -113,6 +114,7 @@ class PCUGeneratorStatic extends PCUGenerator
         $this->main_stylesheet = "/style.css";
         $this->main_title = "PumpkinCell";
         $this->login_controls = false;
+        $this->index_link = "/";
     }
 }
 
