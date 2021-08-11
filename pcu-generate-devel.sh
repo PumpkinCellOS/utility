@@ -26,11 +26,12 @@ pushd pcu
 popd
 
 cp -r \
+    *.php \
+    *.css \
     .htaccess \
     about \
     errors \
-    *.php \
-    *.css \
+    favicon.ico \
     res \
     tilify \
     build
