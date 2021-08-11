@@ -245,6 +245,7 @@ tr {
     border: 1px solid white;
     border-collapse: collapse;
     height: 10px;
+    text-align: left;
 }
 
 ul, ol {
