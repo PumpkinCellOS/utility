@@ -1,5 +1,5 @@
 <?php
-require_once("lib/generator.php");
+require_once("pcu/lib/generator.php");
 $generator = new PCUGenerator("Terms of use");
 $generator->start_content();
 ?>
@@ -40,7 +40,7 @@ $generator->start_content();
     <p>I <b>really</b> value your privacy, not like some other sites. So, I don't store any data about you <i>except</i> when you are logged in.</p>
     <h4>When you are not logged in</h4>
     <p>As I said, we then don't store any personal data. Only if any error occurs, the anonymous log message (date, error message, page/script which caused an error) is saved on our server to allow me fix it.</p>
-    <p>Example error log file extract:</p>
+    <p>Example error.log file extract:</p>
     <pre>
 [Mon Mar 15 14:36:03 2021] [error] [pid 44839] mod_proxy_fcgi.c(859): AH01071: Got error 'PHP message: PHP Notice:  Undefined index: sort in /mnt/hdd_ext4/prog/Big/www/html/utility/hw-planner/api.php on line 23'
 [Mon Mar 15 14:36:03 2021] [error] [pid 44839] mod_proxy_fcgi.c(859): AH01071: Got error 'PHP message: PHP Notice:  Undefined index: sort in /mnt/hdd_ext4/prog/Big/www/html/utility/hw-planner/api.php on line 23'
@@ -52,8 +52,21 @@ $generator->start_content();
 [Mon Mar 15 14:36:15 2021] [error] [pid 44839] mod_proxy_fcgi.c(859): AH01071: Got error 'PHP message: PHP Notice:  session_start(): A session had already been started - ignoring in /mnt/hdd_ext4/prog/Big/www/html/lib/pcu.php on line 69PHP message: PHP Notice:  Undefined index: userData in /mnt/hdd_ext4/prog/Big/www/html/lib/pcu.php on line 70PHP message: PHP Notice:  Undefined property: stdClass::$message in /mnt/hdd_ext4/prog/Big/www/html/api/login.php on line 60'
 [Mon Mar 15 14:36:18 2021] [error] [pid 44839] mod_proxy_fcgi.c(859): AH01071: Got error 'PHP message: PHP Notice:  Undefined index: sort in /mnt/hdd_ext4/prog/Big/www/html/utility/hw-planner/api.php on line 23'
     </pre>
+    <p>For administrative purposes, we store also date/time of the request, requested file, status, referer and user agent.</p>
+    <p>Example access.log file extract:</p>
+    <pre>
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:48:00 +0200] "GET /pcu/style.css HTTP/1.1" 200 1631 "https://pumpkincell.duckdns.org/pcu/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:48:00 +0200] "GET /res/pumpkin2-beta.png HTTP/1.1" 200 14279 "https://pumpkincell.duckdns.org/pcu/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:48:00 +0200] "GET /pcu/form.css HTTP/1.1" 200 1072 "https://pumpkincell.duckdns.org/pcu/style.css" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:48:00 +0200] "GET /pcu/tilify.css HTTP/1.1" 200 1274 "https://pumpkincell.duckdns.org/pcu/style.css" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:48:00 +0200] "GET /pcu/tilify.js HTTP/1.1" 200 4844 "https://pumpkincell.duckdns.org/pcu/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:48:00 +0200] "GET /res/fonts/OpenSans-Regular.ttf HTTP/1.1" 304 204 "https://pumpkincell.duckdns.org/pcu/style.css" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:48:00 +0200] "GET /res/fonts/OpenSans-Bold.ttf HTTP/1.1" 304 204 "https://pumpkincell.duckdns.org/pcu/style.css" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:15:49:54 +0200] "GET /pcu/ HTTP/1.1" 200 7365 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0"
+pumpkincell.duckdns.org:443 - - [11/Aug/2021:16:03:16 +0200] "GET / HTTP/1.1" 200 4977 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36"
+</pre>
     <h4>When you are logged in</h4>
-    <p>The following information are public (can be seen by everybody):</p>
+    <p>The following information are public (can be seen by everybody who knows your username or user ID):</p>
     <ul id="privacy-public-content">
         <li><b>Basic account information</b> (username, display name, account description, role, status, join date)</li>
     </ul>
