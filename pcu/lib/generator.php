@@ -64,7 +64,7 @@ class PCUGenerator
                             if(pcu_is_authenticated())
                             {
                                 echo "<div class='title-link-right'><a href='/pcu/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
-                                echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/`; })'>Log out</a></div>";
+                                echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/pcu`; })'>Log out</a></div>";
                             }
                             else
                             {
