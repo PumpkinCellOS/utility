@@ -27,8 +27,10 @@ popd
 
 cp -r \
     .htaccess \
+    about \
     errors \
-    index.html \
+    *.php \
+    *.css \
     res \
     tilify \
     build
