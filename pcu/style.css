@@ -1,5 +1,5 @@
 @import "form.css";
-@import "tilify.css";
+@import "/tilify/tilify.css";
 
 @font-face {
     font-family: "librmono";

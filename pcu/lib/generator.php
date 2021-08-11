@@ -86,7 +86,7 @@ class PCUGenerator
                     </div>
                     <div id="tlf-notification-box">
                     </div>
-                    <script src="/pcu/tilify.js"></script>
+                    <script src="/tilify/tilify.js"></script>
                     <?php
                         foreach($this->scripts as $script)
                             echo "<script src=$script></script>";

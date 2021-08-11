@@ -6,6 +6,9 @@
 export PCU_BUILD_DIR=`realpath $PWD/build`
 export PCU_DEPLOY_DIR=`realpath $PWD/build-prod`
 
+echo Clearing old build...
+rm -r ${PCU_BUILD_DIR}
+
 # NOTE: This doesn't reload apache!
 # We need to do this manually.
 . ./install-apache.sh
@@ -27,6 +30,7 @@ cp -r \
     errors \
     index.html \
     res \
+    tilify \
     build
 
 # TODO: Setup database if it was not done before

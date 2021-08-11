@@ -4,8 +4,10 @@
 
 . ./pcu-generate-devel.sh
 
-echo Copying files...
+echo Clearing old build...
 sudo rm -r build-prod
+
+echo Copying files...
 sudo mkdir build-prod
 sudo cp -prT build build-prod
 
