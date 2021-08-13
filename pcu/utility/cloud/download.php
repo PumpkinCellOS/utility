@@ -51,7 +51,7 @@ $basename = basename($name);
     
 header("Content-Disposition: inline; filename=\"${basename}\"");
 header("Content-Length: ${fileSize}");
-pcu_page_type(mime_content_type($fileName));
+pcu_page_type("application/octet-stream");
 
 $fd = @fopen($fileName, "r");
 while(!@feof($fd))
