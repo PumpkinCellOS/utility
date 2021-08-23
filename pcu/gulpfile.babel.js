@@ -23,7 +23,7 @@ function utilityTask(name, entry = "main.js")
     });
 
     gulp.task(`utilities/${name}/assets`, function() {
-        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
+        return gulp.src([`utility/${name}/*.css`, `utility/${name}/*.php`, `utility/${name}/*.json`]).pipe(gulp.dest(`${OUTPUT_DIR}/u/${name}`));
     });
 
     gulp.task(`utilities/${name}`, gulp.series(`utilities/${name}/js`, `utilities/${name}/assets`));
