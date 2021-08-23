@@ -1,0 +1,8 @@
+{
+    "name": "pcu-websocket",
+    "type": "module",
+    "dependencies": {
+        "mysql": "^2.18.1",
+        "ws": "^8.2.0"
+    }
+}

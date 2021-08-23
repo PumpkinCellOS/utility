@@ -139,6 +139,7 @@ const utilityEntries = [
         <?php if($login && !pcu_role_less($userData["role"], "member")) { ?>
             {"icon": "",        "units": 1, "color": "#704444", "hovercolor": "#805454", "state": "beta", "displayName": "LSS Lesson Table", "path": "/pcu/u/lss-tlt-gen"},
             {"icon": "", "units": 1, "color": "#4a758c", "hovercolor": "#5a859c", "state": "alpha", "displayName": "Support", "path": "/pcu/u/support"},
+            {"icon": "#127760", "units": 1, "state": "alpha", "displayName": "WebSocket", "path": "/pcu/u/ws-client"},
         <?php } ?>
         {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/pcu/u/hw-planner"},
     <?php } ?>

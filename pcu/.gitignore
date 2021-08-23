@@ -1,6 +1,5 @@
 api/timer-data.json
 
-node_modules
 files
 
 # TODO: move it to some 'secret' directory
