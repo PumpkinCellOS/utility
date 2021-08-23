@@ -14,7 +14,7 @@ function utilityTask(name, entry = "main.js")
         return browserify({entries: [
                 `utility/${name}/${entry}`
             ]})
-            .transform(babelify.configure({presets: ["@babel/env"]}))
+            .transform(babelify.configure({presets: ["@babel/env"], plugins: [['@babel/transform-runtime', { regenerator: true }]]}))
             .bundle()
             .pipe(source('app.js'))
             .pipe(buffer())
