@@ -1,80 +1,4 @@
-var g_data = {
-    "dayrange": [1, 5],
-    "tunit": [
-        [ 7,10,  7,55],
-        [ 8, 0,  8,45],
-        [ 8,50,  9,35],
-        [ 9,50, 10,35],
-        [10,40, 11,25],
-        [11,30, 12,15],
-        [12,30, 13,15],
-        [13,20, 14, 5],
-        [14,10, 14,55],
-        [15, 0, 15,45]
-    ],
-    "lessons": [
-        {"sub": "SIE", "class": 36,  "tunit": 3, "tday": 1},
-        {"sub": ">>>", "class": "*", "tunit": 4, "tday": 1, "type": "window"},
-        {"sub": "WFI", "class": "*", "tunit": 5, "tday": 1},
-        {"sub": "<<<", "class": "*", "tunit": 6, "tday": 1, "type": "window"},
-        {"sub": "NIE", "class": 34,  "tunit": 7, "tday": 1},
-        {"sub": "NIE", "class": 34,  "tunit": 8, "tday": 1},
-        {"sub": "HIS", "class": 38,  "tunit": 9, "tday": 1},
-        
-        {"sub": "POL", "class": 23,  "tunit": 2, "tday": 2},
-        {"sub": "POL", "class": 23,  "tunit": 3, "tday": 2},
-        {"sub": "ANG", "class": 20,  "tunit": 4, "tday": 2},
-        {"sub": "SYS", "class": 57,  "tunit": 5, "tday": 2},
-        {"sub": "PSY", "class": 56,  "tunit": 6, "tday": 2},
-        {"sub": "MAT", "class": 17,  "tunit": 7, "tday": 2},
-        {"sub": "GWC", "class": 17,  "tunit": 8, "tday": 2},
-        {"sub": "PPO", "class": 51,  "tunit": 9, "tday": 2},
-        
-        {"sub": "PUT", "class": 62,  "tunit": 1, "tday": 3},
-        {"sub": "PUT", "class": 62,  "tunit": 2, "tday": 3},
-        {"sub": "PSY", "class": 41,  "tunit": 3, "tday": 3},
-        {"sub": "PPR", "class": 33,  "tunit": 4, "tday": 3},
-        {"sub": "MAT", "class": 26,  "tunit": 5, "tday": 3},
-        {"sub": "SIE", "class": 57,  "tunit": 6, "tday": 3},
-        {"sub": "MAT", "class": 37,  "tunit": 7, "tday": 3},
-        {"sub": "MAT", "class": 37,  "tunit": 8, "tday": 3},
-        {"sub": "INF", "class": 58,  "tunit": 9, "tday": 3},
-        
-        {"sub": "ANG", "class": 20,  "tunit": 2, "tday": 4},
-        {"sub": "JIN", "class": 32,  "tunit": 3, "tday": 4},
-        {"sub": "UTK", "class": 36,  "tunit": 4, "tday": 4},
-        {"sub": "POL", "class": 23,  "tunit": 5, "tday": 4},
-        {"sub": ">>>", "class": "*", "tunit": 6, "tday": 4, "type": "window"},
-        {"sub": "WFI", "class": "*", "tunit": 7, "tday": 4},
-        {"sub": "WFI", "class": "*", "tunit": 8, "tday": 4},
-        {"sub": "<<<", "class": "*", "tunit": 9, "tday": 4, "type": "window"},
-        
-        {"sub": "PSI", "class": 43,  "tunit": 1, "tday": 5},
-        {"sub": "PSI", "class": 43,  "tunit": 2, "tday": 5},
-        {"sub": "PRO", "class": 23,  "tunit": 3, "tday": 5},
-        {"sub": "PRO", "class": 28,  "tunit": 4, "tday": 5},
-        {"sub": "UTK", "class": 36,  "tunit": 5, "tday": 5},
-        {"sub": "SYS", "class": 26,  "tunit": 6, "tday": 5},
-        {"sub": "INF", "class": 58,  "tunit": 7, "tday": 5}
-    ],
-    "freeDays": [
-        {"date": ["2021-04-01", "2021-04-02"], "reason": "Przerwa świąteczna"},
-        {"date": ["2021-04-03", "2021-04-04"], "reason": "Wielkanoc"},
-        {"date": "2021-04-05", "reason": "Pon. Wielkanocny"},
-        {"date": "2021-04-06", "reason": "Przerwa świąteczna"},
-        {"date": "2021-05-03", "reason": "Święto Konstytucji"},
-        {"date": ["2021-05-04", "2021-05-07"], "reason": "Matury"},
-        {"date": "2021-05-11", "reason": "Matury"},
-        {"date": "2021-05-19", "reason": "Matury"},
-        {"date": ["2021-06-03", "2021-06-04"], "reason": "Boże Ciało"},
-        {"date": "2021-06-22", "reason": "Egzamin zawodowy"},
-        {"date": ["2021-06-25", "2021-09-01"], "reason": "Wakacje"},
-        {"date": "2021-12-23", "reason": "Przerwa świąteczna"},
-        {"date": ["2021-12-24", "2021-12-26"], "reason": "Boże Narodzenie"},
-        {"date": ["2021-12-27", "2021-12-31"], "reason": "Przerwa świąteczna"},
-        {"date": "2022-01-01", "reason": "Nowy Rok"}
-    ]
-};
+var g_data;
 
 function addSlashes(str)
 {
@@ -417,7 +341,7 @@ function generateTlt(data)
 function loadHWPlannerData()
 {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/u/hw-planner/api.php?c=get-data&q=hws+done");
+    xhr.open("GET", "/pcu/u/hw-planner/api.php?command=get-data&q=hws+done");
     xhr.onreadystatechange = function() {
         if(this.readyState == XMLHttpRequest.DONE)
         {
@@ -442,9 +366,19 @@ window.changeWeekOffset = function(value)
     generate();
 }
 
-function main()
+async function main(response)
 {
-    generate();
-    setInterval(generate, 30000);
+    try
+    {
+        var data = await response.body.getReader().read();
+        g_data = JSON.parse(new TextDecoder().decode(data.value));
+        generate();
+        setInterval(generate, 30000);
+    }
+    catch(e)
+    {
+        console.log(e);
+    }
 }
-main();
+
+fetch("data.json").then(main).catch(console.log);

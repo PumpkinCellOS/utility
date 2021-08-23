@@ -14,7 +14,7 @@ $generator->start_content();
 ?>
 <h2>Lesson Table Generator</h2>
 <div class="app-list" style="height: 50px;">
-    <a is="tlf-button-tile" style="width: 16.666%; height: 100%" href="/u/hw-planner">
+    <a is="tlf-button-tile" style="width: 16.666%; height: 100%" href="/pcu/u/hw-planner">
         HW Planner
     </a><a is="tlf-button-tile" style="width: 50px; height: 100%" onclick="changeWeekOffset(g_weekOffset - 1); return false;">
         &lt;
