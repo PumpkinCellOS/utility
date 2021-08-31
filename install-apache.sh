@@ -1,9 +1,13 @@
 #!/bin/sh
 
+echo Creating Apache directories if needed...
+sudo mkdir -p /etc/apache2
+sudo mkdir -p /etc/apache2/sites-{available,enabled}
+
 # Install Apache config files (only devel)
 echo Copying Apache config files...
-sudo cp -r apache/sites-available/* /etc/apache2/sites-available
-sudo cp -rP apache/sites-enabled/* /etc/apache2/sites-enabled
+sudo cp -r apache/* /etc/apache2
+sudo cp -rP apache/sites-available/* /etc/apache2/sites-enabled
 
 echo Filling variable fields
 # TODO: Are there some variables in apache config files? maybe use them if so.

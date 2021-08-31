@@ -9,11 +9,14 @@ export PCU_DEPLOY_DIR=`realpath $PWD/build-prod`
 echo Clearing old build...
 rm -r ${PCU_BUILD_DIR}
 
+mkdir build
+
 # NOTE: This doesn't reload apache!
 # We need to do this manually.
 . ./install-apache.sh
 echo Reloading Apache...
-sudo systemctl reload apache2
+sudo systemctl start httpd
+sudo systemctl reload httpd
 
 # Ensure that build is up-to-date
 echo Generating build...
