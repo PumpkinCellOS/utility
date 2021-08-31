@@ -1,5 +1,13 @@
 var g_data;
 
+const PRINT_MODE = tlfGetURLParam("print") == "1";
+
+if(PRINT_MODE)
+{
+    document.body.style.overflow = "auto";
+    document.body.style.backgroundColor = "white";
+}
+
 function addSlashes(str)
 {
     return (str + '').replace(/[\\']/g, '\\$&').replace(/\u0000/g, '\\0');
@@ -107,7 +115,7 @@ function generateBlockText(data, hwPlannerData)
     return inner;
 }
 
-const SCALE = 1.2;
+const SCALE = PRINT_MODE ? 1 : 1.2;
 const SPACING = 20;
 
 var g_currentLesson = null;
@@ -137,6 +145,9 @@ function generateCurrentLabelText()
 
 function generateCurrent()
 {
+    if(PRINT_MODE)
+        return "";
+
     var current = new Date();
 
     if(g_weekOffset != 0 || current.getDay() < g_data.dayrange[0] || current.getDay() > g_data.dayrange[1])
@@ -190,7 +201,7 @@ function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
 function generateBlock(data, hwPlannerData)
 {
     var realDayDate = new Date(g_startDay.getTime() + data.tday * 86400000);
-    var freeDay = data.type != "hourDisplay" ? findFreeDay(realDayDate) : null;
+    var freeDay = !PRINT_MODE ? (data.type != "hourDisplay" ? findFreeDay(realDayDate) : null) : null;
     
     var inner = "";
     var tunitdb = getUnitDB(data);
@@ -238,7 +249,7 @@ function generateBlock(data, hwPlannerData)
     var b2 = currentMinutes >= startMinutes;
     var b3 = currentMinutes <= endMinutes;
 
-    if(b1 && b2 && b3 && g_weekOffset == 0 && data.type != "hourDisplay")
+    if(!PRINT_MODE && b1 && b2 && b3 && g_weekOffset == 0 && data.type != "hourDisplay")
     {
         type += " tt-current";
         g_currentLesson = data;
@@ -268,7 +279,7 @@ function generateDates()
         
         inner += 
             `<div class="date-block" style="left: calc(${left_pc}% + ${left_spacing}px); width: calc(${width_pc}% - ${width_spacing}px);">
-                ${dateNoTimeString(realDayDate)}
+                ${PRINT_MODE ? realDayDate.toLocaleString("default", { weekday: "long" }) : dateNoTimeString(realDayDate)}
             </div>`;
     }
     
@@ -298,7 +309,7 @@ function generateTlt(data)
     {
         var unit_inst = g_data.tunit[unit];
         var lsn = {sub: unit_inst[0].toString().padStart(2, "0") + ":" + unit_inst[1].toString().padStart(2, "0")
-            + "<br>" + unit_inst[2].toString().padStart(2, "0") + ":" + unit_inst[3].toString().padStart(2, "0"), tunit: unit, tday: 0,
+            + (PRINT_MODE ? " - " : "<br>") + unit_inst[2].toString().padStart(2, "0") + ":" + unit_inst[3].toString().padStart(2, "0"), tunit: unit, tday: 0,
             type: "hourDisplay"};
         inner += generateBlock(lsn, data);
     }
@@ -311,30 +322,33 @@ function generateTlt(data)
     var diffMinutes = constructMinutes(g_data.tunit[g_data.tunit.length - 1].slice(2)) - constructMinutes(g_data.tunit[0]);
     document.getElementById("container-wrapper").style.height = ((diffMinutes * SCALE) + 10) + "px";
     
-    var currentBox = document.getElementById("tlt-current-box");
-    if(currentBox)
+    if(!PRINT_MODE)
     {
-        currentBox.addEventListener("mouseenter", function() {
-            document.getElementById("tlt-current-label").style.opacity = "90%";
-        });
-        currentBox.addEventListener("mouseleave", function() {
-            document.getElementById("tlt-current-label").style.opacity = "0%";
-        });
-    }
+        var currentBox = document.getElementById("tlt-current-box");
+        if(currentBox)
+        {
+            currentBox.addEventListener("mouseenter", function() {
+                document.getElementById("tlt-current-label").style.opacity = "90%";
+            });
+            currentBox.addEventListener("mouseleave", function() {
+                document.getElementById("tlt-current-label").style.opacity = "0%";
+            });
+        }
     
-    var dateBox = document.getElementById("current-date");
-    dateBox.innerHTML = dateNoTimeString(g_startDay) + "<br>" + dateNoTimeString(g_endDay);
+        var dateBox = document.getElementById("current-date");
+        dateBox.innerHTML = dateNoTimeString(g_startDay) + "<br>" + dateNoTimeString(g_endDay);
     
-    for(var element of document.getElementsByClassName("tlt-topic-label"))
-    {
-        element.addEventListener("mouseenter", function() {
-            var el2 = document.getElementById(`tlt-hw-dscr-${this.getAttribute("tid")}`);
-            el2.style.display = "block";
-        });
-        element.addEventListener("mouseleave", function() {
-            var el2 = document.getElementById(`tlt-hw-dscr-${this.getAttribute("tid")}`);
-            el2.style.display = "none";
-        });
+        for(var element of document.getElementsByClassName("tlt-topic-label"))
+        {
+            element.addEventListener("mouseenter", function() {
+                var el2 = document.getElementById(`tlt-hw-dscr-${this.getAttribute("tid")}`);
+                el2.style.display = "block";
+            });
+            element.addEventListener("mouseleave", function() {
+                var el2 = document.getElementById(`tlt-hw-dscr-${this.getAttribute("tid")}`);
+                el2.style.display = "none";
+            });
+        }
     }
 }
 
@@ -349,6 +363,12 @@ function loadHWPlannerData()
                 generateTlt(JSON.parse(this.responseText).data);
             else
                 generateTlt(null);
+        }
+
+        if(PRINT_MODE && window.location != window.parent.location)
+        {
+            console.log("We are in iframe, printing document!");
+            window.print();
         }
     }
     xhr.send();
@@ -373,12 +393,24 @@ async function main(response)
         var data = await response.body.getReader().read();
         g_data = JSON.parse(new TextDecoder().decode(data.value));
         generate();
-        setInterval(generate, 30000);
+        if(!PRINT_MODE)
+            setInterval(generate, 30000);
     }
     catch(e)
     {
         console.log(e);
     }
+}
+
+window.requestPrint = function()
+{
+    var printModeContainer = document.createElement("iframe");
+    printModeContainer.src = "?print=1";
+    printModeContainer.addEventListener("load", function() {
+        console.log("Printing print mode container", this.contentWindow);
+        // TODO: Remove the container after printing
+    });
+    document.body.appendChild(printModeContainer);
 }
 
 fetch("data.json").then(main).catch(console.log);
