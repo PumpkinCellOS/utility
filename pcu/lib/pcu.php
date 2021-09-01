@@ -60,6 +60,7 @@ function pcu_page_error(string $message = "Unknown error", int $responseCode = 4
     http_response_code($responseCode);
 
     $generator = new PCUGenerator($message);
+    $generator->header_title = "Error :(";
     $generator->start_content();
 
     ?>
