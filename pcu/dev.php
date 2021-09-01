@@ -3,8 +3,6 @@ require_once("lib/generator.php");
 $generator = new PCUGenerator("Development");
 $generator->start_content();
 ?>
-<h2>Development</h2>
-
 <div class="small app-list">
     <a is="tlf-button-tile" style="width: 16.666%" href="/template.php">Template
     </a><a is="tlf-button-tile" style="width: 16.666%" href="/tilify-sandbox.php">Tilify Sandbox

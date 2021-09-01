@@ -6,7 +6,7 @@ class PCUGenerator
 {
     public array $stylesheets = [];
     public array $scripts = [];
-    public string $main_stylesheet = "/pcu/style.css";
+    public string $main_stylesheet = "/style.css";
     public string $main_title = "PumpkinCell.net";
     public string $index_link = "/pcu";
     public bool $login_controls = true;
@@ -16,6 +16,7 @@ class PCUGenerator
     public function __construct(string $title = "", string $head_suffix = "", string $body_suffix = "")
     {
         $this->title = $title;
+        $this->header_title = $title;
         $this->head_suffix = $head_suffix;
         $this->body_suffix = $body_suffix;
         pcu_page_type(PCUPageType::Display);
@@ -55,11 +56,14 @@ class PCUGenerator
         $this->userData = pcu_user_session();
         ?>
             <!-- TODO: Use custom elements -->
-            <h1>
-                <a href="<?php echo $this->index_link; ?>" class="title-link">
-                    <img id="logo" src="/res/pumpkin2-beta.png" style="height: 50px"/>
+            <header>
+                <a href="<?php echo $this->index_link; ?>" class="title-link header-element">
+                    <img id="logo" src="/res/pumpkin2-beta.png" style="height: 50px; margin-left: 30px;"/>
                 </a>
-                <div style="float: right; display: flex; align-items: center">
+                <h1 class="header-element">
+                    <?php echo $this->header_title; ?>
+                </h1>
+                <div id="header-controls-box">
                     <?php
                         if($this->login_controls)
                         {
@@ -77,7 +81,7 @@ class PCUGenerator
                     ?>
                     <!--<iframe width=395 height=50 style="overflow: hidden; border: none;" src="/u/timer.html?embed=1&mode=3"></iframe>-->
                 </div>
-            </h1>
+            </header>
             <div id="content">
         <?php
     }
@@ -123,7 +127,7 @@ class PCUGeneratorStatic extends PCUGenerator
 -- PCU Generator --
 It's used to generate PCU pages.
 
-Usage:
+## Usage
 
 // Simple
 $generator = new PCUGenerator();
@@ -134,17 +138,28 @@ $generator->start_content();
 $generator->finish();
 
 // With fullscreen forms
-$generator = new PCUGenerator();
+$generator = new PCUGenerator("Example");
 $generator->start_pre_content();
 ?>
-... fullscreen forms ...
+... fullscreen forms etc. ...
 <?php
 $generator->start_content();
 ?>
-<h2>test</h2>
 ... other content ..
 <?php
 $generator->finish();
+
+## Properties
+* body_suffix - A HTML appended to end of <body>
+* head_suffix - A HTML appended to end of <head>
+* header_title - A title used on header, $this->title by default
+* index_link - A href of header image link, "/pcu" by default
+* login_controls - Whether to display login controls, true by default
+* main_stylesheet - A single stylesheet that is linked first, "style.css" by default
+* main_title - A value used after "|" character in <title>, "PumpkinCell.net" by default
+* scripts - A list of JS scripts to link, empty by default (Tilify is linked always)
+* stylesheets - A list of additional stylesheets to link, empty by default
+* title - A title used before "|" character in <title>
 
 */
 ?>

@@ -43,7 +43,6 @@ $generator->stylesheets = ["style.css", "../hw-planner/style.css"];
 
 $generator->start_content();
 ?>
-<h2>Lesson Table Generator</h2>
 <div class="app-list" style="height: 50px;">
     <a is="tlf-button-tile" style="width: 16.666%; height: 100%" href="/pcu/u/hw-planner">
         HW Planner

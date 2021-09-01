@@ -6,7 +6,6 @@ $generator = new PCUGeneratorStatic("About");
 $generator->start_content();
 ?>
 <div is="tlf-background-tile">
-    <h2>About</h2>
     (this is still a TODO)
     <h3>PumpkinCell</h3>
     <p>

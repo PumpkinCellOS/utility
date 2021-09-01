@@ -5,8 +5,6 @@ require_once("../../lib/generator.php");
 $generator = new PCUGenerator("Timer");
 $generator->start_content();
 ?>
-    <h2>Timer</h2>
-
     <!-- Timer -->
     <div id="timer-timer">
         <iframe id="timer-iframe" width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/misc/timer.html?mode=3"></iframe>

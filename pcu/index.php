@@ -2,10 +2,11 @@
 require_once("lib/generator.php");
 $login = pcu_is_logged_in();
 $userData = pcu_user_session();
+
 $generator = new PCUGenerator();
+$generator->header_title = "PumpkinCell.net";
 $generator->start_content();
 ?>
-<h2>PumpkinCell.net</h2>
 <div class="app-list" id="pcu-app-list">
 </div>
 <h2>Utilities<?php if(!$login) echo " (Log in for more!)"; ?></h2>

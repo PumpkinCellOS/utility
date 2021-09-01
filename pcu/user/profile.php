@@ -28,8 +28,6 @@ window.queriedUID = <?php echo $qUid; ?>;
 window.queriedData = <?php echo json_encode(pcu_safe_user_data($qUserData)); ?>;
 </script>
 
-<h2>User Profile</h2>
-
 <?php if($queryingSelf) { ?>
     <div class="app-list small">
         <a is="tlf-button-tile" style="width: 25%" onclick="changePassword(); return false;">Change password</a>

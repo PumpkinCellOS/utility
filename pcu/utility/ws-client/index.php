@@ -8,7 +8,6 @@ $generator->scripts = ["app.js"];
 
 $generator->start_content();
 ?>
-<h2>PCU WebSocket Client</h2>
 <tlf-background-tile>
 (beta)
 </tlf-background-tile>

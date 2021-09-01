@@ -5,10 +5,10 @@ require_once("../../lib/pcu.php");
 
 $generator = new PCUGenerator("Support");
 $generator->scripts = ["app.js"];
+$generator->header_title = "Community Support";
 
 $generator->start_content();
 ?>
-<h2>Community Support</h2>
 <tlf-background-tile>
 <div id="threads" class="data">
 </div>

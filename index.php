@@ -6,7 +6,6 @@ $generator = new PCUGeneratorStatic();
 $generator->start_content();
 ?>
 <div is="tlf-background-tile">
-    <h2>Pumpkin Cell</h2>
     <ul>
         <li><span style="color: red">YouTube</span>
             <ul>

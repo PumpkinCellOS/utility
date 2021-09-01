@@ -15,7 +15,6 @@ $generator->scripts = ["app.js"];
 $generator->start_content();
 
 ?>
-<h2>Admin panel</h2>
 <div id="controls" class="app-list small">
     <a is="tlf-button-tile" style="width: 20%" href="/phpmyadmin">phpMyAdmin</a>
 </div>

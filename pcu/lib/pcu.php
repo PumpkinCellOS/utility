@@ -63,7 +63,6 @@ function pcu_page_error(string $message = "Unknown error", int $responseCode = 4
     $generator->start_content();
 
     ?>
-    <h2>ERROR :(</h2>
     <div class="background-tile" style="background-color: var(--tlf-bg-red)">
         <div class="background-tile-padding">
             <p>Sorry, but we couldn't handle your request.</p>

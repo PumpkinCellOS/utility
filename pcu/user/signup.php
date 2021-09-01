@@ -2,9 +2,9 @@
 require_once("../lib/generator.php");
 $generator = new PCUGenerator("Sign up");
 $generator->scripts = ["login.js"];
+$generator->header_title = "PumpkinCell.net Account";
 $generator->start_content();
 ?>
-    <h2>PumpkinCell.net Account</h2>
     <div class="background-tile">
         <!-- TODO: Use custom elements! -->
         <div class="background-tile-padding text-align-center">

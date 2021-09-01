@@ -27,10 +27,9 @@ switch($_SERVER["REQUEST_METHOD"])
 
         $generator->scripts = ["/pcu/plupload.full.min.js", "app.js"];
         $generator->stylesheets = ["style.css"];
+        $generator->header_title = "Cloud Storage";
         $generator->start_content();
         ?>
-
-            <h2>Cloud Storage</h2>
             <div class="background-tile" id="uploader-box">
                 <div class="background-tile-padding">
                     <p>Select file to upload (4GB limit):</p>

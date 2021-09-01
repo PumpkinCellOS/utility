@@ -3,7 +3,6 @@ require_once("pcu/lib/generator.php");
 $generator = new PCUGenerator("Terms of use");
 $generator->start_content();
 ?>
-<h2 id="terms">PumpkinCell.net Legal Information</h2>
 <tlf-background-tile padding="big">
     <h3>Go to</h3>
     <ul>

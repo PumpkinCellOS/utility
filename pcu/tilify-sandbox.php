@@ -4,7 +4,6 @@ $generator = new PCUGenerator("Tilify Sandbox");
 $generator->scripts = ["tilify-sandbox.js"];
 $generator->start_content();
 ?>
-<h2>Tilify Sandbox</h2>
 <a is="tlf-resizable-tile">test1</a>
 <a is="tlf-resizable-tile">test2</a>
 <a is="tlf-resizable-tile">test3</a>

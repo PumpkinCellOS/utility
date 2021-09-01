@@ -116,7 +116,6 @@ $generator->start_pre_content();
 <?php
 $generator->start_content();
 ?>
-    <h2>HW Planner</h2>
     <div id="controls" class="small app-list">
         <a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('form-filters').style.display='block'; updateTopicDisplay(); return false;">
             {controls.filters}
