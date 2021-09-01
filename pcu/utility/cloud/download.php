@@ -37,7 +37,7 @@ if($result && $result->num_rows > 0)
         $shared = true;
 }
 
-if($userData["id"] != $uid && !isset($shared))
+if($userData["id"] != $uid && !$shared)
     pcu_cmd_fatal("Access denied for user " . $userData["userName"] . ". Ask file owner for sharing it." . json_encode($result), 403);
 
 $fileName = "$PCU_CLOUD/files/$uid/$name";
