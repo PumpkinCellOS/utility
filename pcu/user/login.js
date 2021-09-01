@@ -66,12 +66,6 @@ function signup(form)
         {
             window.location.href = "verify-email.php";
         }
-    }, function(data) {
-        if(data.message !== undefined)
-        {
-            tlfNotification(data.message, TlfNotificationType.Error);
-            //tlfOpenForm([], null, { title: data.message, noCancel: true });
-        }
     });
 }
 
