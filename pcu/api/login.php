@@ -55,19 +55,11 @@ $api->register_command("query-user", function($api) {
     if($result && $result->num_rows > 0)
     {
         $json->data = $result->fetch_assoc();
+        if($json->data["public"] != "1")
+            return $json;
     }
     return $json;
 });
-
-function get_properties($conn, $uid, $array=false) 
-{
-    global $api;
-    $result = $conn->query("SELECT properties FROM users WHERE id='$uid'");
-    if(!$result)
-        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
-    return json_decode($result->fetch_assoc()["properties"], $array);
-}
-
 $api->register_command("set-property", function($api) {
     $api->require_method("POST");
     $conn = $api->require_database("pcutil");
@@ -83,6 +75,21 @@ $api->register_command("set-property", function($api) {
     if(!$result)
         pcu_cmd_fatal("Query failed: " . $conn->error, 500);
 });
+
+function get_properties($conn, $uid, $array=false) 
+{
+    global $api;
+    $result = $conn->query("SELECT public, properties FROM users WHERE id='$uid'");
+    if(!$result)
+        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+    if($result->num_rows == 0)
+        return [];
+    $row = $result->fetch_assoc();
+    if($row["public"] != "1" && $uid != pcu_current_uid())
+        return [];
+    return json_decode($row["properties"], $array);
+}
+
 $api->register_command("get-properties", function($api) {
     $json = new stdClass();
     $api->require_method("GET");
@@ -94,5 +101,18 @@ $api->register_command("get-properties", function($api) {
 $api->register_command("get-roles", function($api) {
     $api->require_method("GET");
     return pcu_roles();
+});
+$api->register_command("set-public-state", function($api) {
+    $api->require_method("POST");
+    $state = $api->required_arg("state") == "1" ? "1" : "0";
+    $userData = $api->require_login();
+    $conn = $api->require_database("pcutil");
+    $uid = $userData["id"];
+    $result = $conn->query("UPDATE users SET public='$state' WHERE id='$uid'");
+    if(!$result)
+        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+    // Remember to update session!
+    $_SESSION["userData"]["public"] = $state;
+    return null;
 });
 $api->run();

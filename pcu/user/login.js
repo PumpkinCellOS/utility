@@ -8,7 +8,8 @@ const api = new TlfAPI({
         "create-user": { method: "POST" },
         "set-property": { method: "POST" },
         "get-properties": { method: "GET" },
-        "get-roles": { method: "GET" }
+        "get-roles": { method: "GET" },
+        "set-public-state": { method: "POST" }
     },
     onerror: function(response, msg) {
         if(msg !== undefined)

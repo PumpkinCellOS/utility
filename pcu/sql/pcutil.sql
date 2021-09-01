@@ -59,7 +59,8 @@ CREATE TABLE `users` (
   `password` tinytext NOT NULL,
   `passwordExpired` tinyint(1) NOT NULL DEFAULT '0',
   `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `properties` JSON NOT NULL COMMENT 'User properties'
+  `properties` JSON NOT NULL COMMENT 'User properties',
+  `public` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

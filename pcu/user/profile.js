@@ -89,6 +89,18 @@ function changeEmail()
     }, {title: "Change e-mail address"});
 }
 
+function switchPublicState()
+{
+    const newState = window.PCU_USER_DATA.public == "1" ? "0" : "1";
+    // TODO: Make it a yes/no message box
+    tlfOpenForm([{type: "label", value: (newState == "1" ? "Everyone" : "Only you") + " will be able to see it"}], function(args) {
+        api.call("set-public-state", {state: newState}, function() {
+            // TODO: Make this working without reloading
+            window.location.reload();
+        });
+    }, {title: `Are you sure to make your page ${newState == "1" ? "public" : "private"}?`});
+}
+
 function reload()
 {
     api.call("get-properties", {uid: window.queriedUID}, function(data) {

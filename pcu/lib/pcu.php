@@ -110,13 +110,22 @@ function pcu_cmd_connect_db($json, $db)
     return $conn;
 }
 
+function pcu_current_uid()
+{
+    $session = pcu_user_session();
+    return $session ? $session["id"] : 0;
+}
+
 function pcu_user_by_id($conn, $id)
 {
     $result = $conn->query("SELECT * FROM users WHERE id='$id'");
 
     if($result && $result->num_rows == 1)
     {
-        return $result->fetch_assoc();
+        $row = $result->fetch_assoc();
+        if($row["public"] != "1" && $row["id"] != pcu_current_uid())
+            return null;
+        return $row;
     }
     return null;
 }
@@ -127,7 +136,10 @@ function pcu_load_user_data($conn, $userName)
 
     if($result && $result->num_rows == 1)
     {
-        return $result->fetch_assoc();
+        $row = $result->fetch_assoc();
+        if($row["public"] != "1" && $row["uid"] != pcu_current_uid())
+            return null;
+        return $row;
     }
     return null;
 }
