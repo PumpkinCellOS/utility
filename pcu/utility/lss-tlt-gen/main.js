@@ -154,7 +154,6 @@ function topPositionFromMinutes(hours, minutes)
         return null;
     }
     const val = (offsetMins - firstLessonStart) * SCALE;
-    console.log("TPFM ", hours, minutes, val);
     return val;
 }
 
@@ -372,26 +371,26 @@ function generateTlt(data)
     }
 }
 
+const hwPlanner = require("../hw-planner/main.js");
+
 function loadHWPlannerData()
 {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/pcu/u/hw-planner/api.php?command=get-data&q=hws+done");
-    xhr.onreadystatechange = function() {
-        if(this.readyState == XMLHttpRequest.DONE)
-        {
-            if(this.status == 200)
-                generateTlt(JSON.parse(this.responseText).data);
-            else
-                generateTlt(null);
-        }
-
+    function setupPrintMode()
+    {
         if(PRINT_MODE && window.location != window.parent.location)
         {
             console.log("We are in iframe, printing document!");
             window.print();
         }
     }
-    xhr.send();
+
+    hwPlanner.API.call("get-data", {q: "hws+done"}, function(data) {
+        generateTlt(data.data);
+        setupPrintMode();
+    }, function() {
+        generateTlt(null);
+        setupPrintMode();
+    });
 }
 
 function generate()
