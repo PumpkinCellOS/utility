@@ -277,12 +277,17 @@ function pcu_mkuser($json, $conn, $userName, $password, $email)
 {
     pcu_session_start();
     
-    if(strlen($password) < 1)
-        pcu_cmd_fatal("Your password must not be empty");
+    if(strlen($userName) > 16)
+        pcu_cmd_fatal("Your username must be not longer than 16 characters, got '$userName'");
+    if(preg_match("/[^a-zA-Z0-9_-]+/", $userName))
+        pcu_cmd_fatal("Your username must contain only letters, digits, '_' or '-', got '$userName'");
+    if($email != "" && !preg_match("/[a-zA-Z0-9-.]*@[a-zA-Z0-9-.]*/", $email))
+        pcu_cmd_fatal("Invalid e-mail given, got '$email'");
+    if(strlen($password) < 3)
+        pcu_cmd_fatal("Your password's length must be greater than 3");
         
     $hash = hash('sha256', $password);
     
-    // TODO: Username length limit
     $existingUser = $conn->query("SELECT id FROM users WHERE userName='$userName'");
     if($existingUser && $existingUser->num_rows >= 1)
         pcu_cmd_fatal("The user already exists");
@@ -291,13 +296,13 @@ function pcu_mkuser($json, $conn, $userName, $password, $email)
 
     if(!$conn->query("INSERT INTO users (userName, password, email, properties, emailVerificationToken) VALUES ('$userName', '$hash', '$email', '{}', '$token')"))
         pcu_cmd_fatal("Failed to add user: " . $conn->error);
-    
+
+    pcu_authuser($json, $conn, $userName, $password);
     if($token != "")
     {
         $json->verifyEmail = true;
         pcu_send_verification_token();
     }
-    pcu_authuser($json, $conn, $userName, $password);
 }
 
 function pcu_change_password($json, $conn, $password)

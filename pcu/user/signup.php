@@ -10,11 +10,10 @@ $generator->start_content();
         <div class="background-tile-padding text-align-center">
             <h3>Sign up to get all free PumpkinCell services</h3>
             <form method="POST" action="/pcu/api/login.php" onsubmit="if(validate(this)) signup(this); return false;">
-                <input type="hidden" name="command" value="create-user"></input>
-                <input type="email" name="email" placeholder="E-mail address"></input><br>
-                <input type="text" name="userName" placeholder="Username (will be used to log in)"></input><br>
-                <input type="password" name="password" placeholder="Password"></input><br>
-                <input type="password" name="password2" placeholder="Retype password"></input><br>
+                <input type="email" name="email" placeholder="E-mail address" pattern="[a-zA-Z0-9-.]*@?[a-zA-Z0-9-.]*"></input><br>
+                <input required type="text" name="userName" placeholder="Username (will be used to log in)" pattern="[a-zA-Z0-9_-]*"></input><br>
+                <input required type="password" name="password" placeholder="Password"></input><br>
+                <input required type="password" name="password2" placeholder="Retype password"></input><br>
                 <input type="submit" value="Create Account"></input>
             </form>
             <p>Already have an account? <a href="/pcu/user/login.php">Log in</a> here.</p>
