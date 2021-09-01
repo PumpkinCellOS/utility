@@ -29,8 +29,8 @@ div.app-list {
     margin: 10px;
 }
 
-div.small {
-    height: 50px;
+div.app-list.small {
+    height: 45px;
 }
 
 div.resizable-tile {
@@ -51,6 +51,10 @@ div.resizable-tile:hover {
     background-color: var(--tlf-hover-color);
     transform: scale(1.02, 1.02);
     transition: transform 0.05s, background-color 0.05s;
+}
+
+.button-tile:is(.resizable-tile) {
+    height: calc(100% - 5px);
 }
 
 .button-tile {
@@ -75,8 +79,7 @@ div.resizable-tile:hover {
     height: 100%;
 }
 
-[is=tlf-resizable-tile]
-{
+[is=tlf-resizable-tile] {
     height: 150px;
 }
 
