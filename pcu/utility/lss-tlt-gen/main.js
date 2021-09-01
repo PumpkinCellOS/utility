@@ -125,19 +125,23 @@ var g_endDay = null;
 
 function generateCurrentLabelText()
 {
-    console.log("Generating current label text");
-    if(!g_currentLesson)
-        return "No lesson!";
-    var time = getLessonTimeRange(g_currentLesson);
-    var inner = "";
-    
-    var current = new Date();
-    var leftMinutes = (constructMinutes(time[2], time[3])
-                    - constructMinutes(current.getHours(), current.getMinutes()));
-    var totalMinutes = (constructMinutes(time.slice(2)) - constructMinutes(time));
-    var elapsedMinutes = totalMinutes - leftMinutes;
-    
+    const current = new Date();
+    let inner = "";
     inner += dateString(current) + "<br>";
+    const freeDay = findFreeDay(current);
+    if(!g_currentLesson)
+        return inner + "No lesson";
+    
+    if(freeDay)
+        return inner + "Free day: " + freeDay.reason;
+
+    const time = getLessonTimeRange(g_currentLesson);
+    
+    const leftMinutes = (constructMinutes(time[2], time[3])
+                    - constructMinutes(current.getHours(), current.getMinutes()));
+    const totalMinutes = (constructMinutes(time.slice(2)) - constructMinutes(time));
+    const elapsedMinutes = totalMinutes - leftMinutes;
+    
     inner += elapsedMinutes + " min elapsed (" + Math.round((elapsedMinutes * 100 / totalMinutes), 1) + "%)<br>";
     inner += leftMinutes + " min left (" + Math.round((leftMinutes * 100 / totalMinutes), 1) + "%)<br>";
     return inner;
