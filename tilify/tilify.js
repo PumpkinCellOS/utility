@@ -187,6 +187,7 @@ customElements.define("tlf-combobox", TlfCombobox);
 //   {
 //     type: string, label|link|textarea|select|<type as in input element>
 //     name: string, the property name in object passed to callback
+//     callback: Function(), the onclick event handler (for buttons)
 //     value: string, the preset value
 //     placeholder: string, <as in input element>
 //     options: [, the options for `select` type
@@ -279,6 +280,8 @@ function tlfOpenForm(fields, callback, config)
                 widget.name = field.name ?? widget.type;
                 widget.value = field.value ?? "";
                 widget.placeholder = field.placeholder ?? "";
+                if(field.callback)
+                    widget.onclick = field.callback;
                 if(field.type == "button")
                 {
                     if(field.onclick instanceof Function)

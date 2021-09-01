@@ -2,7 +2,6 @@ body {
     --tlf-bg-red:   #884444;
     --tlf-bg-green: #448844;
     --tlf-bg-blue:  #444488;
-    
     --tlf-bg-cyan:    #448888;
     --tlf-bg-magenta: #884488;
     --tlf-bg-yellow:  #888844;
@@ -10,6 +9,9 @@ body {
     --tlf-bg-dark-red:   #663333;
     --tlf-bg-dark-green: #336633;
     --tlf-bg-dark-blue:  #333366;
+    --tlf-bg-dark-cyan:    #336666;
+    --tlf-bg-dark-magenta: #663366;
+    --tlf-bg-dark-yellow:  #666633;
     
     --tlf-notify-bg-info: #44448877;
     --tlf-notify-bg-error: #88444477;

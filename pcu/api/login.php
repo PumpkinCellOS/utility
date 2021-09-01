@@ -115,4 +115,15 @@ $api->register_command("set-public-state", function($api) {
     $_SESSION["userData"]["public"] = $state;
     return null;
 });
+$api->register_command("resend-verification-token", function($api) {
+    $api->require_method("POST");
+    $userData = $api->require_auth();
+    if(!pcu_send_verification_token())
+        pcu_cmd_fatal("Failed to send e-mail", 500);
+});
+$api->register_command("verify-token", function($api) {
+    $api->require_method("GET");
+    $api->require_auth();
+    pcu_verify_token($api->required_arg("token"));
+});
 $api->run();

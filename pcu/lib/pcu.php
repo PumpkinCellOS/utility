@@ -137,7 +137,7 @@ function pcu_load_user_data($conn, $userName)
     if($result && $result->num_rows == 1)
     {
         $row = $result->fetch_assoc();
-        if($row["public"] != "1" && $row["uid"] != pcu_current_uid())
+        if($row["public"] != "1" && $row["id"] != pcu_current_uid())
             return null;
         return $row;
     }
@@ -171,6 +171,7 @@ function pcu_safe_user_data($data)
 {
     $data["password"] = "****";
     $data["email"] = "i.wont.give.you.hacker@example.com";
+    $data["emailVerificationToken"] = "****";
     $data["properties"] = "<optimized out>";
     return $data;
 }
@@ -281,12 +282,21 @@ function pcu_mkuser($json, $conn, $userName, $password, $email)
         
     $hash = hash('sha256', $password);
     
-    if(pcu_load_user_data($conn, $userName))
+    // TODO: Username length limit
+    $existingUser = $conn->query("SELECT id FROM users WHERE userName='$userName'");
+    if($existingUser && $existingUser->num_rows >= 1)
         pcu_cmd_fatal("The user already exists");
     
-    if(!$conn->query("INSERT INTO users (userName, password, email, properties) VALUES ('$userName', '$hash', '$email', '{}')"))
+    $token = strlen($email) == 0 ? "" : pcu_random_token();
+
+    if(!$conn->query("INSERT INTO users (userName, password, email, properties, emailVerificationToken) VALUES ('$userName', '$hash', '$email', '{}', '$token')"))
         pcu_cmd_fatal("Failed to add user: " . $conn->error);
     
+    if($token != "")
+    {
+        $json->verifyEmail = true;
+        pcu_send_verification_token();
+    }
     pcu_authuser($json, $conn, $userName, $password);
 }
 
@@ -308,13 +318,67 @@ function pcu_change_password($json, $conn, $password)
 function pcu_change_email($json, $conn, $email)
 {
     pcu_require_login();
-    
-    if(strlen($email) < 1)
-        pcu_cmd_fatal("Your email must not be empty");
-    
+    if($email == pcu_user_session()["email"])
+        pcu_cmd_fatal("Email did not change");
+    $token = $email == "" ? "" : pcu_random_token();
+
     $uid = pcu_user_session()["id"];
-    if(!$conn->query("UPDATE users SET email='$email' WHERE id='$uid'"))
+    // TODO: Consider token expiring after logout
+    if(!$conn->query("UPDATE users SET email='$email',emailVerificationToken='$token' WHERE id='$uid'"))
         pcu_cmd_fatal("Failed to change email");
+    $_SESSION["userData"]["emailVerificationToken"] = $token;
+    $_SESSION["userData"]["email"] = $email;
+    if($token != "")
+        $json->verifyEmail = true;
+}
+
+function pcu_user_needs_to_verify_email()
+{
+    pcu_require_auth();
+    return pcu_user_session()["emailVerificationToken"] != "";
+}
+
+function pcu_send_verification_token()
+{
+    if(!pcu_user_needs_to_verify_email())
+        pcu_cmd_fatal("No need to send any token", 400);
+
+    $token = urlencode(pcu_user_session()["emailVerificationToken"]);
+    $userName = pcu_user_session()["userName"];
+    # It will redirect to HTTPS if possible anyway.
+    $link = "http://" . $_SERVER['HTTP_HOST'] . "/pcu/api/login.php?command=verify-token&token=$token";
+
+    error_log("sending verification token to " . pcu_user_session()["email"]);
+    return mail(pcu_user_session()["email"], "PumpkinCell Utility - Verification link",
+        "Someone have just used your e-mail address on PumpkinCell.net. You
+        need to verify your identity with going to verification link: <a href='$link'>$link</a>.
+        If it was not you, you can safely ignore this email.<br>(User name: $userName)", ["From" => "noreply@pumpkincell.duckdns.org", "Content-Type" => "text/html"]);
+}
+
+function pcu_verify_token($givenToken)
+{
+    pcu_page_type(PCUPageType::Display);
+    if(!pcu_user_needs_to_verify_email())
+        pcu_cmd_fatal("No need to verify any token", 400);
+    
+    $token = pcu_user_session()["emailVerificationToken"];
+    if($token == $givenToken)
+    {
+        // TODO: Make this json a non-required arg
+        $json = new stdClass();
+        $conn = pcu_cmd_connect_db($json, "pcutil");
+        if(!$conn)
+            exit;
+
+        $uid = pcu_user_session()["id"];
+        if(!$conn->query("UPDATE users SET emailVerificationToken='' WHERE id='$uid'"))
+            pcu_cmd_fatal("Query failed", 500);
+        
+        $_SESSION["userData"]["emailVerificationToken"] = "";
+        header("Location: /pcu/user/verify-email.php?success=1");
+        return;
+    }
+    pcu_cmd_fatal("Invalid token", 400);
 }
 
 function pcu_authuser($json, $conn, $userName, $password)
@@ -328,6 +392,18 @@ function pcu_authuser($json, $conn, $userName, $password)
         pcu_mksession($json, $result->fetch_assoc());
     else
         pcu_cmd_error($json, "Authentication failed");
+}
+
+function pcu_random_token()
+{
+    $out = "";
+    for($x = 0; $x < 64; $x++)
+    {
+        $i = random_int(0, 65536);
+        $out .= chr($i & 0xFF);
+        $out .= chr($i >> 8);
+    }
+    return base64_encode($out);
 }
 
 ?>

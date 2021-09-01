@@ -69,8 +69,10 @@ class PCUGenerator
                         {
                             if(pcu_is_authenticated())
                             {
+                                if($this->userData["emailVerificationToken"] != "")
+                                    echo "<a class='email-verification' title='You need to verify your e-mail address. Click for more info' href='/pcu/user/profile.php'>⚠</a>";
                                 echo "<div class='title-link-right'><a href='/pcu/user/profile.php?uid={$this->userData["id"]}'>{$this->userData["userName"]}</a></div>";
-                                echo "<div class='title-link-right'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/pcu`; })'>Log out</a></div>";
+                                echo "<div class='title-link-right' style='font-size: 100%'><a onclick='tlfApiCall(`GET`,`/api/login.php`,`remove-session`, {}, function() { window.location.href = `/pcu`; })'>(Log out)</a></div>";
                             }
                             else
                             {

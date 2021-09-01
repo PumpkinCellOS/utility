@@ -85,7 +85,10 @@ function queriedUserGetProperty(key)
 function changeEmail()
 {
     tlfOpenForm([{type: "email", name: "email", placeholder: "New e-mail address"}], function(args) {
-        api.call("change-email", {email: args.email});
+        api.call("change-email", {email: args.email}, function(data) {
+            if(data.verifyEmail)
+                notifyEmailVerification();
+        });
     }, {title: "Change e-mail address"});
 }
 

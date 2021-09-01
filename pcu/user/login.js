@@ -9,7 +9,8 @@ const api = new TlfAPI({
         "set-property": { method: "POST" },
         "get-properties": { method: "GET" },
         "get-roles": { method: "GET" },
-        "set-public-state": { method: "POST" }
+        "set-public-state": { method: "POST" },
+        "resend-verification-token": { method: "POST" }
     },
     onerror: function(response, msg) {
         if(msg !== undefined)
@@ -29,7 +30,8 @@ catch(e)
     ;
 }
 
-function login(userName, password) {
+function login(userName, password)
+{
     api.call("auth-user", {userName: userName, password: password}, function(data) {
         if(data.passwordExpired)
         {
@@ -42,13 +44,28 @@ function login(userName, password) {
     });
 }
 
-function signup(form)
+function resendVerificationToken()
+{
+    api.call("resend-verification-token", {}, function() {
+        notifyEmailVerification();
+    });
+}
+
+function notifyEmailVerification()
+{
+    tlfNotification("Verification e-mail sent", TlfNotificationType.Info);
+}
+
+function signup(form) 
 {
     var email = form["email"].value;
     var userName = form["userName"].value;
     var password = form["password"].value;
-    api.call("create-user", { email: email, userName: userName, password: password }, function() {
-        window.location.href = "/pcu";
+    api.call("create-user", { email: email, userName: userName, password: password }, function(data) {
+        if(data.verifyEmail)
+        {
+            window.location.href = "verify-email.php";
+        }
     }, function(data) {
         if(data.message !== undefined)
         {

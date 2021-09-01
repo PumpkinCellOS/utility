@@ -276,3 +276,7 @@ li {
 .pcu-user-role {
     font-weight: bold;
 }
+
+.email-verification {
+    font-size: 150%;
+}

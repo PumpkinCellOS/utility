@@ -39,7 +39,16 @@ window.queriedData = <?php echo json_encode(pcu_safe_user_data($qUserData)); ?>;
     <tlf-background-tile style="--tlf-color-widget-bg: var(<?php echo $qUserData["public"] ? "--tlf-bg-dark-green" : "--tlf-bg-dark-red"; ?>)">
     Your profile is <?php echo $currentPublicString; ?>. <a onclick="switchPublicState()">Make <?php echo $oppositePublicString ?></a>
     </tlf-background-tile>
-<?php } ?>
+<?php } 
+if(pcu_user_needs_to_verify_email())
+{
+    ?>
+    <tlf-background-tile style="--tlf-color-widget-bg: var(--tlf-bg-dark-yellow)">
+        You need to verify your e-mail address. We have sent you a notification. If you don't see it, try to check in spam or <a onclick="resendVerificationToken()">resend</a>
+    </tlf-background-tile>
+    <?php
+}
+?>
 
 <tlf-background-tile padding="big">
     <?php
