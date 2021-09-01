@@ -143,6 +143,21 @@ function generateCurrentLabelText()
     return inner;
 }
 
+function topPositionFromMinutes(hours, minutes)
+{
+    const firstLessonStart = constructMinutes(g_data.tunit[0].slice(0, 2));
+    const lastLessonEnd = constructMinutes(g_data.tunit.slice(-1)[0].slice(2));
+    const offsetMins = constructMinutes(hours, minutes);
+    if(offsetMins > lastLessonEnd || offsetMins < firstLessonStart)
+    {
+        console.log(offsetMins, ">", lastLessonEnd, "-", firstLessonStart);
+        return null;
+    }
+    const val = (offsetMins - firstLessonStart) * SCALE;
+    console.log("TPFM ", hours, minutes, val);
+    return val;
+}
+
 function generateCurrent()
 {
     if(PRINT_MODE)
@@ -152,8 +167,10 @@ function generateCurrent()
 
     if(g_weekOffset != 0 || current.getDay() < g_data.dayrange[0] || current.getDay() > g_data.dayrange[1])
         return "";
-    
-    var top = ((current.getHours() - g_data.tunit[0][0]) * 60 + current.getMinutes()) * SCALE;
+
+    const top = topPositionFromMinutes(current.getHours(), current.getMinutes());
+    if(top === null)
+        return "";
     var left_pc = 100 * ((current.getDay() - g_data.dayrange[0] + 0.5) / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5));
     var left_spacing = 0;
     var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5) * 100;
@@ -219,7 +236,10 @@ function generateBlock(data, hwPlannerData)
     
     var left_pc = 100 * ((data.tday - g_data.dayrange[0] + 0.5) / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5));
     var left_spacing = SPACING / 2;
-    var top = ((startdate.getHours() - g_data.tunit[0][0]) * 60 + startdate.getMinutes()) * SCALE;
+    const current = new Date();
+    const top = topPositionFromMinutes(startdate.getHours(), startdate.getMinutes());
+    if(top === null)
+        return "";
     var width_pc = 1 / (g_data.dayrange[1] - g_data.dayrange[0] + 1.5) * 100;
     var width_spacing = SPACING;
     
