@@ -6,6 +6,10 @@ body {
     --tlf-bg-cyan:    #448888;
     --tlf-bg-magenta: #884488;
     --tlf-bg-yellow:  #888844;
+
+    --tlf-bg-dark-red:   #663333;
+    --tlf-bg-dark-green: #336633;
+    --tlf-bg-dark-blue:  #333366;
     
     --tlf-notify-bg-info: #44448877;
     --tlf-notify-bg-error: #88444477;
