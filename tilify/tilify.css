@@ -60,7 +60,6 @@ div.resizable-tile:hover {
     display: inline-block;
     font-weight: bold;
     min-width: 100px;
-    overflow: hidden;
 }
 
 [is=tlf-resizable-tile]:hover,
