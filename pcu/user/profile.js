@@ -73,7 +73,7 @@ function insertProperties(data, isLoggedIn)
         return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>");
     }, type: "textarea", editOnTop: true, editName: "Edit description"});
     dataObject.insertProperty("status", {generator: function(value) {
-        return value == "" ? "" : " • " + value;
+        return value == "" ? "" : " • <span class='status-value'>" + value + "</span>";
     }, editName: "Edit status"});
 }
 

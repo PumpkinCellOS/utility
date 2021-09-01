@@ -22,7 +22,7 @@
     display: block;
 }
 
-#property-status .property-value {
+.property-value .status-value {
     color: #eeeeee;
     font-weight: bold;
 }
