@@ -2,6 +2,8 @@
 
 # Production deployment script.
 
+set -e
+
 . ./pcu-generate-devel.sh
 
 echo Clearing old build...
