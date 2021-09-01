@@ -34,6 +34,10 @@ function errorLoading(response, msg)
 
 var api = new TlfAPI( { endpoint: "/u/hw-planner/api.php", calls: API_COMMANDS, onerror: errorLoading } );
 
+module.exports = {
+    API: api
+}
+
 // TODO: Make it configurable
 var LABELS = 
 {
