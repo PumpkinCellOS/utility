@@ -3,7 +3,3 @@
 .date-block {
     color: black;
 }
-
-.tlt-block:not(.tt-hourDisplay) {
-    border: 1px solid black;
-}

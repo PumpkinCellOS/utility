@@ -9,5 +9,5 @@
 }
 
 .tlt-block:not(.tt-hourDisplay) {
-    box-shadow: 1px 1px 4px black;
+    border: 1px solid black;
 }
