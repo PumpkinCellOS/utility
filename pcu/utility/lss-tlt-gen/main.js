@@ -96,22 +96,25 @@ function generateBlockText(data, hwPlannerData)
         inner += "&nbsp;" + data.class;
 
     var title = "";
-    if(hwPlannerData.length == 1)
+    if(!PRINT_MODE)
     {
-        var hw = hwPlannerData[0];
-        title = generateBlockTextHWTitle(hw);
-        inner += `&nbsp;<a class="tlt-topic-label" tid=${hw.tid}>` + generateLabel(hw.topicLabel, statusToImp(hw.status)) + "</a>";
-    }
-    else if(hwPlannerData.length > 1)
-    {
-        for(var hw of hwPlannerData)
+        if(hwPlannerData.length == 1)
         {
-            title += "* " + generateBlockTextHWTitle(hw) + "<br>";
+            var hw = hwPlannerData[0];
+            title = generateBlockTextHWTitle(hw);
+            inner += `&nbsp;<a class="tlt-topic-label" tid=${hw.tid}>` + generateLabel(hw.topicLabel, statusToImp(hw.status)) + "</a>";
         }
-        inner += `<a class="tlt-topic-label" tid=${hwPlannerData[0].tid}>&nbsp;` + generateLabel("...") + `</a>`;
+        else if(hwPlannerData.length > 1)
+        {
+            for(var hw of hwPlannerData)
+            {
+                title += "* " + generateBlockTextHWTitle(hw) + "<br>";
+            }
+            inner += `<a class="tlt-topic-label" tid=${hwPlannerData[0].tid}>&nbsp;` + generateLabel("...") + `</a>`;
+        }
+        if(hwPlannerData[0] !== undefined)
+            inner += `<div class="tlt-hw-dscr" id="tlt-hw-dscr-${hwPlannerData[0].tid}">${title}</div>`;
     }
-    if(hwPlannerData[0] !== undefined)
-        inner += `<div class="tlt-hw-dscr" id="tlt-hw-dscr-${hwPlannerData[0].tid}">${title}</div>`;
     return inner;
 }
 
