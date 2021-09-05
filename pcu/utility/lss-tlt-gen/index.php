@@ -14,7 +14,7 @@ if($_REQUEST["print"] == "1")
         <head>
             <title>LSS TLT Gen (print mode) | PumpkinCell.net</title>
             <meta charset="utf-8">
-            <link rel="stylesheet" href="/pcu/style.css"/>
+            <link rel="stylesheet" href="/style.css"/>
             <link rel="stylesheet" href="style-print.css"/>
             <link rel="stylesheet" href="../hw-planner/style.css"/>
         </head>
