@@ -65,7 +65,7 @@ function getUnitDB(data)
 
 function getLessonTimeRange(data)
 {
-    return getUnitDB(data)[data.tunit ?? 0];
+    return Array.isArray(data.tunit) ? data.tunit : getUnitDB(data)[data.tunit ?? 0];
 }
 
 function generateBlockTextHWTitle(hw)
