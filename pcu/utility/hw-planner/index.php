@@ -50,23 +50,16 @@ $generator->start_pre_content();
         
     </div>
     <div id="form-filters" class="fullscreen-form" style="display: none; text-align: left">
-        <form action="#" style="padding: 15px;" onsubmit="submitFilters(this); return false" name="filters">
-        
-            <div class="background-tile" style="background-color: var(--tlf-bg-red)">
-                <div class="background-tile-padding">
-                    {form.filters.todo}
-                </div>
-            </div>
-            
+        <form action="#" style="padding: 15px;" onsubmit="submitFilters(this); return false" name="filters">            
             <h3 style="text-align: center">{form.filters.name}</h3>
             <h4>{field.status}</h4>
-            <input type="checkbox" name="status-f"/><label>{status.f}</label><br>
-            <input type="checkbox" name="status-ip"/><label>{status.i}</label><br>
-            <input type="checkbox" name="status-e"/><label>{status.e}</label><br>
-            <input type="checkbox" name="status-p"/><label>{status.p}</label><br>
+            <input type="checkbox" name="status-f" checked/><label>{status.f}</label><br>
+            <input type="checkbox" name="status-ip" checked/><label>{status.i}</label><br>
+            <input type="checkbox" name="status-e" checked/><label>{status.e}</label><br>
+            <input type="checkbox" name="status-p" checked/><label>{status.p}</label><br>
             <input type="checkbox" name="status-v"/><label>{status.v}</label><br>
             <input type="checkbox" name="status-x"/><label>{status.x}</label><br>
-            <input type="checkbox" name="status-n"/><label>{status.n}</label><br>
+            <input type="checkbox" name="status-n" checked/><label>{status.n}</label><br>
             <h4>{field.turnInTime}</h4>
             <select name="turn-in-mode">
                 <option value=">">{cmp.least}</option>
