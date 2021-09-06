@@ -221,9 +221,9 @@ function generateStatusNonRich(data_status)
     else if(data_status == "E")
         status = `<span class='status-e'>${L("status.e")}</span>`;
     else if(data_status == "V")
-        status = `<span class='status-v'>${L("status.d")}</span>`;
+        status = `<span class='status-v'>${L("status.v")}</span>`;
     else if(data_status == "?")
-        status = `<span class='status-f'>${L("status.f")}</span`;
+        status = `<span class='status-f'>${L("status.f")}</span>`;
     return status;
 }
 
