@@ -1,4 +1,7 @@
-button, input[type="submit"], input[type="button"], input[type="checkbox"] {
+button, 
+input[type="submit"], 
+input[type="button"], 
+input[type="checkbox"] {
     background-color: #777777;
     border: none;
     border-radius: 3px;
@@ -10,9 +13,16 @@ button, input[type="submit"], input[type="button"], input[type="checkbox"] {
     transition: background-color 0.1s, border-color 0.1s;
 }
 
-button:hover, input[type="submit"]:hover, input[type="button"]:hover {
+button:hover, 
+input[type="submit"]:hover, 
+input[type="button"]:hover {
     background-color: #88888f;
     transition: background-color 0.1s;
+}
+
+input:focus {
+    border: 2px solid #77777f !important;
+    outline: none;
 }
 
 input[type="text"],
@@ -22,9 +32,34 @@ input[type="time"],
 input[type="email"],
 select {
     display: inline-block;
-    height: 35px;
+    font-family: opensans;
     margin: 5px;
     width: 300px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="time"] {
+    height: 25px;
+}
+
+select {
+    height: 35px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="time"],
+input[type="email"],
+select,
+textarea {
+    background-color: #333338;
+    border: 2px solid #66666d;
+    border-radius: 3px;
+    color: white;
+    padding-left: 10px;
 }
 
 input[type="submit"], input[type="button"] {
@@ -43,6 +78,6 @@ input[type="submit"], input[type="button"] {
 }
 
 textarea {
-    height: 100px;
-    width: 50%;
+    height: 300px;
+    width: 75%;
 }
