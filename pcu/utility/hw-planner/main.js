@@ -86,7 +86,7 @@ var g_serverVersion = "Unknown";
 var g_showDones = false;
 var g_sortBy = "date"; // "sub", "date", "status"
 var g_sortMode = 1;  // 1, -1
-var g_filters = { status: ["f", "i", "e", "p", "n"] };
+var g_filters = { status: ["?", "i", "e", "p", "n"] };
 var g_requestLog = null;
 var g_userCache = {};
 
@@ -495,7 +495,7 @@ window.submitFilters = function(form)
     var data = {};
     
     data.status = [];
-    if(form["status-f"].checked) data.status.push("f");
+    if(form["status-f"].checked) data.status.push("?");
     if(form["status-ip"].checked) data.status.push("i");
     if(form["status-e"].checked) data.status.push("e");
     if(form["status-p"].checked) data.status.push("p");
@@ -582,6 +582,8 @@ function sortStatus(status)
 
 function generateDataTable()
 {
+    // Apply default filters
+    
 
     // Generate layout.
     var divData = document.getElementById("data");
