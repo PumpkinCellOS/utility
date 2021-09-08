@@ -12,19 +12,8 @@
       echo "{\"status\":\"failed to set cookie\"}";
       exit;
     }
-    ?>
-    <html>
-      <head>
-        <meta http-equiv="refresh" content="0; url=/u/twitch-overlay.html"/>
-        <title>Finally, redirecting to overlay...</title>
-      </head>
-      <body>
-        <div>
-          Finally, redirecting to overlay...
-        </div>
-      </body>
-    </html>
-    <?php
+    http_response_code(301);
+    header("Location: /pcu/u/misc/twitch-overlay.php");
   }
 
   function parse_url_query($url)
@@ -81,7 +70,7 @@
     "client_secret" => $secret,
     "code" => $code,
     "grant_type" => "authorization_code",
-    "redirect_uri" => "https://pumpkincell.duckdns.org/api/twitch-oauth.php/"
+    "redirect_uri" => "https://pumpkincell.duckdns.org/pcu/api/twitch-oauth.php"
   ));
 
   echo $data;

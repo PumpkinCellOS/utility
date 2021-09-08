@@ -1,0 +1,35 @@
+@font-face {
+    font-family: goodtimes;
+    src: url(/res/fonts/good_times_rg.ttf);
+}
+
+#render {
+    border: 2px solid #00ff00;
+    padding: 50px;
+    margin: 20px;
+    color: white;
+    font-family: "goodtimes";
+}
+
+#last-follower-box, #x-followed-box {
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    border-radius: 6px;
+    width: 400px;
+    margin: 10px;
+    padding: 5px;
+    font-size: 12px;
+}
+
+#x-followed-box {
+    background-color: rgba(0, 64, 0, 0.5);
+}
+
+#last-follower-name, #x-followed-name {
+    font-weight: bold;
+    color: #ffbbbb;
+}
+
+#x-followed-box {
+    transition: opacity 0.25s;
+}

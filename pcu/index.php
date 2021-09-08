@@ -133,7 +133,7 @@ const pcuEntries = [
 const utilityEntries = [
     {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "displayName": "Timer", "path": "/pcu/u/misc/timer.html"},
     {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "state": "alpha", "displayName": "Timer GUI", "path": "/pcu/u/misc/timer-gui.php"},
-    {"icon": "#128308", "units": 1, "color": "#5b3e84", "hovercolor": "#6b4e94", "displayName": "Twitch Overlay", "path": "/pcu/u/misc/twitch-redirect.html"},
+    {"icon": "#128308", "units": 1, "color": "#5b3e84", "hovercolor": "#6b4e94", "displayName": "Twitch Overlay", "path": "/pcu/u/misc/twitch-redirect.php"},
     {"icon": "#127760", "units": 1, "color": "#555566", "hovercolor": "#656576", "displayName": "Network Builder", "path": "/pcu/u/network-builder"},
     <?php if($login) { ?>
         {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "beta", "displayName": "Cloud Storage", "path": "/pcu/u/cloud"},
