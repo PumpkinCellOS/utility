@@ -58,6 +58,7 @@ a.resizable-tile:hover {
     background-color: var(--tlf-color);
     border-radius: 4px;
     color: #bbbbbf;
+    cursor: pointer;
     display: flex;
     font-weight: bold;
     height: calc(100% - 10px);
