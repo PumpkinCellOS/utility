@@ -28,17 +28,17 @@
     	#timer-progress {
     	  display: block;
     	  height: 50px;
-    	  background-color: RGBA(17, 224, 136, 0.5);
+    	  background-color: rgba(17, 224, 136, 0.5);
     	  position: relative;
     	  top: -50px;
     	  z-index: -1;
-    	  width: 0%;
+    	  width: 100%;
     	  border-radius: 10px;
     	}
     	#timer-progress-background {
     	  display: block;
     	  height: 50px;
-    	  background-color: RGBA(224, 68, 17, 0.5);
+    	  background-color: rgba(224, 68, 17, 0.5);
     	  position: relative;
     	  top: -100px;
     	  z-index: -2;
@@ -343,7 +343,9 @@
             {
               _1_eprogress.style.display = "block";
               _1_eprogress_background.style.display = "block";
-              _1_eprogress.style.width = ((_1_diff) / (_1_timeInput) * 100) + "%";
+              const clip = `inset(0 ${395 - Math.round(((_1_diff) / (_1_timeInput) * 395))}px 0 0)`;
+              console.log(clip);
+              _1_eprogress.style.clipPath = clip;
             }
             else
             {
@@ -532,6 +534,12 @@
         document.addEventListener("runCountDown", function() { _1_runCountDown() });
         document.addEventListener("pause", function() { _1_pause() });
         document.addEventListener("submitopts", function(evt) { console.log("submitopts"); window.location.href = evt.newURL; });
+        document.addEventListener("timerValues", function(event) {
+          _1_eTimeInputHours = event.data.hours;
+          _1_eTimeInputMinutes = event.data.minutes;
+          _1_eTimeInputSeconds = event.data.seconds;
+          _1_eTimeInputPrecount = event.data.precount;
+        })
       </script>
   </body>
 </html>

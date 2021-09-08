@@ -6,46 +6,41 @@ $generator = new PCUGenerator("Timer");
 $generator->start_content();
 ?>
     <!-- Timer -->
-    <div id="timer-timer">
-        <iframe id="timer-iframe" width=395 height=50 style="overflow: hidden; border: none; float: right" src="/u/misc/timer.html?mode=3"></iframe>
-    </div>
+    <tlf-background-tile>
+        <div id="timer-timer">
+            <iframe id="timer-iframe" width=405 height=60 style="overflow: hidden; border: none;" src="/pcu/u/misc/timer.html?mode=3"></iframe>
+        </div>
+    </tlf-background-tile>
 
     <div class="background-tile">
         <div class="background-tile-padding">
-        <h3 id="_1_timer-mode">Normal Mode (No Sync)</h3>
-        <button name="toggle" onclick="runEvent('toggleTimer')">
-            Toggle Timer
-        </button>
-        <button name="toggle" onclick="runEvent('runCountDown')">
-            Run Countdown
-        </button>
-        <button name="toggle" onclick="runEvent('pause')">
-            Pause
-        </button>
-        <input class="timer-input" type="number" id="_1_timer-input-hours" value="0">
-        </input>
-        <input class="timer-input" type="number" id="_1_timer-input-minutes" value="0">
-        </input>
-        <input class="timer-input" type="number" id="_1_timer-input-seconds" value="0">
-        </input>
-        <input class="timer-input" type="number" id="_1_timer-input-precount" value="0">
-        </input>
+            <button name="toggle" onclick="runEvent('toggleTimer')">
+                Toggle Timer
+            </button>
+            <button name="toggle" onclick="runEvent('runCountDown')">
+                Run Countdown
+            </button>
+            <button name="toggle" onclick="runEvent('pause')">
+                Pause
+            </button>
+            <input class="timer-input" type="number" id="timer-input-hours" value="0">
+            </input>
+            <input class="timer-input" type="number" id="timer-input-minutes" value="0">
+            </input>
+            <input class="timer-input" type="number" id="timer-input-seconds" value="0">
+            </input>
+            <input class="timer-input" type="number" id="timer-input-precount" value="0">
+            </input>
         </div>
     </div>
     <div class="background-tile">
         <div class="background-tile-padding">
             <form action="timer-gui.html" id="urlform">
-                <h3>Otwórz z URL</h3>
-                <label for="h">Godziny</label><input name="h" type="number" value="0"></input><br>
-                <label for="m">Minuty</label><input name="m" type="number" value="0"></input><br>
-                <label for="s">Sekundy</label><input name="s" type="number" value="0"></input><br>
-                <label for="p">Odliczanie (s)</label><input name="p" type="number" value="0"></input><br>
-                <label for="admin">Admin Mode</label>
-                <select name="admin" value="2">
-                <option value="2">No Sync</option>
-                <option value="0">Slave</option>
-                <option value="1">Master</option>
-                </select><br>
+                <h3>Open from URL</h3>
+                <input name="h" type="number" value="0"></input> <label for="h">Hours</label><br>
+                <input name="m" type="number" value="0"></input> <label for="m">Minutes</label><br>
+                <input name="s" type="number" value="0"></input> <label for="s">Seconds</label><br>
+                <input name="p" type="number" value="0"></input> <label for="p">Countdown (s)</label><br>
                 <label for="mode">Timer Mode</label>
                 <select name="mode" value="0">
                 <option value="0">None</option>
@@ -59,40 +54,32 @@ $generator->start_content();
     </div>
     <div id="timer-tip" class="background-tile">
         <div class="background-tile-padding">
-            <p>Składnia URL: /u/timer.html?</p>
-            <p>mode=TRYB (0-domyślny, 1-stoper, 2-czasomierz, 3-zegar)</p>
-            <p>s=ilość SEKUND (dla trybu czasomierz)</p>
-            <p>m=ilość MINUT (dla trybu czasomierz)</p>
-            <p>h=ilość GODZIN (dla trybu czasomierz)</p>
-            <p>p=ilość SEKUND ("odliczanie wstępne") (dla trybu czasomierz)</p>
-            <p>admin=ADMIN MODE (0 - slave, 1 - master, </p>
-            <p><b>ADMIN MODE</b>: pozwala na ustawianie danych na serwerze (nie-admin ściąga dane z serwera)</p>
+            <p>URL Syntax: <code>/pcu/u/misc/timer.html?</code></p>
             <ul>
-                <li>Slave: co 2 sekundy pobiera dane z serwera, jest od niego zależny</li>
-                <li>Master: ma prawo ustawiać dane na serwerze, wymaga autoryzacji (TODO)</li>
-                <li>None: jest niezależny (ani nie ustawia danych ani ich nie ściąga)</li>
+                <li><code>mode</code> - MODE (0 - default, 1 - stopwatch, 2 - timer, 3 - clock)</li>
+                <li><code>s</code> - amount of SECONDS (dla trybu czasomierz)</li>
+                <li><code>m</code> - amount of MINUTES (dla trybu czasomierz)</li>
+                <li><code>h</code> - amount of HOURS (dla trybu czasomierz)</li>
+                <li><code>p</code> -  amount of COUNTDOWN in seconds, for timer mode</li>
             </ul>
-            <p id="debug">debug</p>
         </div>
     </div>
-    <!--<div id="msgbox">
-        <div id="msgbox-container">
-            <div id="msgbox-message">
-            JavaScript is disabled. It must be enabled for this page to&nbsp;work.
-            </div>
-            <div id="msgbox-buttons">
-                <button class="msgbox" onclick="document.getElementById('msgbox').style.display='none'">Ok</button>
-            </div>
-        </div>
-    </div>-->
     
     <!-- Script -->
     <script>
-    function runEvent(name)
+    function runEvent(name, data = null)
     {
+        if(name != "timerValues")
+            runEvent("timerValues", {
+                hours: document.getElementById("timer-input-hours"),
+                minutes: document.getElementById("timer-input-minutes"),
+                seconds: document.getElementById("timer-input-seconds"),
+                precount: document.getElementById("timer-input-precount")
+            });
         var iframe = document.getElementById('timer-iframe');
         var ev = iframe.contentWindow.document.createEvent('UIEvents');
         ev.initUIEvent(name, true, true, window, 1);
+        ev.data = data;
         iframe.contentWindow.document.dispatchEvent(ev);
     }
     
