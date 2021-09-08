@@ -4,6 +4,9 @@ $generator = new PCUGenerator("Tilify Sandbox");
 $generator->scripts = ["tilify-sandbox.js"];
 $generator->start_content();
 ?>
+<tlf-background-tile>
+    <canvas id="plot-canvas" width=500 height=400></canvas>
+</tlf-background-tile>
 <a is="tlf-resizable-tile">test1</a>
 <a is="tlf-resizable-tile">test2</a>
 <a is="tlf-resizable-tile">test3</a>
