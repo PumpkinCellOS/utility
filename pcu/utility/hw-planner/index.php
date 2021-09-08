@@ -123,8 +123,9 @@ $generator->start_content();
     </div>
 
     <div class="data background-tile" style="width: calc(100% - 30px);">
-        <div class="small app-list" style="margin: 0; margin-top: 10px !important;">
-            <a is="tlf-button-tile" style="width: 16.666%;" onclick="openTopicEditor('add'); return false;">
+        <!-- FIXME: Too much hardcoded constants here, move it to Tilify somehow! -->
+        <div class="small app-list" style="margin: 0; margin-top: 10px !important; justify-content: center">
+            <a is="tlf-button-tile" style="width: 16.666%; outline: 1px solid #888888" onclick="openTopicEditor('add'); return false;">
                 {controls.addObject}
             </a>
         </div>

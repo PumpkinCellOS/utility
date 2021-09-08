@@ -28,6 +28,8 @@ body {
 
 div.app-list {
     box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
     margin: 10px;
 }
 
@@ -35,21 +37,7 @@ div.app-list.small {
     height: 45px;
 }
 
-div.resizable-tile {
-    align-items: center;
-    background-color: var(--tlf-color);
-    border-radius: 4px;
-    color: #bbbbbf;
-    display: flex;
-    font-size: 180%;
-    height: calc(100% - 10px);
-    justify-content: center;
-    margin: 5px;
-    outline: 2px solid #333337;
-    transition: transform 0.05s, background-color 0.05s;
-}
-
-div.resizable-tile:hover {
+a.resizable-tile:hover {
     background-color: var(--tlf-hover-color);
     transform: scale(1.02, 1.02);
     transition: transform 0.05s, background-color 0.05s;
@@ -66,10 +54,16 @@ div.resizable-tile:hover {
 
 [is=tlf-resizable-tile],
 [is=tlf-button-tile] {
+    align-items: center;
+    background-color: var(--tlf-color);
     border-radius: 4px;
-    display: inline-block;
+    color: #bbbbbf;
+    display: flex;
     font-weight: bold;
-    min-width: 100px;
+    height: calc(100% - 10px);
+    justify-content: center;
+    margin: 5px;
+    transition: transform 0.05s, background-color 0.05s;
 }
 
 [is=tlf-resizable-tile]:hover,
@@ -78,10 +72,12 @@ div.resizable-tile:hover {
 }
 
 [is=tlf-button-tile] {
+    font-size: 120%;
     height: 100%;
 }
 
 [is=tlf-resizable-tile] {
+    font-size: 180%;
     height: 150px;
 }
 

@@ -7,9 +7,9 @@ class TlfResizableTile extends HTMLAnchorElement {
     constructor() {
         super();
         
-        // setup
-        var name = this.innerHTML;
-        
+        // TODO: This is very common to specify width of these using a fraction
+        // of width, maybe add this possibility here?
+
         // target
         if(this.getAttribute("noblank") !== "true")
             this.target = "_blank";
@@ -31,7 +31,9 @@ class TlfResizableTile extends HTMLAnchorElement {
             hovercolorHTML = "--tlf-hover-color: " + hovercolor + ";";
 
         // apply
-        this.innerHTML = "<div class='resizable-tile' style='" + colorHTML + hovercolorHTML + "'>" + name + "</div>"
+        this.classList.add("resizable-tile");
+        // FIXME: This is hacky
+        this.setAttribute("style", this.getAttribute("style") + "; " + colorHTML + hovercolorHTML);
     }
 }
 

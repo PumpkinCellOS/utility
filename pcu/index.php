@@ -107,7 +107,7 @@ function generateEntries(objectId, array)
         var units = entry.units;
         if(units == undefined)
         units = 1;
-        el_app_list.lastChild.style.width = (units * 25) + "%";
+        el_app_list.lastChild.style.width = "calc(" + (units * 25) + "% - 10px)";
     });
     assignEvents(objectId);
 }
