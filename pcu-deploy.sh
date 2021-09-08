@@ -13,4 +13,6 @@ echo Copying files...
 mkdir build-prod
 cp -prT build build-prod
 
+. ./install-apache.sh
+
 echo Successfully deployed to $PCU_DEPLOY_DIR.
