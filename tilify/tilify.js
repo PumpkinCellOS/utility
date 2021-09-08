@@ -40,7 +40,7 @@ class TlfResizableTile extends HTMLAnchorElement {
 class TlfButtonTile extends TlfResizableTile {
     constructor() {
         super();
-        this.firstChild.classList.add("button-tile");
+        this.classList.add("button-tile");
     }
 }
 
