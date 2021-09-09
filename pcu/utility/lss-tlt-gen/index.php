@@ -43,17 +43,17 @@ $generator->stylesheets = ["style.css", "../hw-planner/style.css"];
 
 $generator->start_content();
 ?>
-<div class="app-list" style="height: 50px;">
-    <a is="tlf-button-tile" style="width: 16.666%; height: 100%" href="/pcu/u/hw-planner">
+<div class="small app-list">
+    <a is="tlf-button-tile" style="width: 16.666%;" href="/pcu/u/hw-planner">
         HW Planner
     </a>
-    <a is="tlf-button-tile" style="width: 16.666%; height: 100%" onclick="requestPrint()">
+    <a is="tlf-button-tile" style="width: 16.666%;" onclick="requestPrint()">
         Print <span class="app-spec app-tile-beta">ALPHA</span>
-    </a><a is="tlf-button-tile" style="width: 50px; height: 100%" onclick="changeWeekOffset(g_weekOffset - 1); return false;">
+    </a><a is="tlf-button-tile" style="width: 50px;" onclick="changeWeekOffset(g_weekOffset - 1); return false;">
         &lt;
     </a><div id="current-date-wrapper">
         <span id="current-date" onclick="changeWeekOffset(0)">Current date: Loading...</span>
-    </div><a is="tlf-button-tile" style="width: 50px; height: 100%" onclick="changeWeekOffset(g_weekOffset + 1); return false;">
+    </div><a is="tlf-button-tile" style="width: 50px;" onclick="changeWeekOffset(g_weekOffset + 1); return false;">
         &gt;
     </a>
 </div>
