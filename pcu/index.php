@@ -4,6 +4,7 @@ $login = pcu_is_logged_in();
 $userData = pcu_user_session();
 
 $generator = new PCUGenerator();
+$generator->stylesheets = ["index-style.css"];
 $generator->header_title = "PumpkinCell.net";
 $generator->start_content();
 ?>
@@ -87,7 +88,7 @@ function generateUtilityEntry(entry) {
     if(entry.noblank === undefined)
         entry.noblank = true;
         
-    var html = `<a is="tlf-resizable-tile" style="${entry.disabled ? "" : ""}" noblank="${entry.noblank}" color="${entry.color}" hovercolor="${entry.hovercolor}" href="`;
+    var html = `<a is="tlf-resizable-tile" class="index-app" style="${entry.disabled ? "" : ""}" noblank="${entry.noblank}" color="${entry.color}" hovercolor="${entry.hovercolor}" href="`;
     html += list_link + '">' + list_name + '</a>';
 
     return html;

@@ -58,6 +58,12 @@ h1 {
     text-align: center;
 }
 
+@media (max-width: 1000px) {
+    h1 {
+        display: none;
+    }
+}
+
 h2 {
     background-color: #444448;
     border: 2px solid #333337;
