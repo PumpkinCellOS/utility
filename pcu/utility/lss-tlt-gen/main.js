@@ -432,12 +432,11 @@ window.changeWeekOffset = function(value)
     generate();
 }
 
-async function main(response)
+function main(response)
 {
     try
     {
-        var data = await response.body.getReader().read();
-        g_data = JSON.parse(new TextDecoder().decode(data.value));
+        g_data = response;
 
         // Default groups
         if(g_groupSelection.length == 0)
@@ -516,4 +515,8 @@ window.openFilterGroupsForm = function()
     }, {title: "Configure groups"});
 }
 
-fetch("data.json").then(main).catch(console.log);
+// NOTE: We can use tlfApiCall here because the lesson-data.json file
+// is in JSON format. We couldn't do that for files in another format.
+tlfApiCall("GET", "/api/domain.php", "download-file", {name: "lesson-data.json"}, main, function(message) {
+    tlfNotification(message.message, TlfNotificationType.Error);
+});
