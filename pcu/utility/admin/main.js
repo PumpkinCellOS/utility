@@ -125,8 +125,9 @@ function generateUserData(data)
         {
             tdDomain.innerText = "Loading...";
             // TODO: Cache it
+            // TODO: Fetch owner data
             loginApi.call("get-domain-info", {id: data.domain}, function(domainData) {
-                tdDomain.innerText = `${data.id} (${domainData.name})`;
+                tdDomain.innerText = `${domainData.id} (${domainData.name}, owner: ${domainData.ownerId})`;
             });
         }
         else
