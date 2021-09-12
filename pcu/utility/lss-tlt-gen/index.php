@@ -56,6 +56,9 @@ $generator->start_content();
     </div><a is="tlf-button-tile" style="width: 50px;" onclick="changeWeekOffset(g_weekOffset + 1); return false;">
         &gt;
     </a>
+    <a is="tlf-button-tile" style="width: 16.666%;" onclick="openFilterGroupsForm()">
+        Filter groups
+    </a>
 </div>
 <div id="date-container-wrapper">
     <div id="date-container">

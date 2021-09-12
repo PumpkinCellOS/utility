@@ -2,6 +2,9 @@ var g_data;
 
 const PRINT_MODE = tlfGetURLParam("print") == "1";
 
+let g_groups = new Set();
+let g_groupSelection = [];
+
 if(PRINT_MODE)
 {
     document.body.style.overflow = "auto";
@@ -223,6 +226,9 @@ function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
 
 function generateBlock(data, hwPlannerData)
 {
+    if(data.group && !g_groups.has(data.group))
+        return "";
+
     var realDayDate = new Date(g_startDay.getTime() + data.tday * 86400000);
     var freeDay = !PRINT_MODE ? (data.type != "hourDisplay" ? findFreeDay(realDayDate) : null) : null;
     
@@ -418,6 +424,18 @@ async function main(response)
     {
         var data = await response.body.getReader().read();
         g_data = JSON.parse(new TextDecoder().decode(data.value));
+
+        // Default groups
+        for(const groupset of Object.values(g_data.groupsets))
+        {
+            if(groupset.length > 0)
+            {
+                if(groupset[0] != null)
+                    g_groups.add(groupset[0]);
+                g_groupSelection.push(groupset[0]);
+            }
+        }
+
         generate();
         if(!PRINT_MODE)
             setInterval(generate, 30000);
@@ -437,6 +455,43 @@ window.requestPrint = function()
         // TODO: Remove the container after printing
     });
     document.body.appendChild(printModeContainer);
+}
+
+window.openFilterGroupsForm = function()
+{
+    // TODO: Consider saving it in db
+    let fields = [];
+
+    for(const [groupsetIndex, groupset] of Object.entries(g_data.groupsets))
+    {
+        let field = {};
+        field.type = "select";
+        field.name = groupsetIndex;
+        field.value = g_groupSelection ? g_groupSelection[groupsetIndex] : undefined;
+        field.options = [];
+        for(const group of groupset)
+        {
+            const option = {
+                displayName: group ? g_data.groups[group] : "None",
+                value: group
+            }
+            field.options.push(option);
+        }
+        fields.push(field);
+    }
+
+    tlfOpenForm(fields, function(data) {
+        // TODO
+        console.log(data);
+        g_groupSelection = data;
+        g_groups.clear();
+        for(const field in data)
+        {
+            if(data[field] != "null")
+                g_groups.add(data[field]);
+        }
+        generate();
+    }, {title: "Configure groups"});
 }
 
 fetch("data.json").then(main).catch(console.log);
