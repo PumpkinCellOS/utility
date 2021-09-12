@@ -58,6 +58,7 @@ if(pcu_user_needs_to_verify_email())
     if($queryingSelf && strlen($qUserData["email"]) > 0)
         echo "<p>E-mail: " . $qUserData["email"] . "</p>";
     ?>
+    <div id="domain-info"></div>
     <div id="property-description">
     </div>
 </tlf-background-tile>

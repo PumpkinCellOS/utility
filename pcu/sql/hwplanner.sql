@@ -31,18 +31,18 @@ SET time_zone = "+00:00";
 CREATE TABLE `hws` (
   `tid` int NOT NULL COMMENT 'Unique ID.',
   `userId` int DEFAULT NULL COMMENT 'Idenftifies user who can see the HW.',
-  `sub` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '3-letter Subject Identifier',
-  `type` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '[DEPRECATED] Type: small/big task/test',
+  `sub` varchar(3) CHARACTER SET utf8mb4 NOT NULL COMMENT '3-letter Subject Identifier',
+  `type` varchar(1) CHARACTER SET utf8mb4 NOT NULL COMMENT '[DEPRECATED] Type: small/big task/test',
   `addTime` datetime DEFAULT NULL COMMENT 'Creation time',
   `untilTime` date NOT NULL COMMENT 'Turn-in date',
   `untilTimeT` time NOT NULL COMMENT 'Turn-in time. TODO: merge untilTime and untilTimeT',
-  `topicFormat` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'R-raw, N-new exercise list',
-  `topic` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'Topic text.',
-  `topicLabel` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT 'Comma-separated label list',
-  `status` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'N' COMMENT 'Status. One of ?,N,ipXX%[,P][,E],D',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'Long description of task. TODO: Support adding binary files and more',
+  `topicFormat` varchar(1) CHARACTER SET utf8mb4 NOT NULL COMMENT 'R-raw, N-new exercise list',
+  `topic` text CHARACTER SET utf8mb4 NOT NULL COMMENT 'Topic text.',
+  `topicLabel` text CHARACTER SET utf8mb4 COMMENT 'Comma-separated label list',
+  `status` varchar(6) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'N' COMMENT 'Status. One of ?,N,ipXX%[,P][,E],D',
+  `description` text CHARACTER SET utf8mb4 NOT NULL COMMENT 'Long description of task. TODO: Support adding binary files and more',
   `optional` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Is the HW optional, add additional label for it.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -53,17 +53,18 @@ CREATE TABLE `hws` (
 CREATE TABLE `labels` (
   `id` int NOT NULL COMMENT 'The unique label ID.',
   `userId` int DEFAULT NULL COMMENT 'Identifies user, who added the label, or NULL if public (default) label.',
-  `imp` enum('none','small','medium','big','verybig') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'none' COMMENT 'Defines the color of label.',
+  `imp` enum('none','small','medium','big','verybig') CHARACTER SET utf8mb4 NOT NULL DEFAULT 'none' COMMENT 'Defines the color of label.',
   `fullFlow` tinyint(1) NOT NULL COMMENT 'Enables the ?-N-ip-P[-E]-D flow instead of default ?-N-ip[-E]-D',
-  `name` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'Label displayed name.',
+  `name` tinytext CHARACTER SET utf8mb4 NOT NULL COMMENT 'Label displayed name.',
   `preparationTime` int NOT NULL DEFAULT '14' COMMENT 'The time (in days) that the HW can be in "E" state',
   `evaluationTime` int NOT NULL DEFAULT '7' COMMENT 'The time (in days) that the HW must be added before untilTime.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `labels`
 --
 
+-- TODO: Do not hardcode this??
 INSERT INTO `labels` (`id`, `userId`, `imp`, `fullFlow`, `name`, `preparationTime`, `evaluationTime`) VALUES
 (2, NULL, 'small', 1, 'Odpowiedź ustna', 0, 7),
 (3, NULL, 'small', 0, 'Opracowanie', 3, 14),
@@ -93,10 +94,10 @@ INSERT INTO `labels` (`id`, `userId`, `imp`, `fullFlow`, `name`, `preparationTim
 CREATE TABLE `requestLog` (
   `id` int NOT NULL COMMENT 'ID',
   `userId` int NOT NULL COMMENT 'The User ID who did the request',
-  `command` enum('add-hw','remove-hw','modify-hw','add-label','remove-label','modify-label','pcu-register','clear-log','remove-log','modify-status','modify-turn-in-time','modify-details') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'API command',
+  `command` enum('add-hw','remove-hw','modify-hw','add-label','remove-label','modify-label','pcu-register','clear-log','remove-log','modify-status','modify-turn-in-time','modify-details') CHARACTER SET utf8mb4 NOT NULL COMMENT 'API command',
   `args` json NOT NULL COMMENT 'Arguments to command',
   `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Request time'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -128,19 +129,19 @@ ALTER TABLE `requestLog`
 -- AUTO_INCREMENT for table `hws`
 --
 ALTER TABLE `hws`
-  MODIFY `tid` int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID.', AUTO_INCREMENT=217;
+  MODIFY `tid` int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID.', AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `labels`
 --
 ALTER TABLE `labels`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'The unique label ID.', AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'The unique label ID.', AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `requestLog`
 --
 ALTER TABLE `requestLog`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=281;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -34,7 +34,7 @@ CREATE TABLE `shares` (
   `targetUid` int NOT NULL DEFAULT '0' COMMENT 'Target UID',
   `file` tinytext NOT NULL COMMENT 'File name',
   `inherit` BOOLEAN NOT NULL COMMENT 'For directories, if the files should inherit shared state' 
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -54,7 +54,7 @@ ALTER TABLE `shares`
 -- AUTO_INCREMENT for table `shares`
 --
 ALTER TABLE `shares`
-  MODIFY `sid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `sid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

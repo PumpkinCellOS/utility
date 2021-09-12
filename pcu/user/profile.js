@@ -104,11 +104,23 @@ function switchPublicState()
     }, {title: `Are you sure to make your page ${newState == "1" ? "public" : "private"}?`});
 }
 
+function insertData(data)
+{
+    if(data.domain)
+    {
+        api.call("get-domain-info", {id: data.domain}, function(data) {
+            document.getElementById("domain-info").innerText = "Domain: " + data.name;
+        });
+    }
+}
+
 function reload()
 {
     api.call("get-properties", {uid: window.queriedUID}, function(data) {
         insertProperties(data.data, window.queriedUID == window.PCU_USER_DATA.id);
     });
+
+    insertData(window.queriedData);
 }
 
 reload();

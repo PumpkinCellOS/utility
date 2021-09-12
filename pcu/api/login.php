@@ -126,4 +126,13 @@ $api->register_command("verify-token", function($api) {
     $api->require_auth();
     pcu_verify_token($api->required_arg("token"));
 });
+$api->register_command("get-domain-info", function($api) {
+    $api->require_method("GET");
+    $conn = $api->require_database("pcutil");
+    $id = $conn->real_escape_string($api->required_arg("id"));
+    $result = $conn->query("SELECT * FROM domains WHERE id='$id'");
+    if(!$result || $result->num_rows < 0)
+        return null;
+    return $result->fetch_assoc();
+});
 $api->run();

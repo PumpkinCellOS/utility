@@ -10,7 +10,8 @@ const api = new TlfAPI({
         "get-properties": { method: "GET" },
         "get-roles": { method: "GET" },
         "set-public-state": { method: "POST" },
-        "resend-verification-token": { method: "POST" }
+        "resend-verification-token": { method: "POST" },
+        "get-domain-info": { method: "GET" }
     },
     onerror: function(response, msg) {
         if(msg !== undefined)
