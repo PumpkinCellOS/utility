@@ -10,6 +10,7 @@ const API_COMMANDS = {
     "change-password-user": {"method": "POST"},
     "expire-password-user": {"method": "POST"},
     "change-role-user": {"method": "POST"},
+    "set-domain-user": {"method": "POST"},
     "version": {"method": "GET"}
 };
 
@@ -74,6 +75,14 @@ window.UserManagement =
                 updateUserList(document.getElementById("username-box").value);
             });
         }, {title: "Change user role"});
+    },
+    // TODO: Use domain name
+    setDomain: function(data) {
+        tlfOpenForm([{type: "number", name: "id", value: data.domain}], function(args) {
+            api.call("set-domain-user", {uid: data.id, domain: args.id}, function() {
+                updateUserList(document.getElementById("username-box").value);
+            })
+        }, {title: "Change domain ID"});
     }
 };
 
@@ -111,6 +120,19 @@ function generateUserData(data)
         tdRole.innerHTML = g_roles[data.role].displayName;
         tr.appendChild(tdRole);
 
+        var tdDomain = document.createElement("td");
+        if(data.domain)
+        {
+            tdDomain.innerText = "Loading...";
+            // TODO: Cache it
+            loginApi.call("get-domain-info", {id: data.domain}, function(domainData) {
+                tdDomain.innerText = `${data.id} (${domainData.name})`;
+            });
+        }
+        else
+            tdDomain.innerText = "None";
+        tr.appendChild(tdDomain);
+
         var tdStatus = document.createElement("td");
         tdStatus.innerHTML = getStatus(data).join(", ");
         tr.appendChild(tdStatus);
@@ -119,6 +141,7 @@ function generateUserData(data)
         tr.appendChild(buttonTD("Make expired", function(data) { UserManagement.expire(data); }));
         tr.appendChild(buttonTD("Change password", function(data) { UserManagement.changePassword(data); }));
         tr.appendChild(buttonTD("Change role", function(data) { UserManagement.changeRole(data); }));
+        tr.appendChild(buttonTD("Set domain ID", function(data) { UserManagement.setDomain(data); }));
     }
     return tr;
 }
@@ -136,7 +159,8 @@ function generateUserDataTable(data)
     var thead = document.createElement("thead");
     var tr = document.createElement("tr");
 
-    tr.innerHTML += "<td>ID</td><td>User name</td><td>Role</td><td>Status</td>";
+    // TODO: Use domain name
+    tr.innerHTML += "<td>ID</td><td>User name</td><td>Role</td><td>Domain ID</td><td>Status</td>";
 
     thead.appendChild(tr);
     dataTable.appendChild(thead);

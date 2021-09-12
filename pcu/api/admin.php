@@ -22,7 +22,7 @@ $api->register_command("search-users", function($api) {
         return $json;
     }
     
-    $result = $conn->query("SELECT id,userName,role,passwordExpired FROM users WHERE userName LIKE '%$query%'");
+    $result = $conn->query("SELECT id,userName,role,passwordExpired,domain FROM users WHERE userName LIKE '%$query%'");
 
     if($result && $result->num_rows > 0)
     {
@@ -77,6 +77,15 @@ $api->register_command("change-role-user", function($api) {
     $uid = $conn->real_escape_string($api->required_arg("uid"));
     $role = $conn->real_escape_string($api->required_arg("role"));
     $result = $conn->query("UPDATE users SET role='$role' WHERE id='$uid'");
+    if(!$result)
+        pcu_cmd_fatal("Query failed");
+});
+$api->register_command("set-domain-user", function($api) {
+    $api->require_method("POST");
+    $conn = $api->require_database("pcutil");
+    $uid = $conn->real_escape_string($api->required_arg("uid"));
+    $domain = $conn->real_escape_string($api->required_arg("domain"));
+    $result = $conn->query("UPDATE users SET domain='$domain' WHERE id='$uid'");
     if(!$result)
         pcu_cmd_fatal("Query failed");
 });
