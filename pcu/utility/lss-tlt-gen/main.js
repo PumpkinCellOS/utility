@@ -94,7 +94,9 @@ function statusToImp(status)
 
 function generateBlockText(data, hwPlannerData)
 {
-    var inner = "<b>" + data.sub + "</b>";
+    const subjectTitle = g_data.subjects[data.sub];
+    // TODO: This should have its class
+    var inner = `<b title="${subjectTitle}" style="cursor: help">` + data.sub + "</b>";
     if(data.type != "hourDisplay")
         inner += "&nbsp;" + data.class;
 
