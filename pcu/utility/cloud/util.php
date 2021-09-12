@@ -9,16 +9,6 @@ function cloud_path($uid, $name)
     return "$PCU_CLOUD/files/$uid/$name";
 }
 
-function validate_path($path)
-{
-    $output = explode('/', $path);
-    foreach($output as $dir)
-    {
-        if($dir == ".." || $dir == "")
-            pcu_cmd_fatal("Invalid path: $path", 400);
-    }
-}
-
 function account_quota($role)
 {
     if(pcu_role_less($role, "member"))

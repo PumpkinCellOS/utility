@@ -411,6 +411,16 @@ function pcu_random_token()
     return base64_encode($out);
 }
 
+function pcu_validate_relative_path($path)
+{
+    $output = explode('/', $path);
+    foreach($output as $dir)
+    {
+        if($dir == ".." || $dir == "")
+            pcu_cmd_fatal("Invalid path: $path", 400);
+    }
+}
+
 function pcu_download_file($fileName)
 {
     $fileSize = filesize($fileName);

@@ -16,7 +16,7 @@ if(!pcu_is_logged_in())
 
 $uid = $_GET["u"];
 $name = $_GET["f"];
-validate_path($name);
+pcu_validate_relative_path($name);
 
 if($name == "" || $uid == "")
     pcu_cmd_fatal("Invalid argument");

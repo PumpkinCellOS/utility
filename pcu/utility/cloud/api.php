@@ -20,7 +20,7 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     $targetUid = $api->optional_arg("uid", $uid);
     if($currentDir == "")
         $currentDir = ".";
-    validate_path($currentDir);
+        pcu_validate_relative_path($currentDir);
     
     // split path to check if it has 'bad' folders (..)
     
@@ -72,7 +72,7 @@ $api->register_command("remove-file", function($api) use($uid, $PCU_CLOUD) {
     pcu_require_login();
     $api->require_method("POST");
     $file = $api->required_arg("file");
-    validate_path($file);
+    pcu_validate_relative_path($file);
     
     $conn = $api->require_database("pcu-cloud");
     if(!remove_file($conn, $uid, $file))
@@ -89,7 +89,7 @@ $api->register_command("file-share", function($api) use($uid, $PCU_CLOUD) {
     $conn = $api->require_database("pcu-cloud");
     
     $file = $api->required_arg("file");
-    validate_path($file);
+    pcu_validate_relative_path($file);
     $targetUid = $conn->real_escape_string($api->optional_arg("uid", 0));
     $remove = $conn->real_escape_string($api->optional_arg("remove", false));
     
@@ -107,7 +107,7 @@ $api->register_command("make-directory", function($api) use($uid, $PCU_CLOUD) {
     pcu_require_login();
     $api->require_method("POST");
     $file = $api->required_arg("name");
-    validate_path($file);
+    pcu_validate_relative_path($file);
     $target = cloud_path($uid, $file);
 
     mkdir("$PCU_CLOUD/files");
