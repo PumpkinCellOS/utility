@@ -41,23 +41,6 @@ if($userData["id"] != $uid && !$shared)
     pcu_cmd_fatal("Access denied for user " . $userData["userName"] . ". Ask file owner for sharing it." . json_encode($result), 403);
 
 $fileName = "$PCU_CLOUD/files/$uid/$name";
-
-$exists = stat($fileName);
-if(!$exists)
-    pcu_cmd_fatal("File doesn't exist: $name", 404);
-    
-$fileSize = filesize($fileName);
-$basename = basename($name);
-    
-header("Content-Disposition: inline; filename=\"${basename}\"");
-header("Content-Length: ${fileSize}");
-pcu_page_type("application/octet-stream");
-
-$fd = @fopen($fileName, "r");
-while(!@feof($fd))
-{
-    $buff = @fread($fd, 16384);
-    echo $buff;
-}
+pcu_download_file($fileName);
 
 ?>

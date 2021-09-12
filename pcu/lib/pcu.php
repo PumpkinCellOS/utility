@@ -411,4 +411,25 @@ function pcu_random_token()
     return base64_encode($out);
 }
 
+function pcu_download_file($fileName)
+{
+    $fileSize = filesize($fileName);
+    $basename = basename($name);
+        
+    $exists = stat($fileName);
+    if(!$exists)
+        pcu_cmd_fatal("File doesn't exist: $name", 404);
+
+    header("Content-Disposition: inline; filename=\"${basename}\"");
+    header("Content-Length: ${fileSize}");
+    pcu_page_type("application/octet-stream");
+
+    $fd = @fopen($fileName, "r");
+    while(!@feof($fd))
+    {
+        $buff = @fread($fd, 16384);
+        echo $buff;
+    }
+}
+
 ?>
