@@ -81,3 +81,9 @@ textarea {
     height: 300px;
     width: 75%;
 }
+
+/* TODO: Match to content somehow */
+fieldset {
+    margin: auto;
+    width: 50%;
+}

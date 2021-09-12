@@ -213,6 +213,7 @@ customElements.define("tlf-combobox", TlfCombobox);
 //  - link - The link. No output. Uses `name` as text and `value` as href (or as fallback text, if `name` is not specified).
 //  - textarea - The <textarea> element. Uses properties like normal input element.
 //  - select - The combobox (<select> element). Uses `options` as options. Other properties are used like in normal input element.
+//  - radiogroup - Like select, but with radio buttons instead of combobox
 function tlfOpenForm(fields, callback, config)
 {
     try
@@ -277,6 +278,32 @@ function tlfOpenForm(fields, callback, config)
                 fullScreenForm.appendChild(widget);
                 fullScreenForm.appendChild(document.createElement("br"));
             }
+            else if(field.type == "radiogroup")
+            {
+                let widget = document.createElement("fieldset");
+                widget.id = field.name;
+                for(const option of field.options)
+                {
+                    // FIXME: This sadly uses global ids, consider shadow roots or sth
+                    const id = "tlfopenform-option-" + field.name + "-" + option.value;
+                    let optionElement = document.createElement("input");
+                    optionElement.type = "radio";
+                    optionElement.id = id;
+                    optionElement.name = field.name;
+                    optionElement.value = option.value;
+                    optionElement.checked = option.value == field.value;
+                    widget.appendChild(optionElement);
+
+                    let optionLabel = document.createElement("label");
+                    optionLabel.setAttribute("for", id);
+                    optionLabel.innerText = option.displayName;
+                    widget.appendChild(optionLabel);
+
+                    widget.appendChild(document.createElement("br"));
+                }
+                fullScreenForm.appendChild(widget);
+                fullScreenForm.appendChild(document.createElement("br"));
+            }
             else
             {
                 var widget = document.createElement("input");
@@ -313,10 +340,23 @@ function tlfOpenForm(fields, callback, config)
         submit.value = config.submitName ?? "Ok";
         submit.onclick = function() {
             var args = {};
+            // TODO: Port this everything to FormData
             for(var field of fields)
             {
                 if(field.type != "label" && field.type != "link")
-                    args[field.name] = fullScreenForm[field.name].value;
+                {
+                    if(field.type == "radiogroup")
+                    {
+                        console.log(fullScreenForm);
+                        for(const entry of new FormData(fullScreenForm))
+                        {
+                            if(entry[0] == field.name)
+                                args[entry[0]] = entry[1];
+                        }
+                    }
+                    else
+                        args[field.name] = fullScreenForm[field.name].value;
+                }
             }
             
             if(formObject.callback(args) === false)

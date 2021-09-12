@@ -471,7 +471,7 @@ window.openFilterGroupsForm = function()
     for(const [groupsetIndex, groupset] of Object.entries(g_data.groupsets))
     {
         let field = {};
-        field.type = "select";
+        field.type = "radiogroup";
         field.name = groupsetIndex;
         field.value = g_groupSelection ? g_groupSelection[groupsetIndex] : undefined;
         field.options = [];
@@ -487,7 +487,6 @@ window.openFilterGroupsForm = function()
     }
 
     tlfOpenForm(fields, function(data) {
-        // TODO
         console.log(data);
         g_groupSelection = data;
         g_groups.clear();
