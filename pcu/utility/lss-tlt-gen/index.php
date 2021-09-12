@@ -4,7 +4,12 @@ require_once("../../lib/generator.php");
 require_once("../../lib/pcu.php");
 
 if(!pcu_allow_insecure_operations())
-    $userData = pcu_require_role("member");
+{
+    $userData = pcu_require_login();
+    // TODO: This should have domain-relative data instead of hardcoding first as I have in database
+    if($userData["domain"] != "1")
+        pcu_cmd_fatal("No permission for domain");
+}
 
 if($_REQUEST["print"] == "1")
 {

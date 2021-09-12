@@ -139,8 +139,11 @@ const utilityEntries = [
     <?php if($login) { ?>
         {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "beta", "displayName": "Cloud Storage", "path": "/pcu/u/cloud"},
         {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/pcu/u/hw-planner"},
-        <?php if(!pcu_role_less($userData["role"], "member")) { ?>
+        // TODO: This should have domain-relative data instead of hardcoding first as I have in database
+        <?php if($userData["domain"] == "1") { ?>
             {"icon": "", "units": 1, "color": "#704444", "hovercolor": "#805454", "displayName": "Lesson Table", "path": "/pcu/u/lss-tlt-gen"},
+        <?php } ?>
+        <?php if(!pcu_role_less($userData["role"], "member")) { ?>
             {"icon": "", "units": 1, "color": "#4a758c", "hovercolor": "#5a859c", "state": "alpha", "displayName": "Support", "path": "/pcu/u/support"},
             {"icon": "#127760", "units": 1, "state": "alpha", "displayName": "WebSocket", "path": "/pcu/u/ws-client"},
         <?php } ?>
