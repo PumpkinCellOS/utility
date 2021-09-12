@@ -6,6 +6,7 @@ class PCUAPI
 {
     private $commands = [];
     private $args;
+    private string $data;
     private bool $requireMethod;
 
     // handler is function(PCUAPI $api), returns array
@@ -41,14 +42,25 @@ class PCUAPI
     {
         return $this->args;
     }
+
+    function data()
+    {
+        return $this->data;
+    }
     
     function run()
     {
-        // use JSON for POST, URL for GET
-        if($_SERVER["REQUEST_METHOD"] == "GET")
-            $args = $_GET;
-        else
+        // use JSON for POST, URL for GET/PUT
+        if($_SERVER["REQUEST_METHOD"] == "GET" || $_SERVER["REQUEST_METHOD"] == "PUT")
+            $args = $_REQUEST;
+        else if($_SERVER["REQUEST_METHOD"] == "POST")
             $args = json_decode(file_get_contents("php://input"), true);
+        
+        if($_SERVER["REQUEST_METHOD"] == "PUT")
+        {
+            // NOTE: only for small files that fit into one cloud chunk (<8MB)
+            $data = file_get_contents("php://input");
+        }
         
         $command = $args["command"];
         $out = $this->run_command($command, $args);
@@ -81,6 +93,7 @@ class PCUAPI
     
     function require_database($name)
     {
+        // TODO: Cache database connections
         $json = new stdClass();
         $conn = pcu_cmd_connect_db($json, $name);
         if($conn == null)
@@ -96,6 +109,23 @@ class PCUAPI
     function require_login()
     {
         return pcu_require_login();
+    }
+
+    function require_domain()
+    {
+        $userData = pcu_require_login();
+        if(strlen($userData["domain"]) == 0)
+            pcu_cmd_fatal("User is not in any domain");
+        return $userData["domain"];
+    }
+
+    function require_domain_owner()
+    {
+        $did = require_domain();
+        $conn = require_database("pcutil");
+        if(pcu_get_current_domain_data($conn)["ownerId"] != $userData["uid"])
+            pcu_cmd_fatal("User need to be a domain owner");
+        return $userData["domain"];
     }
 
     function require_role(string $role)

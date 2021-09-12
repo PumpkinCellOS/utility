@@ -399,6 +399,21 @@ function pcu_authuser($json, $conn, $userName, $password)
         pcu_cmd_error($json, "Authentication failed");
 }
 
+function pcu_get_current_domain_data($conn)
+{
+    pcu_require_login();
+    if($userData["domain"] == "")
+        pcu_cmd_fatal("User is not in any domain");
+
+    $did = $conn->real_escape_string($userData["domain"]);
+    $result = $conn->query("SELECT * FROM domains WHERE id='$did'");
+    
+    if($result && $result->num_rows == 1)
+        return $result;
+    else
+        pcu_cmd_error($json, "User's domain doesn't exist");
+}
+
 function pcu_random_token()
 {
     $out = "";
@@ -424,11 +439,11 @@ function pcu_validate_relative_path($path)
 function pcu_download_file($fileName)
 {
     $fileSize = filesize($fileName);
-    $basename = basename($name);
+    $basename = basename($fileName);
         
     $exists = stat($fileName);
     if(!$exists)
-        pcu_cmd_fatal("File doesn't exist: $name", 404);
+        pcu_cmd_fatal("File doesn't exist: $fileName", 404);
 
     header("Content-Disposition: inline; filename=\"${basename}\"");
     header("Content-Length: ${fileSize}");
