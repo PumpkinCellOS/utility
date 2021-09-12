@@ -17,7 +17,7 @@ PCU_SOURCE_DIR=$(dirname $(realpath $0))
 cd ${PCU_SOURCE_DIR}
 echo Running Gulp for PCU...
 pushd pcu
-    npm install
+    #npm install
     gulp
 popd
 
