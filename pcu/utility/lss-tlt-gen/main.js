@@ -106,14 +106,18 @@ function generateBlockText(data, hwPlannerData)
         if(hwPlannerData.length == 1)
         {
             var hw = hwPlannerData[0];
-            title = generateBlockTextHWTitle(hw);
-            inner += `&nbsp;<a class="tlt-topic-label" tid=${hw.tid}>` + generateLabel(hw.topicLabel, statusToImp(hw.status)) + "</a>";
+            if(hw.sub == data.sub)
+            {
+                title = generateBlockTextHWTitle(hw);
+                inner += `&nbsp;<a class="tlt-topic-label" tid=${hw.tid}>` + generateLabel(hw.topicLabel, statusToImp(hw.status)) + "</a>";
+            }
         }
         else if(hwPlannerData.length > 1)
         {
             for(var hw of hwPlannerData)
             {
-                title += "* " + generateBlockTextHWTitle(hw) + "<br>";
+                if(hw.sub == data.sub)
+                    title += "* " + generateBlockTextHWTitle(hw) + "<br>";
             }
             inner += `<a class="tlt-topic-label" tid=${hwPlannerData[0].tid}>&nbsp;` + generateLabel("...") + `</a>`;
         }
