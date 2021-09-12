@@ -147,3 +147,8 @@ div.background-tile-big-padding {
     padding: 10px;
     transition: opacity 0.5s; /* keep this in sync with tilify.js DISAPPEAR_TIME */
 }
+
+.tlf-form-label {
+    font-size: 16pt;
+    font-weight: bold;
+}

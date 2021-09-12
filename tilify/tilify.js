@@ -194,6 +194,7 @@ customElements.define("tlf-combobox", TlfCombobox);
 //     callback: Function(), the onclick event handler (for buttons)
 //     value: string, the preset value
 //     placeholder: string, <as in input element>
+//     displayName: string, the display name of field (only used by radiogroup)
 //     options: [, the options for `select` type
 //       {
 //         displayName: string, the displayed name
@@ -282,6 +283,10 @@ function tlfOpenForm(fields, callback, config)
             {
                 let widget = document.createElement("fieldset");
                 widget.id = field.name;
+                let label = document.createElement("div");
+                label.classList.add("tlf-form-label");
+                label.innerHTML = field.displayName;
+                widget.appendChild(label);
                 for(const option of field.options)
                 {
                     // FIXME: This sadly uses global ids, consider shadow roots or sth

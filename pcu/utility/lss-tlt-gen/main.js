@@ -432,15 +432,18 @@ async function main(response)
         g_data = JSON.parse(new TextDecoder().decode(data.value));
 
         // Default groups
-        for(const groupset of Object.values(g_data.groupsets))
+        for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
         {
-            if(groupset.length > 0)
+            console.log(groupset);
+            if(groupset.groups.length > 0)
             {
-                if(groupset[0] != null)
-                    g_groups.add(groupset[0]);
-                g_groupSelection.push(groupset[0]);
+                if(groupset.groups[0] != null)
+                    g_groups.add(groupset.groups[0]);
+                g_groupSelection[groupsetName] = groupset.groups[0] ?? "";
             }
         }
+        console.log(g_groups);
+        console.log(g_groupSelection);
 
         generate();
         if(!PRINT_MODE)
@@ -468,18 +471,20 @@ window.openFilterGroupsForm = function()
     // TODO: Consider saving it in db
     let fields = [];
 
-    for(const [groupsetIndex, groupset] of Object.entries(g_data.groupsets))
+    for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
     {
+        console.log(groupsetName, groupset);
         let field = {};
         field.type = "radiogroup";
-        field.name = groupsetIndex;
-        field.value = g_groupSelection ? g_groupSelection[groupsetIndex] : undefined;
+        field.name = groupsetName;
+        field.displayName = groupset.displayName;
+        field.value = g_groupSelection ? g_groupSelection[groupsetName] : "";
         field.options = [];
-        for(const group of groupset)
+        for(const group of groupset.groups)
         {
             const option = {
                 displayName: group ? g_data.groups[group] : "None",
-                value: group
+                value: group ?? ""
             }
             field.options.push(option);
         }
