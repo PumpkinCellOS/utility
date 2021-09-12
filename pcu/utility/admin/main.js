@@ -125,9 +125,8 @@ function generateUserData(data)
         {
             tdDomain.innerText = "Loading...";
             // TODO: Cache it
-            // TODO: Fetch owner data
             loginApi.call("get-domain-info", {id: data.domain}, function(domainData) {
-                tdDomain.innerText = `${domainData.id} (${domainData.name}, owner: ${domainData.ownerId})`;
+                tdDomain.innerText = `${domainData.name}${domainData.ownerId == data.id ? " (owner)" : ""}`;
             });
         }
         else
@@ -160,8 +159,7 @@ function generateUserDataTable(data)
     var thead = document.createElement("thead");
     var tr = document.createElement("tr");
 
-    // TODO: Use domain name
-    tr.innerHTML += "<td>ID</td><td>User name</td><td>Role</td><td>Domain ID</td><td>Status</td>";
+    tr.innerHTML += "<td>ID</td><td>User name</td><td>Role</td><td>Domain</td><td>Status</td>";
 
     thead.appendChild(tr);
     dataTable.appendChild(thead);
