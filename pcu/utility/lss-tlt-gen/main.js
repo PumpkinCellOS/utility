@@ -2,15 +2,19 @@ var g_data;
 
 const PRINT_MODE = tlfGetURLParam("print") == "1";
 
+let g_loadedFromURL = false;
 let g_groups = (()=> {
     const data = decodeURIComponent(tlfGetURLParam("groups"));
     if(data.length > 0)
     {
+        g_loadedFromURL = true;
         console.log(data);
         return new Set(JSON.parse(data));
     }
     return new Set();
 })();
+
+// HACK: to not create additional loaded from url variable
 let g_groupSelection = [];
 
 if(PRINT_MODE)
@@ -439,7 +443,7 @@ function main(response)
         g_data = response;
 
         // Default groups
-        if(g_groupSelection.length == 0)
+        if(!g_loadedFromURL)
         {
             for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
             {
