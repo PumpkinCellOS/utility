@@ -14,6 +14,7 @@ $generator->start_content();
 
     <div class="background-tile">
         <div class="background-tile-padding">
+            <a id="timer-url"></a><br>
             <button name="toggle" onclick="runEvent('toggleTimer')">
                 Toggle Timer
             </button>
@@ -67,6 +68,12 @@ $generator->start_content();
     
     <!-- Script -->
     <script>
+    function setURL(url)
+    {
+        let element = document.getElementById("timer-url")
+        element.innerText = url;
+        element.href = url;
+    }
     function runEvent(name, data = null)
     {
         if(name != "timerValues")
@@ -95,12 +102,14 @@ $generator->start_content();
         
         ev2.newURL = "timer.html?" + search.toString();
         iframe.contentWindow.document.dispatchEvent(ev2);
+        setURL(ev2.newURL);
     }
     
     document.getElementById("urlform").onsubmit = function(evt) {
         submitopts(evt);
         evt.preventDefault();
     };
+    setURL("timer.html");
     </script>
 <?php
 $generator->finish();

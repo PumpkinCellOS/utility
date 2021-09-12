@@ -132,8 +132,7 @@ const pcuEntries = [
 ];
 
 const utilityEntries = [
-    {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "displayName": "Timer", "path": "/pcu/u/misc/timer.html"},
-    {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "state": "beta", "displayName": "Timer GUI", "path": "/pcu/u/misc/timer-gui.php"},
+    {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "state": "beta", "displayName": "Timer", "path": "/pcu/u/misc/timer-gui.php"},
     {"icon": "#128308", "units": 1, "color": "#5b3e84", "hovercolor": "#6b4e94", "displayName": "Twitch Overlay", "path": "/pcu/u/misc/twitch-redirect.php"},
     {"displayName": "PCLab", "units": 1, "color": "#5b843e", "hovercolor": "#6b944e", "state": "alpha", "path": "/pcu/u/misc/pclab.html"},
     {"icon": "#127760", "units": 1, "color": "#555566", "hovercolor": "#656576", "displayName": "Network Builder", "path": "/pcu/u/network-builder"},
