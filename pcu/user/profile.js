@@ -109,7 +109,7 @@ function insertData(data)
     if(data.domain)
     {
         api.call("get-domain-info", {id: data.domain}, function(domainData) {
-            let text = "Domain: " + domainData.name;
+            let text = "Domain: " + domainData.fullName;
             if(domainData.ownerId == data.id)
                 text += " (owner)";
             document.getElementById("domain-info").innerText = text;

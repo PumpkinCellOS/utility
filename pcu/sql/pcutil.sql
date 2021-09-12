@@ -51,7 +51,8 @@ INSERT INTO `modules` (`id`, `name`, `commandURL`, `maintainerUserId`) VALUES
 CREATE TABLE `domains` (
   `id` int NOT NULL,
   `name` tinytext NOT NULL,
-  `ownerId` int NOT NULL
+  `ownerId` int NOT NULL,
+  `fullName` tinytext NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `domains`
