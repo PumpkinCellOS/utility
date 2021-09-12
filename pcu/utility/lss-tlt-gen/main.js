@@ -2,7 +2,15 @@ var g_data;
 
 const PRINT_MODE = tlfGetURLParam("print") == "1";
 
-let g_groups = new Set();
+let g_groups = (()=> {
+    const data = decodeURIComponent(tlfGetURLParam("groups"));
+    if(data.length > 0)
+    {
+        console.log(data);
+        return new Set(JSON.parse(data));
+    }
+    return new Set();
+})();
 let g_groupSelection = [];
 
 if(PRINT_MODE)
@@ -432,14 +440,17 @@ async function main(response)
         g_data = JSON.parse(new TextDecoder().decode(data.value));
 
         // Default groups
-        for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
+        if(g_groupSelection.length == 0)
         {
-            console.log(groupset);
-            if(groupset.groups.length > 0)
+            for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
             {
-                if(groupset.groups[0] != null)
-                    g_groups.add(groupset.groups[0]);
-                g_groupSelection[groupsetName] = groupset.groups[0] ?? "";
+                console.log(groupset);
+                if(groupset.groups.length > 0)
+                {
+                    if(groupset.groups[0] != null)
+                        g_groups.add(groupset.groups[0]);
+                    g_groupSelection[groupsetName] = groupset.groups[0] ?? "";
+                }
             }
         }
         console.log(g_groups);
@@ -458,7 +469,8 @@ async function main(response)
 window.requestPrint = function()
 {
     var printModeContainer = document.createElement("iframe");
-    printModeContainer.src = "?print=1";
+    console.log(g_groups);
+    printModeContainer.src = "?print=1&groups=" + encodeURIComponent(JSON.stringify([...g_groups]));
     printModeContainer.addEventListener("load", function() {
         console.log("Printing print mode container", this.contentWindow);
         // TODO: Remove the container after printing
