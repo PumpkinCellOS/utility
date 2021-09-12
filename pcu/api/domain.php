@@ -20,13 +20,15 @@ $api->register_command("upload-file", function($api) {
     $name = $api->required_arg("name");
     pcu_validate_relative_path($name);
     $did = $api->require_domain_owner();
-    $path = "/var/pcu-cloud/internal/domains/$did/$name";
-    if(!mkdir("/var/pcu-cloud/internal/domains/$did"))
+    $dir = "/var/pcu-cloud/internal/domains/$did";
+    if(!is_dir($dir) && !mkdir($dir))
         pcu_cmd_fatal("Failed to create directory", 500);
+    $path = "$dir/$name";
     $out = fopen($path, "wb");
     if(!$out)
         pcu_cmd_fatal("Failed to open file", 500);
-    if(!fwrite($out, $api->data()))
+    error_log("Writing " . strlen($api->data()) . " bytes to $path");
+    if(fwrite($out, $api->data()) === false)
     {
         pcu_cmd_fatal("Failed to write file", 500);
         fclose($out);

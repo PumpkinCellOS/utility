@@ -429,7 +429,8 @@ class TlfAPI {
     //   endpoint: string
     //   calls: {
     //     <name>: {
-    //       method: GET|POST
+    //       method: GET|POST|PUT
+    //       noJSONResponse: bool // don't parse JSON in response
     //     }
     //   }
     //   onerror: function(response: object, msg: string)
@@ -441,7 +442,7 @@ class TlfAPI {
         this.config = config;
     }
     
-    _doXHR(xhr, args, method, callback, errorCallback)
+    _doXHR(xhr, callConfig, data, method, callback, errorCallback)
     {
         // HACK
         var _this = this;
@@ -451,7 +452,7 @@ class TlfAPI {
                 try
                 {
                     if(this.status == 200 && callback instanceof Function)
-                        callback(JSON.parse(this.responseText)); 
+                        callback(callConfig.noJSONResponse ? this.responseText : JSON.parse(this.responseText)); 
                     else
                     {
                         var response;
@@ -480,10 +481,10 @@ class TlfAPI {
             }
         };
         
-        if(method == "POST")
-            xhr.send(args); // args in JSON
+        if(method == "POST" || method == "PUT")
+            xhr.send(data);
         else
-            xhr.send(); // args in URL
+            xhr.send();
     }
     
     json2uri(json)
@@ -498,13 +499,16 @@ class TlfAPI {
     {
         console.info(`API call ${command} with args=${JSON.stringify(args)}`);
         var xhr = new XMLHttpRequest();
-        var method = this.config.calls[command].method;
+        const callConfig = this.config.calls[command];
+        var method = callConfig.method;
+        if(method == "PUT")
+            throw new Error("PUT method not allowed, use api.put() for it.");
         
         var url = this.config.endpoint;
         if(url[0] == '/')
             url = "/pcu" + url;
         args.command = command;
-        if(method != "POST")
+        if(method == "GET")
             url += `?${this.json2uri(args)}`;
         else
         {
@@ -512,7 +516,25 @@ class TlfAPI {
         }
         
         xhr.open(method, url);
-        this._doXHR(xhr, args, method, callback, errorCallback);
+        this._doXHR(xhr, callConfig, args, method, callback, errorCallback);
+    }
+
+    put(command, data, args = {}, callback = function() {}, errorCallback = function() {})
+    {
+        console.info(`API call (put) ${command} with data size ${data.length}`);
+        var xhr = new XMLHttpRequest();
+        const callConfig = this.config.calls[command];
+        var method = callConfig.method;
+        
+        var url = this.config.endpoint;
+        if(url[0] == '/')
+            url = "/pcu" + url;
+        args.command = command;
+        if(method != "PUT")
+            throw new Error("Unsupported method, must be PUT.");
+        
+        xhr.open(method, url + `?${this.json2uri(args)}`);
+        this._doXHR(xhr, callConfig, data, method, callback, errorCallback);
     }
 }
 

@@ -59,6 +59,7 @@ utilityTask("lss-tlt-gen");
 utilityTask("cloud");
 utilityTask("support");
 utilityTask("ws-client");
+utilityTask("dsd-editor");
 
 utilityTasks.push("utilities/network-builder");
 

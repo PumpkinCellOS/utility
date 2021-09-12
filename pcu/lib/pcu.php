@@ -401,7 +401,7 @@ function pcu_authuser($json, $conn, $userName, $password)
 
 function pcu_get_current_domain_data($conn)
 {
-    pcu_require_login();
+    $userData = pcu_require_login();
     if($userData["domain"] == "")
         pcu_cmd_fatal("User is not in any domain");
 
@@ -409,7 +409,7 @@ function pcu_get_current_domain_data($conn)
     $result = $conn->query("SELECT * FROM domains WHERE id='$did'");
     
     if($result && $result->num_rows == 1)
-        return $result;
+        return $result->fetch_assoc();
     else
         pcu_cmd_error($json, "User's domain doesn't exist");
 }

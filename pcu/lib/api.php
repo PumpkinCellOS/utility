@@ -58,8 +58,8 @@ class PCUAPI
         
         if($_SERVER["REQUEST_METHOD"] == "PUT")
         {
-            // NOTE: only for small files that fit into one cloud chunk (<8MB)
-            $data = file_get_contents("php://input");
+            // FIXME: Enforce only small files that fit into one cloud chunk (<8MB)
+            $this->data = file_get_contents("php://input");
         }
         
         $command = $args["command"];
@@ -121,10 +121,13 @@ class PCUAPI
 
     function require_domain_owner()
     {
-        $did = require_domain();
-        $conn = require_database("pcutil");
-        if(pcu_get_current_domain_data($conn)["ownerId"] != $userData["uid"])
-            pcu_cmd_fatal("User need to be a domain owner");
+        $userData = pcu_require_login();
+        $did = $this->require_domain();
+        $uid = $userData["id"];
+        $conn = $this->require_database("pcutil");
+        $ownerId = pcu_get_current_domain_data($conn)["ownerId"];
+        if($ownerId != $uid)
+            pcu_cmd_fatal("User needs to be a domain owner ($ownerId), is $uid");
         return $userData["domain"];
     }
 
