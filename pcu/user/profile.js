@@ -108,8 +108,11 @@ function insertData(data)
 {
     if(data.domain)
     {
-        api.call("get-domain-info", {id: data.domain}, function(data) {
-            document.getElementById("domain-info").innerText = "Domain: " + data.name;
+        api.call("get-domain-info", {id: data.domain}, function(domainData) {
+            let text = "Domain: " + domainData.name;
+            if(domainData.ownerId == data.id)
+                text += " (owner)";
+            document.getElementById("domain-info").innerText = text;
         });
     }
 }
