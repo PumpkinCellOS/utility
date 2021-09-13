@@ -163,7 +163,7 @@ body {
     border-radius: 10px;
     display: inline-block;
     font-size: 80%;
-    margin: 0px 8px 5px 0px;
+    margin-right: 8px;
     padding: 3px 8px 3px 8px;
     text-transform: uppercase;
 }
