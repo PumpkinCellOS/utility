@@ -8,14 +8,6 @@ $generator->stylesheets = ["index-style.css"];
 $generator->header_title = "PumpkinCell.net";
 $generator->start_content();
 ?>
-<div class="app-list" id="pcu-app-list">
-</div>
-<h2>Utilities<?php if(!$login) echo " (Log in for more!)"; ?></h2>
-<div class="app-list" id="utility-app-list">
-</div>
-<h2>Links</h2>
-<div class="app-list" id="link-app-list">
-</div>
 <script>
 /*
 -- Entry format --
@@ -99,9 +91,21 @@ function assignEvents(objectId)
     // TODO: Drag
 }
 
-function generateEntries(objectId, array)
+const contentElement = document.getElementById("content");
+
+function generateEntries(title, objectId, array)
 {
-    var el_app_list = document.getElementById(objectId);
+    if(array.length === 0)
+        return;
+
+    if(title.length !== 0)
+    {
+        let header = document.createElement("h2");
+        header.innerText = title;
+        contentElement.appendChild(header);
+    }
+
+    var el_app_list = document.createElement("div");
     el_app_list.innerHTML = "";
     array.forEach(function(entry) {
         el_app_list.innerHTML += generateUtilityEntry(entry);
@@ -111,6 +115,8 @@ function generateEntries(objectId, array)
         el_app_list.lastChild.style.width = "calc(" + (units * 25) + "% - 10px)";
     });
     assignEvents(objectId);
+    el_app_list.classList.add("app-list");
+    contentElement.appendChild(el_app_list);
 }
 
 function swapEntries(arrId, list, ix1, ix2)
@@ -158,9 +164,9 @@ const linkEntries = [
     {"icon": "",   "units": 1, "color": "#864e39", "hovercolor": "#965e49", "displayName": "Microsoft Office", "path": "https://www.office.com/?auth=2"},
 ];
 
-generateEntries("pcu-app-list", pcuEntries);
-generateEntries("utility-app-list", utilityEntries);
-generateEntries("link-app-list", linkEntries);
+generateEntries("Admin", "pcu-app-list", pcuEntries);
+generateEntries("Utilities <?php if(!$login) echo " (Log in for more!)"; ?>", "utility-app-list", utilityEntries);
+generateEntries("Links", "link-app-list", linkEntries);
 </script>
 <?php
 $generator->finish();
