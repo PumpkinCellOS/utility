@@ -98,26 +98,18 @@ function makeDirectory(name)
     api.call("make-directory", {name: `${g_currentDir.join("/")}/${name}`}, reload, (msg) => {tlfNotification(msg.message, TlfNotificationType.Error)});
 }
 
-function downloadFile(name, path)
-{
-    var link = document.createElement('a');
-    link.href = path;
-    link.download = name;
-    link.click();
-}
-
 function generateFileEntry(file)
 {
     var tr = document.createElement("tr");
-    
+
     var name = document.createElement("td");
-    
+
     var nameFlex = document.createElement("div");
     nameFlex.classList.add("name-flex");
-    
+
     var icon = document.createElement("span");
     icon.classList.add("icon");
-    
+
     if(file.isDir)
     {
         if(file.name == "..")
@@ -148,11 +140,11 @@ function generateFileEntry(file)
     }
     else
         link.href = file.link;
-    
+
     link.download = file.name;
     link.innerHTML = file.name == ".." ? "(Go up)" : file.name;
     nameFlex.appendChild(link);
-    
+
     if(file.isDir)
     {
         var link2 = document.createElement('a');
@@ -160,10 +152,10 @@ function generateFileEntry(file)
             link2.href = file.link;
         nameFlex.appendChild(link2);
     }
-    
+
     name.appendChild(nameFlex);
     tr.appendChild(name);
-    
+
     function mkButton(name, callback)
     {
         var button = document.createElement("button");
@@ -171,24 +163,24 @@ function generateFileEntry(file)
         button.addEventListener("click", callback);
         return button;
     }
-    
+
     if(uid_url == uid && file.name != "..")
     {
         var shareButton = document.createElement("td");
-        
+
         var shareButtonCallback = (file.sharedFor["0"] ?
             function() { unshareFile(file, 0); } :
             function() { shareFile(file, 0); }
         );
-        
+
         shareButton.appendChild(mkButton(file.sharedFor["0"] ? "Unshare" : "Share", shareButtonCallback));
-        
+
         var deleteButton = document.createElement("td");
         deleteButton.appendChild(mkButton("Delete", function() { deleteFile(file.name); }));
         tr.appendChild(shareButton);
         tr.appendChild(deleteButton);
     }
-    
+
     return tr;
 }
 
