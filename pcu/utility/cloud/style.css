@@ -9,6 +9,23 @@
     font-size: 120%;
 }
 
+.progress-container {
+    max-width: 1000px;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.progress-bar {
+    background-color: #66666c;
+}
+
+.progress-bar-progress {
+    background-color: #00a000;
+    height: 10px;
+    margin: 5px 0px 10px 0px;
+    transition: width 0.2s;
+}
+
 #file-listing .name-flex {
     display: flex;
     height: 40px;

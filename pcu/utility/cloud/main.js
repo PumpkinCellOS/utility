@@ -1,6 +1,8 @@
 // PCU Cloud
 // Sppmacd (c) 2021
 
+const upload = require("./upload");
+
 const API_COMMANDS = {
     "get-account-quota": {"method": "GET"},
     "list-files": {"method": "GET"},
@@ -83,17 +85,17 @@ function shareFile(file, targetUid)
         tlfOpenForm([{ type: "label", value: "Anyone can see this file using that link:"},
                    { type: "link", value: "http://" + document.location.hostname + file.link }], null,
                    { title: "Share", noCancel: true });
-    });
+    }, (msg) => {tlfNotification(msg.message, TlfNotificationType.Error)});
 }
 
 function unshareFile(file, targetUid)
 {
-    api.call("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: true}, reload);
+    api.call("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: true}, reload, (msg) => {tlfNotification(msg.message, TlfNotificationType.Error)});
 }
 
 function makeDirectory(name)
 {
-    api.call("make-directory", {name: `${g_currentDir.join("/")}/${name}`}, reload);
+    api.call("make-directory", {name: `${g_currentDir.join("/")}/${name}`}, reload, (msg) => {tlfNotification(msg.message, TlfNotificationType.Error)});
 }
 
 function downloadFile(name, path)
@@ -193,7 +195,7 @@ function generateFileEntry(file)
 function generateBreadcrumb()
 {
     var breadcrumb = document.getElementById("breadcrumb");
-    var inner = `<b>${userDisplayName}'s</b> main directory &gt; `;
+    var inner = `<b>${userDisplayName}'s</b> home directory &gt; `;
     for(var dir in g_currentDir)
     {
         // TODO: Make it a link!
@@ -240,6 +242,9 @@ function setupEvents()
     document.getElementById("file-mkdir").addEventListener("click", function() {
         tlfOpenForm([{name: "dirname", placeholder: "Name"}], (args) => { makeDirectory(args.dirname) }, { title: "Create new directory" });
     });
+    document.getElementById("file-submit").addEventListener("click", function() {
+        cloud.uploadFile();
+    });
     
     if(uid_url != uid)
         document.getElementById("uploader-box").style.display = "none";
@@ -248,6 +253,61 @@ function setupEvents()
 window.reload = function()
 {
     fileListing(generateFileTable);
+}
+
+let eFiles = document.getElementById("files");
+
+window.cloud = {
+    uploadFile: () => {
+        let fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.multiple = true;
+        fileInput.addEventListener("change", function() {
+            console.log(this);
+            console.log(this.files.length);
+            for(let i = 0; i < this.files.length; i++)
+            {
+                const file = this.files[i];
+
+                let eProgressContainer = document.createElement("div");
+                eProgressContainer.classList.add("progress-container");
+                let eProgressDisplay = document.createElement("div");
+                {
+                    eProgressContainer.appendChild(eProgressDisplay);
+                }
+                let eProgressBarProgress = document.createElement("div");
+                {
+                let eProgressBar = document.createElement("div");
+                    eProgressBar.classList.add("progress-bar");
+                    {
+                        eProgressBarProgress.classList.add("progress-bar-progress");
+                        eProgressBar.appendChild(eProgressBarProgress);
+                    }
+                    eProgressContainer.appendChild(eProgressBar);
+                }
+                eFiles.appendChild(eProgressContainer);
+
+                const updateProgressDisplay = (offset, size) => {
+                    const percent = offset * 100 / size;
+                    eProgressDisplay.innerText = file.name + ": " + Math.round(percent) + "%";
+                    eProgressBarProgress.style.width = percent + "%";
+                };
+
+                upload(file, g_currentDir.join("/"), function(offset, size) {
+                    console.log("Upload progress: " + offset + "/" + size);
+                    updateProgressDisplay(offset, size);
+                }).then(() => {
+                    tlfNotification("Upload finished: " + file.name);
+                    eFiles.removeChild(eProgressContainer);
+                    window.reload();
+                }).catch((e) => {
+                    tlfNotification("Failed to upload file: " + e, TlfNotificationType.Error);
+                    eFiles.removeChild(eProgressContainer);
+                });
+            }
+        });
+        fileInput.click();
+    }
 }
 
 setupEvents();
