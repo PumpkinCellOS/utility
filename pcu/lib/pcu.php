@@ -443,7 +443,7 @@ function pcu_download_file($fileName)
         
     $exists = stat($fileName);
     if(!$exists)
-        pcu_cmd_fatal("File doesn't exist: $fileName", 404);
+        pcu_cmd_fatal("File doesn't exist: $basename", 404);
 
     header("Content-Disposition: inline; filename=\"${basename}\"");
     header("Content-Length: ${fileSize}");
