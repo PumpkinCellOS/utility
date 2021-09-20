@@ -40,6 +40,8 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
         $object = new stdClass();
         $object->name = $file_bn;
         $object->isDir = is_dir($file);
+        $currentDir = urlencode($currentDir);
+        $file_bn = urlencode($file_bn);
         
         if($object->isDir)
         {
