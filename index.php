@@ -34,6 +34,7 @@ $generator->start_content();
         </li>
         <li><a href="/pcu">PumpkinCell Utility</a></li>
         <li><a href="/about">About</a></li>
+        <li><a href="/dynmap">DynMap</a></li>
     </ul>
 </div>
 <?php
