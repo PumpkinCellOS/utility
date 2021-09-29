@@ -18,6 +18,7 @@ if((int)$_SERVER['CONTENT_LENGTH'] > 8388608)
 
 // Get args
 $currentDir = $_REQUEST["pwd"];
+pcu_validate_relative_path($currentDir);
 $fileName = $_REQUEST["name"];
 $start = (int)$_REQUEST["start"];
 $end = (int)$_REQUEST["end"];
