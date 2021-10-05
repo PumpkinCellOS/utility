@@ -352,7 +352,8 @@ function generateEntry(data)
     html += "<td style='display: none'>" + data.tid + "</td>";
     
     // Subject
-    html += `<td class='col-sub'><span class='code' title='${g_lssData.subjects[data.sub]}'>` + data.sub + "</span></td>";
+    const title = g_lssData?.subjects[data.sub] ?? ""; 
+    html += `<td class='col-sub'><span class='code' title='${title}'>` + data.sub + "</span></td>";
     
     html += generateTopicDisplay(data);
     html += "<td>" + generateTurnInTime(data) + "<br><span class='description'>" + data.untilTime + " <b>" + data.untilTimeT + "</b></span> </td>";
@@ -886,11 +887,8 @@ function finishLoading()
 
 function load()
 {
-    // NOTE: We can use tlfApiCall here because the lesson-data.json file
-    // is in JSON format. We couldn't do that for files in another format.
-    tlfApiCall("GET", "/api/domain.php", "download-file", {name: "lesson-data.json"}, function(lssData) {
-        g_lssData = lssData;
-
+    function loadTasks()
+    {
         // Load tasks
         api.call("version", {}, function(data) { g_serverVersion = data.version; } );
         api.call("get-labels", {}, loadLabels);
@@ -905,8 +903,16 @@ function load()
             }
             
         }, 1000);
+    };
+
+    // NOTE: We can use tlfApiCall here because the lesson-data.json file
+    // is in JSON format. We couldn't do that for files in another format.
+    tlfApiCall("GET", "/api/domain.php", "download-file", {name: "lesson-data.json"}, function(lssData) {
+        g_lssData = lssData;
+        loadTasks();
     }, function(message) {
-        tlfNotification(message.message, TlfNotificationType.Error);
+        console.log(message.message);
+        loadTasks();
     });
 
 }
