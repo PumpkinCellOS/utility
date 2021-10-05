@@ -454,12 +454,43 @@ window.closeTopicEditor = function()
     editor.style.display = "none";
 }
 
+function loadEntryToForm(form, tid)
+{
+    var entry = g_hws[tid];
+    form["sub"].value =         entry.sub;
+    form["untilTime"].value =   entry.untilTimeT;
+    form["untilDate"].value =   entry.untilTime;
+    form["topicFormat"].checked = (entry.topicFormat == "N");
+    form["topic"].value =       entry.topic;
+    form["topicLabel"].value =  entry.topicLabel;
+    form["status"].value =      entry.status;
+    form["optional"].checked =  (entry.optional == 1);
+    form["description"].value = entry.description;
+}
+
 window.openTopicEditor = function(mode, tid)
 {
     var editor = document.getElementById("form-topic-editor");
     editor.style.display = "";
     var form = editor.firstElementChild;
     form["mode"].value = mode;
+    
+    // Subjects combo
+    // TODO: Support custom subjects for completeness
+    if(g_lssData)
+    {
+        let node = form["sub"];
+        let newNode = document.createElement("select");
+        newNode.name = "sub";
+        for(const [sub, subInfo] of Object.entries(g_lssData.subjects))
+        {
+            let option = document.createElement("option");
+            option.innerText = `${sub} ${subInfo}`;
+            option.value = sub;
+            newNode.appendChild(option);
+        }
+        node.parentNode.replaceChild(newNode, node);
+    }
     
     switch(mode)
     {
@@ -477,7 +508,7 @@ window.openTopicEditor = function(mode, tid)
             console.log("invalid mode " + mode);
             break;
     }
-    
+
     updateTopicDisplay();
 }
 
@@ -525,20 +556,6 @@ window.submitFilters = function(form)
     g_filters = data;
     console.log("FILTERS applied: ", g_filters);
     generateDataTable();
-}
-
-function loadEntryToForm(form, tid)
-{
-    var entry = g_hws[tid];
-    form["sub"].value =         entry.sub;
-    form["untilTime"].value =   entry.untilTimeT;
-    form["untilDate"].value =   entry.untilTime;
-    form["topicFormat"].checked = (entry.topicFormat == "N");
-    form["topic"].value =       entry.topic;
-    form["topicLabel"].value =  entry.topicLabel;
-    form["status"].value =      entry.status;
-    form["optional"].checked =  (entry.optional == 1);
-    form["description"].value = entry.description;
 }
 
 window.modifyEntry = function(tid)
