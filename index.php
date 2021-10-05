@@ -5,7 +5,7 @@ require_once("pcu/lib/generator.php");
 $generator = new PCUGeneratorStatic();
 $generator->start_content();
 ?>
-<div is="tlf-background-tile">
+<tlf-background-tile>
     <ul>
         <li><span style="color: red">YouTube</span>
             <ul>
@@ -13,15 +13,24 @@ $generator->start_content();
                 <li><a href="https://www.youtube.com/channel/UClwskzwn2nXvoW_hJ1iGScg">PumpkinCellOS</a></li>
             </ul>
         </li>
+    </ul>
+</tlf-background-tile>
+<tlf-background-tile>
+    <ul>
         <li><span style="color: #7682f6">Discord</span>
             <ul>
                 <li><a href="https://discord.gg/K7Q34gjHSx">Discord [PL]</a></li>
                 <li><a href="https://discord.gg/Amp7f99DWA">Discord [EN]</a></li>
             </ul>
         </li>
+    </ul>
+</tlf-background-tile>
+<tlf-background-tile>
+    <ul>
         <li><span>GitHub</span>
             <ul>
                 <li><a href="https://github.com/PumpkinCellOS">GitHub (PumpkinCellOS)</a></li>
+                <li><a href="https://github.com/sppmacd">GitHub (sppmacd)</a></li>
                 <li><span>Raw Hacking</span>
                     <ul>
                         <li><a href="https://github.com/hexagon-engine/ege">EGE</a></li>
@@ -29,14 +38,17 @@ $generator->start_content();
                         <li><a href="https://github.com/sppmacd/logicbox">LogicBox</a></li>
                     </ul>
                 </li>
-                <li><a href="https://github.com/sppmacd">GitHub (sppmacd)</a></li>
             </ul>
         </li>
+    </ul>
+</tlf-background-tile>
+<tlf-background-tile>
+    <ul>
         <li><a href="/pcu">PumpkinCell Utility</a></li>
         <li><a href="/about">About</a></li>
-        <li><a href="/dynmap">DynMap</a></li>
+        <li><a href="/dynmap/">DynMap</a></li>
     </ul>
-</div>
+</tlf-background-tile>
 <?php
 $generator->finish();
 
