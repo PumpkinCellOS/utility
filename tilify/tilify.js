@@ -477,6 +477,9 @@ class TlfAPI {
                 catch(e)
                 {
                     console.log(e);
+                    const response = {type: "parse", message: "Exception: " + e.toString()};
+                    errorCallback(response);
+                    _this.config.onerror(response, e.toString());
                 }
             }
         };

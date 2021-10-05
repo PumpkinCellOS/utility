@@ -929,6 +929,8 @@ function load()
         loadTasks();
     }, function(message) {
         console.log(message.message);
+        if(message.type == "parse")
+            tlfNotification("lesson-data.json: " + message.message, TlfNotificationType.Error);
         loadTasks();
     });
 
