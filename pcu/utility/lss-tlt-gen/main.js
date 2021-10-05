@@ -108,7 +108,10 @@ function generateBlockText(data, hwPlannerData)
 {
     const subjectTitle = g_data.subjects[data.sub];
     // TODO: This should have its class
-    var inner = `<b title="${subjectTitle}" style="cursor: help">` + data.sub + "</b>";
+    const time = getLessonTimeRange(data);
+    // TODO: Some kind of stringifyTimeRange()
+    var inner = `<b title="${subjectTitle} (${time[0].toString().padStart(2, "0") + ":" + time[1].toString().padStart(2, "0")
+    + " - " + time[2].toString().padStart(2, "0") + ":" + time[3].toString().padStart(2, "0")})" style="cursor: help">` + data.sub + "</b>";
     if(data.type != "hourDisplay")
         inner += "&nbsp;" + data.class;
 
