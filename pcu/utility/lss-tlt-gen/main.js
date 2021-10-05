@@ -234,7 +234,7 @@ function findHWPlannerHWsForRange(unit, tday, hwPlannerData)
         var lsnMinutesStart = constructMinutes(unit);
         var lsnMinutesEnd = constructMinutes(unit.slice(2));
         
-        if(untilMinutes >= lsnMinutesStart && untilMinutes <= lsnMinutesEnd
+        if(untilMinutes >= lsnMinutesStart && untilMinutes < lsnMinutesEnd
            && untilTime >= g_startDay && untilTime <= g_endDay
             && tday == untilTime.getDay()
         )
@@ -450,7 +450,6 @@ function main(response)
         {
             for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
             {
-                console.log(groupset);
                 if(groupset.groups.length > 0)
                 {
                     if(groupset.groups[0] != null)
@@ -459,8 +458,6 @@ function main(response)
                 }
             }
         }
-        console.log(g_groups);
-        console.log(g_groupSelection);
 
         generate();
         if(!PRINT_MODE)
@@ -468,14 +465,13 @@ function main(response)
     }
     catch(e)
     {
-        console.log(e);
+        console.error(e);
     }
 }
 
 window.requestPrint = function()
 {
     var printModeContainer = document.createElement("iframe");
-    console.log(g_groups);
     printModeContainer.src = "?print=1&groups=" + encodeURIComponent(JSON.stringify([...g_groups]));
     printModeContainer.addEventListener("load", function() {
         console.log("Printing print mode container", this.contentWindow);
@@ -491,7 +487,6 @@ window.openFilterGroupsForm = function()
 
     for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
     {
-        console.log(groupsetName, groupset);
         let field = {};
         field.type = "radiogroup";
         field.name = groupsetName;
@@ -510,7 +505,6 @@ window.openFilterGroupsForm = function()
     }
 
     tlfOpenForm(fields, function(data) {
-        console.log(data);
         g_groupSelection = data;
         g_groups.clear();
         for(const field in data)
