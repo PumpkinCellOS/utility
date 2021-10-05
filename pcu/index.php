@@ -138,11 +138,8 @@ const pcuEntries = [
 ];
 
 const utilityEntries = [
-    {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "state": "beta", "displayName": "Timer", "path": "/pcu/u/misc/timer-gui.php"},
-    {"icon": "#128308", "units": 1, "color": "#5b3e84", "hovercolor": "#6b4e94", "displayName": "Twitch Overlay", "path": "/pcu/u/misc/twitch-redirect.php"},
-    {"displayName": "PCLab", "units": 1, "color": "#5b843e", "hovercolor": "#6b944e", "state": "alpha", "path": "/pcu/u/misc/pclab.html"},
+    {"icon": "#9200",   "units": 1, "color": "#666644", "hovercolor": "#767654", "state": "beta", "displayName": "Miscellaneous", "path": "/pcu/u/misc/index.php"},
     {"icon": "#127760", "units": 1, "color": "#555566", "hovercolor": "#656576", "state": "alpha", "displayName": "Network Builder", "path": "/pcu/u/network-builder"},
-    {"units": 1, "state": "alpha", "displayName": "Random MC Block", "path": "/pcu/u/misc/randomblock.php"},
     <?php if($login) { ?>
         {"icon": "#8613",   "units": 1, "color": "#667766", "hovercolor": "#768776", "state": "beta", "displayName": "Cloud Storage", "path": "/pcu/u/cloud"},
         {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/pcu/u/hw-planner"},
