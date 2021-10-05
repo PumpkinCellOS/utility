@@ -471,7 +471,8 @@ class TlfAPI {
                         var msg = serverMessage + " (" + this.status + ")";
                         console.log(msg);
                         errorCallback(response);
-                        _this.config.onerror(response, msg);
+                        if(_this.config.onerror)
+                            _this.config.onerror(response, msg);
                     }
                 }
                 catch(e)
@@ -479,7 +480,8 @@ class TlfAPI {
                     console.log(e);
                     const response = {type: "parse", message: "Exception: " + e.toString()};
                     errorCallback(response);
-                    _this.config.onerror(response, e.toString());
+                    if(_this.config.onerror)
+                        _this.config.onerror(response, e.toString());
                 }
             }
         };
