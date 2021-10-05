@@ -88,7 +88,7 @@ var g_sortBy = "date"; // "sub", "date", "status"
 var g_sortMode = 1;  // 1, -1
 var g_filters = { status: ["?", "i", "e", "p", "n"] };
 var g_requestLog = null;
-var g_userCache = {};
+var g_lssData = null;
 
 window.toggleSortMode = function(field)
 {
@@ -352,7 +352,7 @@ function generateEntry(data)
     html += "<td style='display: none'>" + data.tid + "</td>";
     
     // Subject
-    html += "<td class='col-sub'><span class='code'>" + data.sub + "</span></td>";
+    html += `<td class='col-sub'><span class='code' title='${g_lssData.subjects[data.sub]}'>` + data.sub + "</span></td>";
     
     html += generateTopicDisplay(data);
     html += "<td>" + generateTurnInTime(data) + "<br><span class='description'>" + data.untilTime + " <b>" + data.untilTimeT + "</b></span> </td>";
@@ -886,20 +886,29 @@ function finishLoading()
 
 function load()
 {
-    // Load tasks
-    api.call("version", {}, function(data) { g_serverVersion = data.version; } );
-    api.call("get-labels", {}, loadLabels);
-    
-    var inv = setInterval(function()
-    {
-        if(loadSteps == 1)
-        {
-            console.info("Loading finished!");
-            finishLoading();
-            clearInterval(inv);
-        }
+    // NOTE: We can use tlfApiCall here because the lesson-data.json file
+    // is in JSON format. We couldn't do that for files in another format.
+    tlfApiCall("GET", "/api/domain.php", "download-file", {name: "lesson-data.json"}, function(lssData) {
+        g_lssData = lssData;
+
+        // Load tasks
+        api.call("version", {}, function(data) { g_serverVersion = data.version; } );
+        api.call("get-labels", {}, loadLabels);
         
-    }, 1000);
+        var inv = setInterval(function()
+        {
+            if(loadSteps == 1)
+            {
+                console.info("Loading finished!");
+                finishLoading();
+                clearInterval(inv);
+            }
+            
+        }, 1000);
+    }, function(message) {
+        tlfNotification(message.message, TlfNotificationType.Error);
+    });
+
 }
 
 window.hwplanner_main = function()
