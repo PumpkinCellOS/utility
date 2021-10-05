@@ -35,6 +35,14 @@ body {
     text-transform: uppercase;
 }
 
+.col-sub .code {
+    cursor: help;
+}
+
+.col-sub .code[title=""] {
+    cursor: default;
+}
+
 
 .description {
     font-size: 11pt;
