@@ -29,7 +29,6 @@ cp -r \
     res \
     build
 
-mkdir build/tilify
-cp tilify/tilify.css build/tilify
+cp tilify/tilify.css ${PCU_BUILD_DIR}/tilify
 
 # TODO: Setup database if it was not done before
