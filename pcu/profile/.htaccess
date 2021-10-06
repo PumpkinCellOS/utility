@@ -1,7 +1,12 @@
 # Rewrite Syntax:
+#  /profile/$NAME.{css,js} -> /user/$NAME.{css,js}
 #  /profile -> /user/profile.php
-#  /profile/$USER -> /user/shortlink.php?name=$USER&page=profile
-#  /profile/$USER/$PAGE -> /user/shortlink.php?name=$USER&page=$PAGE
+#  /profile/$USER[/$PAGE] -> /user/shortlink.php?name=$USER&page=$PAGE
 
 RewriteEngine on
-RewriteRule ([^/]*)(?:/(.*))?$ /pcu/user/shortlink.php?name=$1&page=$2
+
+# Assets (CSS/JS/...)
+RewriteRule ^([\w-]*)\.(\w*)$ /pcu/user/$1.$2
+
+# Page
+RewriteRule ^(\w*)(?:/(\w*))?$ /pcu/user/shortlink.php?name=$1&page=$2

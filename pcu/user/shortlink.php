@@ -37,6 +37,8 @@ else if($page == "cloud")
 else
     pcu_cmd_fatal("Invalid page", 404);
 
-header("Location: /pcu/$url");
+$http = isset($_SERVER["HTTPS"]) ? "https" : "http";
+$host = $_SERVER["HTTP_HOST"];
+echo file_get_contents("$http://$host/pcu/$url");
 
 ?>
