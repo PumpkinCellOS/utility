@@ -105,4 +105,5 @@ gulp.task("profile", function() {
     return gulp.src(["profile/.htaccess", "profile/*"]).pipe(gulp.dest(`${OUTPUT_DIR}/profile`));
 });
 
-gulp.task("default", gulp.series("assets", "api", "lib", "res", "res-fonts", "misc", "errors", "user", "profile", "utilities"));
+// tilify is defined in /tilify/gulpfile.js
+gulp.task("default", gulp.series("assets", "api", "lib", "res", "res-fonts", "misc", "errors", "user", "profile", "utilities", "tilify"));

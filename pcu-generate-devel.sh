@@ -15,11 +15,9 @@ mkdir build
 echo Generating build...
 PCU_SOURCE_DIR=$(dirname $(realpath $0))
 cd ${PCU_SOURCE_DIR}
-echo Running Gulp for PCU...
-pushd pcu
-    #npm install
-    gulp
-popd
+echo Running Gulp...
+#npm install
+gulp
 
 cp -r \
     *.php \
@@ -29,7 +27,9 @@ cp -r \
     errors \
     favicon.ico \
     res \
-    tilify \
     build
+
+mkdir build/tilify
+cp tilify/tilify.css build/tilify
 
 # TODO: Setup database if it was not done before
