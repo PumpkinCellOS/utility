@@ -125,6 +125,7 @@ function mkButton(name, callback)
     return button;
 }
 
+// TODO: Handle programatically selecting files properly
 // TODO: Select all
 let g_selectedFiles = new Set();
 
@@ -305,6 +306,7 @@ function setupEvents()
 
 window.reload = function()
 {
+    g_selectedFiles.clear();
     fileListing(generateFileTable);
 }
 
