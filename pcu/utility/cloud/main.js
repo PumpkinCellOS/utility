@@ -71,10 +71,29 @@ function fileListing(callback)
     }
 }
 
-function deleteFile(name)
+function deleteFiles(fileNames)
 {
-    tlfOpenForm([ {"value": `Do you really want to delete ${name}?`, "type": "label"} ], function() {
-        api.call("remove-file", {file: `${g_currentDir.join("/")}/${name}`}, reload);
+    if(fileNames.length == 0)
+    {
+        tlfNotification("You need to select files", TlfNotificationType.Warning);
+        return;
+    }
+    const message = "Do you really want to delete <b>" + (fileNames.length == 1 ? fileNames[0] : fileNames.length + " files") + "</b>?";
+    tlfOpenForm([ {"value": message, "type": "label"} ], function() {
+        let deletedFiles = 0;
+        for(const file of fileNames)
+        {
+            api.call("remove-file", {file: `${g_currentDir.join("/")}/${file}`}, function() {
+                deletedFiles++;
+                if(deletedFiles == fileNames.length)
+                {
+                    tlfNotification("Successfully removed file" + (deletedFiles > 1 ? "s" : ""));
+                    window.reload();
+                }
+            }, function(message) {
+                tlfNotification("Failed to remove file: " + message.message, TlfNotificationType.Error);
+            });
+        }
     }, { title: "Confirm deletion", submitName: "Yes", cancelName: "No" });
 }
 
@@ -98,6 +117,22 @@ function makeDirectory(name)
     api.call("make-directory", {name: `${g_currentDir.join("/")}/${name}`}, reload, (msg) => {tlfNotification(msg.message, TlfNotificationType.Error)});
 }
 
+function mkButton(name, callback)
+{
+    var button = document.createElement("button");
+    button.innerHTML = name;
+    button.addEventListener("click", callback);
+    return button;
+}
+
+// TODO: Select all
+let g_selectedFiles = new Set();
+
+function selectedFiles()
+{
+    return Array.from(g_selectedFiles);
+}
+
 function generateFileEntry(file)
 {
     var tr = document.createElement("tr");
@@ -106,6 +141,21 @@ function generateFileEntry(file)
 
     var nameFlex = document.createElement("div");
     nameFlex.classList.add("name-flex");
+
+    var select = document.createElement("input");
+    select.type = "checkbox";
+    select.classList.add("select-box");
+    select.xFileName = file.name;
+    select.onchange = function(event) {
+        if(event.target.checked)
+            g_selectedFiles.add(event.target.xFileName);
+        else
+            g_selectedFiles.delete(event.target.xFileName);
+    }
+    if(file.isDir && file.name == "..")
+        select.disabled = true;
+
+    nameFlex.appendChild(select);
 
     var icon = document.createElement("span");
     icon.classList.add("icon");
@@ -156,14 +206,6 @@ function generateFileEntry(file)
     name.appendChild(nameFlex);
     tr.appendChild(name);
 
-    function mkButton(name, callback)
-    {
-        var button = document.createElement("button");
-        button.innerHTML = name;
-        button.addEventListener("click", callback);
-        return button;
-    }
-
     if(uid_url == uid && file.name != "..")
     {
         var shareButton = document.createElement("td");
@@ -176,12 +218,24 @@ function generateFileEntry(file)
         shareButton.appendChild(mkButton(file.sharedFor["0"] ? "Unshare" : "Share", shareButtonCallback));
 
         var deleteButton = document.createElement("td");
-        deleteButton.appendChild(mkButton("Delete", function() { deleteFile(file.name); }));
+        deleteButton.appendChild(mkButton("Delete", function() { deleteFiles([file.name]); }));
         tr.appendChild(shareButton);
         tr.appendChild(deleteButton);
     }
 
     return tr;
+}
+
+function generateActionsContainer()
+{
+    let container = document.getElementById("actions-container");
+
+    if(uid_url == uid)
+    {
+        container.appendChild(mkButton("Delete selected", function() {
+            deleteFiles(selectedFiles());
+        }));
+    }
 }
 
 function generateBreadcrumb()
@@ -197,8 +251,11 @@ function generateBreadcrumb()
     breadcrumb.innerHTML = inner;
 }
 
+let g_data = null;
+
 function generateFileTable(data)
 {
+    g_data = data;
     var element = document.getElementById("file-listing");
     
     element.innerHTML = "";
@@ -303,5 +360,6 @@ window.cloud = {
     }
 }
 
+generateActionsContainer();
 setupEvents();
 window.reload();

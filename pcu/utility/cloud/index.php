@@ -27,14 +27,14 @@ $generator->stylesheets = ["style.css"];
 $generator->header_title = "Cloud Storage";
 $generator->start_content();
 ?>
-    <div class="app-list small">
-        <a is="tlf-button-tile" id="file-submit" style="width: 16.666%">Upload (2 GiB limit)</a>
-        <a is="tlf-button-tile" id="file-mkdir" style="width: 16.666%">Create directory</a>
-    </div>
     <tlf-background-tile>
         <div id="files">
         </div>
         <div id="breadcrumb"></div>
+        <div class="app-list small" id="actions-container">
+            <button id="file-submit">Upload (2 GiB limit)</a>
+            <button id="file-mkdir">Create directory</a>
+        </div>
         <div class="data-table">
             <table id="file-listing">
             </table>
