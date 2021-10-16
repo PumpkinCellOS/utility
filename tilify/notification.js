@@ -4,7 +4,7 @@ const TlfNotificationType = {
     Warning: "warning"
 };
 
-window.TlfNoticationType = TlfNotificationType;
+window.TlfNotificationType = TlfNotificationType;
 
 window.tlfNotification = function(text, type = TlfNotificationType.Info, config = { displayTime: 3500 })
 {
