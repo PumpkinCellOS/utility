@@ -269,7 +269,7 @@ window.cloud = {
                 }
                 let eProgressBarProgress = document.createElement("div");
                 {
-                let eProgressBar = document.createElement("div");
+                    let eProgressBar = document.createElement("div");
                     eProgressBar.classList.add("progress-bar");
                     {
                         eProgressBarProgress.classList.add("progress-bar-progress");
@@ -279,15 +279,16 @@ window.cloud = {
                 }
                 eFiles.appendChild(eProgressContainer);
 
-                const updateProgressDisplay = (offset, size) => {
+                const updateProgressDisplay = (offset, size, time) => {
                     const percent = offset * 100 / size;
-                    eProgressDisplay.innerText = file.name + ": " + Math.round(percent) + "%";
+                    const transferSpeed = 8_388_608_000 / time;
+                    eProgressDisplay.innerText = file.name + ": " + Math.round(percent) + "% (" + byteDisplay(transferSpeed) + "/s)";
                     eProgressBarProgress.style.width = percent + "%";
                 };
 
-                upload(file, g_currentDir.join("/"), function(offset, size) {
-                    console.log("Upload progress: " + offset + "/" + size);
-                    updateProgressDisplay(offset, size);
+                upload(file, g_currentDir.join("/"), function(offset, size, time) {
+                    console.log("Upload progress: " + offset + "/" + size + " in " + time + " ms");
+                    updateProgressDisplay(offset, size, time);
                 }).then(() => {
                     tlfNotification("Upload finished: " + file.name);
                     eFiles.removeChild(eProgressContainer);

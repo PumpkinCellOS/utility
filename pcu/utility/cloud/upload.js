@@ -30,7 +30,8 @@ const CHUNK_SIZE = 8388608; // 8MiB
 module.exports = async (file, pwd, onProgress) => {
     for(let off = 0; off < file.size; off += CHUNK_SIZE)
     {
+        const startTime = new Date();
         const result = await uploadChunk(off, file.size, pwd, file.name, file.slice(off, off + CHUNK_SIZE));
-        onProgress(result.offset, result.size);
+        onProgress(result.offset, result.size, new Date() - startTime);
     }
 }
