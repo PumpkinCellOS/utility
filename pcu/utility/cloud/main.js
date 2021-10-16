@@ -40,13 +40,13 @@ if(window.g_currentDir[0] != ".")
 
 function byteDisplay(value)
 {
-    if(value <= 512)
+    if(value < 1024)
         return (value).toPrecision(3) + " B";
-    else if(value <= 512 * 1024)
+    else if(value < 1024 * 1024)
         return (value / 1024).toPrecision(3) + " KiB";
-    else if(value <= 512 * 1024 * 1024)
+    else if(value < 1024 * 1024 * 1024)
         return (value / 1024 / 1024).toPrecision(3) + " MiB";
-    else if(value <= 512 * 1024 * 1024 * 1024)
+    else if(value < 1024 * 1024 * 1024 * 1024)
         return (value / 1024 / 1024 / 1024).toPrecision(3) + " GiB";
     else
         return (value / 1024 / 1024 / 1024 / 1024).toPrecision(3) + " TiB";
