@@ -208,7 +208,10 @@ function generateFileEntry(file)
     tr.appendChild(name);
 
     let size = document.createElement("td");
-    size.innerText = byteDisplay(file.size);
+    if(file.isDir && file.name != "..")
+        size.innerText = file.size + " items";
+    else if(!file.isDir)
+        size.innerText = byteDisplay(file.size);
     tr.appendChild(size);
 
     if(uid_url == uid && file.name != "..")

@@ -38,17 +38,18 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
         $object = new stdClass();
         $object->name = $file_bn;
         $object->isDir = is_dir($file);
-        $object->size = filesize($file);
         $currentDir = urlencode($currentDir);
         $file_bn = urlencode($file_bn);
         
         if($object->isDir)
         {
             $link = "/pcu/u/cloud/?u=$targetUid&cd=$currentDir/$file_bn";
+            $object->size = iterator_count(new FilesystemIterator($file, FilesystemIterator::SKIP_DOTS));
         }
         else
         {
             $link = "/pcu/u/cloud/download.php?u=$targetUid&f=$currentDir/$file_bn";
+            $object->size = filesize($file);
         }
         $object->link = $link;
         
