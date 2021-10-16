@@ -20,9 +20,7 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     $targetUid = $api->optional_arg("uid", $uid);
     if($currentDir == "")
         $currentDir = ".";
-        pcu_validate_relative_path($currentDir);
-    
-    // split path to check if it has 'bad' folders (..)
+    pcu_validate_relative_path($currentDir);
     
     // actually glob the files
     $out = array();
@@ -40,6 +38,7 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
         $object = new stdClass();
         $object->name = $file_bn;
         $object->isDir = is_dir($file);
+        $object->size = filesize($file);
         $currentDir = urlencode($currentDir);
         $file_bn = urlencode($file_bn);
         

@@ -206,6 +206,10 @@ function generateFileEntry(file)
     name.appendChild(nameFlex);
     tr.appendChild(name);
 
+    let size = document.createElement("td");
+    size.innerText = byteDisplay(file.size);
+    tr.appendChild(size);
+
     if(uid_url == uid && file.name != "..")
     {
         var shareButton = document.createElement("td");
