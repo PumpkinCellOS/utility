@@ -14,7 +14,6 @@ let g_groups = (()=> {
     return new Set();
 })();
 
-// HACK: to not create additional loaded from url variable
 let g_groupSelection = [];
 
 if(PRINT_MODE)
@@ -439,15 +438,24 @@ window.changeWeekOffset = function(value)
     generate();
 }
 
+function updateGroupsFromSelection()
+{
+    g_groups.clear();
+    for(const field in g_groupSelection)
+    {
+        if(g_groupSelection[field] != "null")
+            g_groups.add(g_groupSelection[field]);
+    }
+}
+
 function main(response)
 {
     try
     {
         g_data = response;
 
-        // Default groups
-        if(!g_loadedFromURL)
-        {
+        // Initial groups
+        const loadDefaultGroups = ()=> {
             for(const [groupsetName, groupset] of Object.entries(g_data.groupSets))
             {
                 if(groupset.groups.length > 0)
@@ -457,9 +465,30 @@ function main(response)
                     g_groupSelection[groupsetName] = groupset.groups[0] ?? "";
                 }
             }
-        }
+        };
 
-        generate();
+        if(!g_loadedFromURL)
+        {
+            tlfApiCall("GET", "/api/login.php", "get-attribute", {name: "lss_groupPref", uid: window.PCU_USER_DATA.id}, function(data) {
+                if(data.data == "")
+                {
+                    loadDefaultGroups();
+                    generate();
+                    return;
+                }
+                console.log("g-groupSelection", data.data);
+                g_groupSelection = JSON.parse(data.data);
+                updateGroupsFromSelection();
+                generate();
+            }, function() {
+                tlfNotification("Couldn't load group preference - using defaults", TlfNotificationType.Error);
+                loadDefaultGroups();
+                generate();
+            });
+        }
+        else
+            generate();
+
         if(!PRINT_MODE)
             setInterval(generate, 30000);
     }
@@ -506,12 +535,8 @@ window.openFilterGroupsForm = function()
 
     tlfOpenForm(fields, function(data) {
         g_groupSelection = data;
-        g_groups.clear();
-        for(const field in data)
-        {
-            if(data[field] != "null")
-                g_groups.add(data[field]);
-        }
+        tlfApiCall("POST", "/api/login.php", "set-attribute", {name: "lss_groupPref", value: JSON.stringify(g_groupSelection), uid: window.PCU_USER_DATA.id});
+        updateGroupsFromSelection();
         generate();
     }, {title: "Configure groups"});
 }

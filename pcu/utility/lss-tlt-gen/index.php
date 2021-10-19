@@ -3,6 +3,9 @@
 require_once("../../lib/generator.php");
 require_once("../../lib/pcu.php");
 
+// FIXME: Don't do this all the time.
+pcu_user_define_attribute(pcu_cmd_connect_db(null, "pcutil"), "lss_groupPref", 0);
+
 if($_REQUEST["print"] == "1")
 {
     pcu_page_type(PCUPageType::Display);
@@ -45,7 +48,7 @@ $generator->start_content();
         HW Planner
     </a>
     <a is="tlf-button-tile" style="width: 16.666%;" onclick="requestPrint()">
-        Print <span class="app-spec app-tile-beta">ALPHA</span>
+        Print <span class="app-spec app-tile-alpha">ALPHA</span>
     </a><a is="tlf-button-tile" style="width: 50px;" onclick="changeWeekOffset(g_weekOffset - 1); return false;">
         &lt;
     </a><div id="current-date-wrapper">
