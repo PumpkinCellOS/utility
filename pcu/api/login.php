@@ -1,9 +1,5 @@
 <?php
 
-/*if($_SERVER["REQUEST_METHOD"] != "POST")
-    cmd_error($json, "Invalid method");
-*/
-
 require_once("../lib/api.php");
 
 // FIXME: Don't send plaintext password to server!
@@ -60,42 +56,22 @@ $api->register_command("query-user", function($api) {
     }
     return $json;
 });
-$api->register_command("set-property", function($api) {
+$api->register_command("set-attribute", function($api) {
+    $json = new stdClass();
     $api->require_method("POST");
     $conn = $api->require_database("pcutil");
-    $key = $conn->real_escape_string($api->required_arg("key"));
+    $uid = $api->required_arg("uid");
+    $name = $api->required_arg("name");
     $value = $api->required_arg("value");
-    $userData = $api->require_login();
-    $uid = $userData["id"];
-    $data = get_properties($conn, $uid, true);
-    $data[$key] = $value;
-    $dataJson = $conn->real_escape_string(json_encode($data));
-    $query = "UPDATE users SET properties='$dataJson' WHERE id='$uid'";
-    $result = $conn->query($query);
-    if(!$result)
-        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+    pcu_user_set_attribute($conn, $uid, $name, $value);
 });
-
-function get_properties($conn, $uid, $array=false) 
-{
-    global $api;
-    $result = $conn->query("SELECT public, properties FROM users WHERE id='$uid'");
-    if(!$result)
-        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
-    if($result->num_rows == 0)
-        return [];
-    $row = $result->fetch_assoc();
-    if($row["public"] != "1" && $uid != pcu_current_uid())
-        return [];
-    return json_decode($row["properties"], $array);
-}
-
-$api->register_command("get-properties", function($api) {
+$api->register_command("get-attribute", function($api) {
     $json = new stdClass();
     $api->require_method("GET");
     $conn = $api->require_database("pcutil");
-    $uid = $conn->real_escape_string($api->required_arg("uid"));
-    $json->data = get_properties($conn, $uid);
+    $uid = $api->required_arg("uid");
+    $name = $api->required_arg("name");
+    $json->data = pcu_user_get_attribute($conn, $uid, $name);
     return $json;
 });
 $api->register_command("get-roles", function($api) {

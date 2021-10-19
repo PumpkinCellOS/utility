@@ -91,7 +91,7 @@ function assignEvents(objectId)
     // TODO: Drag
 }
 
-const contentElement = document.getElementById("content");
+let contentElement = document.getElementById("content");
 
 function generateEntries(title, objectId, array)
 {

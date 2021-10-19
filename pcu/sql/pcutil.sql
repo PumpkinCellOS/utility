@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 23, 2021 at 01:33 PM
+-- Generation Time: Oct 19, 2021 at 04:31 PM
 -- Server version: 10.6.4-MariaDB
--- PHP Version: 8.0.10
+-- PHP Version: 8.0.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -60,6 +60,30 @@ INSERT INTO `modules` (`id`, `name`, `commandURL`, `maintainerUserId`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `userAttributes`
+--
+
+CREATE TABLE `userAttributes` (
+  `userId` int(11) NOT NULL,
+  `def` int(11) NOT NULL,
+  `value` varchar(1024) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userAttributesDefs`
+--
+
+CREATE TABLE `userAttributesDefs` (
+  `id` int(11) NOT NULL,
+  `name` varchar(16) NOT NULL,
+  `public` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -96,6 +120,20 @@ ALTER TABLE `modules`
   ADD KEY `maintainerUserId` (`maintainerUserId`);
 
 --
+-- Indexes for table `userAttributes`
+--
+ALTER TABLE `userAttributes`
+  ADD UNIQUE KEY `uniq` (`userId`,`def`),
+  ADD KEY `userId_2` (`userId`),
+  ADD KEY `def` (`def`);
+
+--
+-- Indexes for table `userAttributesDefs`
+--
+ALTER TABLE `userAttributesDefs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -119,6 +157,12 @@ ALTER TABLE `modules`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Module ID', AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `userAttributesDefs`
+--
+ALTER TABLE `userAttributesDefs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -139,6 +183,13 @@ ALTER TABLE `domains`
 --
 ALTER TABLE `modules`
   ADD CONSTRAINT `modules_ibfk_1` FOREIGN KEY (`maintainerUserId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `userAttributes`
+--
+ALTER TABLE `userAttributes`
+  ADD CONSTRAINT `userAttributes_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `userAttributes_ibfk_2` FOREIGN KEY (`def`) REFERENCES `userAttributesDefs` (`id`);
 
 --
 -- Constraints for table `users`

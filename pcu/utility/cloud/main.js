@@ -30,8 +30,8 @@ var currentDir = getParam("cd");
 window.g_currentDir = (currentDir != "" ? currentDir.split() : []);
 
 var userDisplayName = PHP_requestUserData.userName;
-pcuLoginApi.call("get-properties", {uid: uid_url}, function(data) {
-    userDisplayName = data.data.displayName;
+pcuLoginApi.call("get-attribute", {uid: uid_url, name: "pcu_displayName"}, function(data) {
+    userDisplayName = data.data;
     generateBreadcrumb();
 });
 

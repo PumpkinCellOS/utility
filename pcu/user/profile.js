@@ -1,78 +1,82 @@
+// Download a specified attribute and insert it on the page.
 // config {
 //   type: see tlfOpenForm() > config > type
 //   generator: function
 //   editOnTop: bool
 //   editName: string
 // }
-function insertProperty(key, config = { editOnTop: false, editName: "Edit" })
+function insertAttribute(name, config = { editOnTop: false, editName: "Edit" })
 {
-    if(!config.generator)
-        config.generator = generator = function(value) { return value; };
-    if(!config.type)
-        config.type = "text";
+    api.call("get-attribute", {name: name, uid: window.queriedUID}, (data)=> {
+        value = data.data ?? "";
+        if(!config.generator)
+            config.generator = generator = function(value) { return value; };
+        if(!config.type)
+            config.type = "text";
 
-    var container = document.getElementById(`property-${key}`);
-    if(!container)
-    {
-        console.error(`Profile: No container for property '${key}'!`);
-        return;
-    }
-    container.innerHTML = "";
-
-    var appendEdit = (container) => {
-        if(this.isLoggedIn)
+        var container = document.getElementById(`property-${name}`);
+        if(!container)
         {
-            var edit = document.createElement("span");
-            edit.classList.add("property-edit-icon");
-            edit.innerText = ` 🖊 ${config.editName ?? "Edit"}`;
-            edit.title = `Edit ${key}`;
-
-            edit.onclick = function() {
-                // TODO: Pretty print title
-                console.log(`setProperty ${key}`);
-                tlfOpenForm([{name: "value", type: "text", placeholder: "Value", value: value, type: config.type}], function(data) {
-                    userSetProperty(key, data.value);
-                }, { title: `Set property: ${key}` });
-            };
-            container.appendChild(edit);
+            console.error(`Profile: No container for property '${name}'!`);
+            return;
         }
-    }
+        container.innerHTML = "";
 
-    if(config.editOnTop)
-        appendEdit(container);
-    var dataContainer = document.createElement("span");
-    var value = this.data[key] ?? "";
-    dataContainer.innerHTML = config.generator(value);
-    dataContainer.classList.add("property-value");
-    container.appendChild(dataContainer);
-    if(!config.editOnTop)
-        appendEdit(container);
+        var appendEdit = (container) => {
+            if(this.isLoggedIn)
+            {
+                var edit = document.createElement("span");
+                edit.classList.add("property-edit-icon");
+                edit.innerText = ` 🖊 ${config.editName ?? "Edit"}`;
+                edit.title = `Edit ${name}`;
+
+                edit.onclick = function() {
+                    // TODO: Pretty print title
+                    console.log(`setAttribute ${name}`);
+                    tlfOpenForm([{name: "value", type: "text", placeholder: "Value", value: value, type: config.type}], function(data) {
+                        userSetAttribute(name, data.value);
+                    }, { title: `Set attribute: ${name}` });
+                };
+                container.appendChild(edit);
+            }
+        }
+
+        if(config.editOnTop)
+        {
+            appendEdit(container);
+            container.appendChild(document.createElement("br"));
+        }
+        var dataContainer = document.createElement("span");
+        dataContainer.innerHTML = config.generator(value);
+        dataContainer.classList.add("property-value");
+        container.appendChild(dataContainer);
+        if(!config.editOnTop)
+            appendEdit(container);
+    });
 }
 
-function userSetProperty(key, value)
+function userSetAttribute(name, value)
 {
-    api.call("set-property", {key: key, value: value}, function() {
-        tlfNotification(`Successfully changed ${key}`, TlfNotificationType.INFO);
+    api.call("set-attribute", {uid: window.PCU_USER_DATA.id, name: name, value: value}, function() {
+        tlfNotification(`Successfully changed ${name}`, TlfNotificationType.INFO);
 
-        // TODO: Do not reload the whole page, update only changed property
+        // TODO: Do not reload the whole page, update only the changed attribute
         reload();
     });
 }
 
-function insertProperties(data, isLoggedIn)
+function insertAttributes(isLoggedIn)
 {
-    data = data ?? {};
-    window.queriedUserProperties = data;
+    // TODO: Find a way to not query every attribute in a separate request.
     var dataObject = {};
-    dataObject.data = data;
-    dataObject.insertProperty = insertProperty;
+    dataObject.insertAttribute = insertAttribute;
     dataObject.isLoggedIn = isLoggedIn;
 
-    dataObject.insertProperty("displayName", {generator: function(value) { return value == "" ? window.queriedData.userName : value }});
-    dataObject.insertProperty("description", {generator: function(value) {
+    dataObject.insertAttribute("pcu_displayName", {generator: function(value) { return value == "" ? window.queriedData.userName : value }});
+    dataObject.insertAttribute("pcu_description", {generator: function(value) {
         return value.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>");
     }, type: "textarea", editOnTop: true, editName: "Edit description"});
-    dataObject.insertProperty("status", {generator: function(value) {
+    dataObject.insertAttribute("pcu_status", {generator: function(value) {
         return value == "" ? "" : " • <span class='status-value'>" + value + "</span>";
     }, editName: "Edit status"});
 }
@@ -119,10 +123,7 @@ function insertData(data)
 
 function reload()
 {
-    api.call("get-properties", {uid: window.queriedUID}, function(data) {
-        insertProperties(data.data, window.queriedUID == window.PCU_USER_DATA.id);
-    });
-
+    insertAttributes(window.queriedUID == window.PCU_USER_DATA.id);
     insertData(window.queriedData);
 }
 

@@ -457,4 +457,69 @@ function pcu_download_file($fileName)
     }
 }
 
+function pcu_user_define_attribute($conn, $name, $public)
+{
+    $name = $conn->real_escape_string($name);
+    $public = $conn->real_escape_string($public);
+    if(!$conn->query("INSERT INTO `userAttributesDefs` (`name`, `public`) VALUES ('$name', '$public')"))
+        pcu_cmd_fatal("Failed to define property type: " . $conn->error, 500);
+}
+
+function pcu_user_find_attribute_def($conn, $name)
+{
+    $result = $conn->query("SELECT * FROM `userAttributesDefs` WHERE `name` = '$name'");
+    if(!$result || $result->num_rows == 0)
+        return null;
+    return $result->fetch_assoc();
+}
+
+function pcu_user_set_attribute($conn, $uid, $name, $value)
+{
+    $uid = $conn->real_escape_string($uid);
+    $name = $conn->real_escape_string($name);
+    $value = $conn->real_escape_string($value);
+    $currentUID = pcu_current_uid();
+    if($currentUID != $uid)
+        pcu_cmd_fatal("Access denied to set attribute $name", 403);
+    
+    $attr_def = pcu_user_find_attribute_def($conn, $name);
+    if(!$attr_def)
+    {
+        // TODO: Specify attribute publicness somehow???
+        pcu_user_define_attribute($conn, $name, 1);
+        // FIXME: Double SQL query??
+        $attr_def = pcu_user_find_attribute_def($conn, $name);
+    }
+    $attr_def_id = $attr_def["id"];
+
+    $result = $conn->query("INSERT INTO `userAttributes` (userId, def, value) VALUES ('$currentUID', '$attr_def_id', '$value')
+        ON DUPLICATE KEY UPDATE value = VALUES(value)");
+    if(!$result)
+        pcu_cmd_fatal("Failed to set attribute: " . $conn->error, 500);
+}
+
+function pcu_user_get_attribute($conn, $uid, $name)
+{
+    $name = $conn->real_escape_string($name);
+    $uid = $conn->real_escape_string($uid);
+    
+    $attr_def = pcu_user_find_attribute_def($conn, $name);
+    if(!$attr_def)
+        return "";
+    $attr_def_id = $attr_def["id"];
+
+    $currentUID = pcu_current_uid();
+    $accessLevel = (int)($uid == $currentUID);
+    if($attr_def["public"] < $accessLevel)
+        pcu_cmd_fatal("Access denied to get attribute $name", 403);
+
+    $result = $conn->query("SELECT `value`
+        FROM `userAttributes`
+        WHERE `def`=$attr_def_id AND `userId`=$uid");
+    if($result->num_rows == 0)
+        return "";
+    $row = $result->fetch_assoc();
+    return $row["value"];
+}
+
 ?>
