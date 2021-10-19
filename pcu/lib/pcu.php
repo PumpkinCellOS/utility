@@ -509,8 +509,7 @@ function pcu_user_get_attribute($conn, $uid, $name)
     $attr_def_id = $attr_def["id"];
 
     $currentUID = pcu_current_uid();
-    $accessLevel = (int)($uid == $currentUID);
-    if($attr_def["public"] < $accessLevel)
+    if($attr_def["public"] != '1' && $uid != $currentUID)
         pcu_cmd_fatal("Access denied to get attribute $name", 403);
 
     $result = $conn->query("SELECT `value`
