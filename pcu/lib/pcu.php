@@ -461,8 +461,8 @@ function pcu_user_define_attribute($conn, $name, $public)
 {
     $name = $conn->real_escape_string($name);
     $public = $conn->real_escape_string($public);
-    if(!$conn->query("INSERT INTO `userAttributesDefs` (`name`, `public`) VALUES ('$name', '$public')"))
-        pcu_cmd_fatal("Failed to define property type: " . $conn->error, 500);
+    // FIXME: Handle errors
+    $conn->query("INSERT INTO `userAttributesDefs` (`name`, `public`) VALUES ('$name', '$public')");
 }
 
 function pcu_user_find_attribute_def($conn, $name)
