@@ -304,7 +304,7 @@ function setupEvents()
     });
     
     if(uid_url != uid)
-        document.getElementById("uploader-box").style.display = "none";
+        document.getElementById("actions-container").style.display = "none";
 }
 
 window.reload = function()
