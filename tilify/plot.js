@@ -52,14 +52,12 @@ class TlfPlot
     moveToMapped(context, size, x, y)
     {
         const coord = this.mapCoords([x, y], size);
-        console.log(coord);
         context.moveTo(coord[0], coord[1]);
     }
 
     lineToMapped(context, size, x, y)
     {
         const coord = this.mapCoords([x, y], size);
-        console.log(coord);
         context.lineTo(coord[0], coord[1]);
     }
 
