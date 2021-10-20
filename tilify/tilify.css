@@ -90,7 +90,7 @@ tlf-combobox {
     width: var(--tlf-widget-width);
 }
 
-div.background-tile, tlf-background-tile {
+div.background-tile, tlf-background-tile, tlf-tab-view {
     background-color: var(--tlf-color-widget-bg);
     border-radius: 4px;
     color: #bbbbbf;
@@ -151,4 +151,35 @@ div.background-tile-big-padding {
 .tlf-form-label {
     font-size: 16pt;
     font-weight: bold;
+}
+
+/* tabView */
+/* FIXME: Hacky border radiuses?? */
+tlf-tab-view {
+    box-sizing: border-box;
+    border: 1px solid #58585f;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.tlf-tab-bar {
+    background-color: #58585f;
+}
+
+.tlf-tab-bar > * {
+    background-color: #66666e;
+    cursor: pointer;
+    display: inline-block;
+    height: 100%;
+    min-width: 100px;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.tlf-tab-bar > :hover:not(.tlf-selected) {
+    background-color: #7f7f87;
+}
+
+.tlf-tab-bar > .tlf-selected {
+    background-color: #77777f;
 }

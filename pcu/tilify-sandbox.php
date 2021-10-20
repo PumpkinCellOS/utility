@@ -5,6 +5,12 @@ $generator->scripts = ["tilify-sandbox.js"];
 $generator->start_content();
 ?>
 <tlf-background-tile>
+    <tlf-tab-view>
+        <div name="test1">1234</div>
+        <div name="test2">5678</div>
+    </tlf-tab-view>
+</tlf-background-tile>
+<tlf-background-tile>
     <canvas id="plot-canvas" width=500 height=400></canvas>
 </tlf-background-tile>
 <a is="tlf-resizable-tile">test1</a>

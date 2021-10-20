@@ -9,9 +9,13 @@ $generator->start_content();
     <a is="tlf-button-tile" style="width: 16.666%" onclick="save()">Save</a>
 </div>
 <tlf-background-tile>
-    <!-- TODO: Turn it into a tab view -->
     <div id="filename-box"></div>
-    <textarea id="editor"></textarea>
+    <tlf-tab-view>
+        <!-- TODO: Turn it into a tab view -->
+        <div name="Editor / tabs beta">
+            <textarea id="editor" style="width: calc(100% - 15px)"></textarea>
+        </div>
+    </tlf-tab-view>
 </tlf-background-tile>
 <?php
 $generator->finish();
