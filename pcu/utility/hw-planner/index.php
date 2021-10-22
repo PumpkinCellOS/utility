@@ -106,6 +106,12 @@ $generator->start_pre_content();
         </div>
         <input type="button" value="{form.ok}" onclick="document.getElementById('request-log').style.display = 'none'" style="background-color: var(--tlf-bg-green)">
     </div>
+    <div id="label-editor-list" class="fullscreen-form" style="display: none">
+        <h3>{form.labelEditor.name}</h3>
+        <tlf-background-tile id="label-editor-list-container">
+        </tlf-background-tile>
+        <input type="button" value="{form.ok}" onclick="document.getElementById('label-editor-list').style.display = 'none'" style="background-color: var(--tlf-bg-green)">
+    </div>
 <?php
 $generator->start_content();
 ?>
@@ -116,6 +122,8 @@ $generator->start_content();
             {controls.statistics}
         </a><a is="tlf-button-tile" style="width: 16.666%" onclick="document.getElementById('request-log').style.display='block'; generateRequestLog(); return false;">
             {controls.requestLog}
+        </a><a is="tlf-button-tile" style="width: 16.666%" onclick="openLabelEditor(); return false;">
+            {controls.labelEditor}
         </a><a is="tlf-button-tile" style="width: 16.666%" href="/pcu/u/lss-tlt-gen">
             {controls.lssTltGen}
         </a>

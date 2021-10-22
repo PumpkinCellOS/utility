@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 23, 2021 at 01:34 PM
+-- Generation Time: Oct 21, 2021 at 05:51 PM
 -- Server version: 10.6.4-MariaDB
--- PHP Version: 8.0.10
+-- PHP Version: 8.0.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -53,36 +53,11 @@ CREATE TABLE `labels` (
   `id` int(11) NOT NULL COMMENT 'The unique label ID.',
   `userId` int(11) DEFAULT NULL COMMENT 'Identifies user, who added the label, or NULL if public (default) label.',
   `imp` enum('none','small','medium','big','verybig') NOT NULL DEFAULT 'none' COMMENT 'Defines the color of label.',
-  `fullFlow` tinyint(1) NOT NULL COMMENT 'Enables the ?-N-ip-P[-E]-D flow instead of default ?-N-ip[-E]-D',
-  `name` tinytext NOT NULL COMMENT 'Label displayed name.',
+  `fullFlow` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Enables the ?-N-ip-P[-E]-D flow instead of default ?-N-ip[-E]-D',
+  `name` tinytext NOT NULL DEFAULT '' COMMENT 'Label displayed name.',
   `preparationTime` int(11) NOT NULL DEFAULT 14 COMMENT 'The time (in days) that the HW can be in "E" state',
   `evaluationTime` int(11) NOT NULL DEFAULT 7 COMMENT 'The time (in days) that the HW must be added before untilTime.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
---
--- Dumping data for table `labels`
---
-
-INSERT INTO `labels` (`id`, `userId`, `imp`, `fullFlow`, `name`, `preparationTime`, `evaluationTime`) VALUES
-(2, NULL, 'small', 1, 'Odpowiedź ustna', 0, 7),
-(3, NULL, 'medium', 0, 'Opracowanie', 3, 14),
-(4, NULL, 'small', 0, 'Opracowanie grupowe', 7, 7),
-(5, NULL, 'small', 0, 'Praca domowa', 0, 7),
-(6, NULL, 'small', 0, 'Ćwiczenie', 0, 7),
-(7, NULL, 'medium', 1, 'Kartkówka', 3, 14),
-(8, NULL, 'medium', 0, 'Lektura', 3, 7),
-(9, NULL, 'medium', 1, 'Wypowiedź', 3, 0),
-(10, NULL, 'medium', 0, 'Wypracowanie', 3, 7),
-(11, NULL, 'big', 1, 'Konkurs', 7, 14),
-(12, NULL, 'none', 0, 'Dni wolne', 14, 7),
-(13, NULL, 'big', 0, 'Praca pisemna', 7, 14),
-(14, NULL, 'big', 0, 'Projekt', 7, 14),
-(15, NULL, 'big', 1, 'Sprawdzian', 7, 14),
-(16, NULL, 'big', 0, 'Projekt', 7, 14),
-(17, NULL, 'verybig', 1, 'Egzamin', 14, 31),
-(18, NULL, 'verybig', 0, 'Duży projekt', 14, 31),
-(19, NULL, 'small', 0, 'Karta pracy', 0, 7),
-(20, NULL, 'small', 0, 'Dodatkowe zajęcia', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -156,7 +131,7 @@ ALTER TABLE `hws`
 -- AUTO_INCREMENT for table `labels`
 --
 ALTER TABLE `labels`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The unique label ID.', AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The unique label ID.';
 
 --
 -- AUTO_INCREMENT for table `requestLog`

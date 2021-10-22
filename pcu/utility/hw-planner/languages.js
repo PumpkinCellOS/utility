@@ -65,6 +65,9 @@ en_US : {
         statistics: {
             name: "Statistics"
         },
+        labelEditor: {
+            name: "Label editor"
+        },
         ok: "OK",
         cancel: "Cancel",
         save: "Save",
@@ -98,7 +101,8 @@ en_US : {
         modify: "Modify",
         requestLog: "Request log",
         showAll: "Show all",
-        statistics: "Statistics"
+        statistics: "Statistics",
+        labelEditor: "Edit labels"
     },
     request: {
         time: "Request time",
@@ -183,6 +187,9 @@ pl_PL : {
         statistics: {
             name: "Statystyki"
         },
+        labelEditor: {
+            name: "Edytor etykiet"
+        },
         ok: "OK",
         cancel: "Anuluj",
         save: "Zapisz",
@@ -216,6 +223,7 @@ pl_PL : {
         requestLog: "Dziennik zmian",
         showAll: "Pokaż wszystkie",
         statistics: "Statystyki",
+        labelEditor: "Edytuj etykiety"
     },
     request: {
         time: "Czas żądania",

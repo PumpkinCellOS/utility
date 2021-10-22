@@ -57,6 +57,18 @@ $api->register_command("get-request-log", function($api) use($json, $uid) {
     cmd_get_request_log($json, $uid);
     return $json;
 });
+$api->register_command("add-label", function($api) use($uid) {
+    $api->require_method("POST");
+    return cmd_add_label($uid);
+});
+$api->register_command("modify-label", function($api) use($uid) {
+    $api->require_method("POST");
+    cmd_modify_label($api->required_arg("id"), $uid, $api->args());
+});
+$api->register_command("remove-label", function($api) use($uid) {
+    $api->require_method("POST");
+    cmd_remove_label($api->required_arg("id"), $uid);
+});
 $api->register_command("version", function($api) use($json, $uid) {
     $api->require_method("GET");
     return $json;

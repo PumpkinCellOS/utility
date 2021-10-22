@@ -417,6 +417,7 @@ function loadHWPlannerData()
         }
     }
 
+    // TODO: Download labels (The best thing would probably be using HW Planner APIs here)
     hwPlanner.API.call("get-data", {q: "hws+done"}, function(data) {
         generateTlt(data.data);
         setupPrintMode();

@@ -8,6 +8,7 @@ const EXEParser = require("./exe-parser.js");
 const EXEStringify = require("./exe-stringify.js");
 const LANG = require("./languages.js");
 const filters = require("./filters.js");
+const labelEditor = require("./label-editor.js");
 
 I18n.LANG = LANG.pl_PL;
 I18n.FALLBACK_LANG = LANG.en_US;
@@ -24,6 +25,9 @@ const API_COMMANDS = {
     "modify-status": {"method": "POST"},
     "remove-hw": {"method": "POST"},
     "get-request-log": {"method": "GET"},
+    "add-label": {"method": "POST"},
+    "modify-label": {"method": "POST"},
+    "remove-label": {"method": "POST"},
     "version": {"method": "GET"}
 };
 
@@ -38,6 +42,8 @@ module.exports = {
     API: api
 }
 
+window.hwPlannerAPI = api;
+
 // TODO: Make it configurable
 var LABELS = 
 {
@@ -51,7 +57,7 @@ function escapeHTML(str)
     return new Option(str).innerHTML;
 }
 
-function loadLabels(data)
+window.loadLabels = function(data)
 {
     for(var label of data.data)
     {
@@ -62,6 +68,7 @@ function loadLabels(data)
     var task_cbbs = [document.forms["topic-editor"]["topicLabel"]];
     for(var cbb of task_cbbs)
     {
+        cbb.innerHTML = "";
         for(var optionIx in LABELS)
         {
             var option = LABELS[optionIx];
@@ -79,6 +86,7 @@ function loadLabels(data)
     }
     
     requestLoading(false);
+    return LABELS;
 }
 
 var g_hws = null;
@@ -106,42 +114,15 @@ window.toggleSortMode = function(field)
 
 var loadSteps = 0;
 
-window.generateLabel = function(tl, customImp)
-{
+window.generateLabel = (tl, customImp) => {
     if(tl.length == 0)
         return L("label.noLabel");
-
-    var topicLabelHTML = "";
-    var label = LABELS[tl];
-    
-    if(label == undefined)
-    {
-        if(customImp != undefined)
-            return `<span class='topic-label imp-${customImp}'>` + tl + "</span>";
-        return "<span class='topic-label imp-none'>" + tl + "</span>";
-    }
-    
-    var imp = label.imp;
-    
-    console.log("hwPlanner.generateLabel(): ", tl, customImp);
-    if(customImp != undefined)
-    {
-        imp = customImp;
-    }
-    
-    switch(imp)
-    {
-        case "verybig": topicLabelHTML += "<span class='topic-label imp-verybig'>" + tl + "</span>"; break;
-        case "big":     topicLabelHTML += "<span class='topic-label imp-big'>" + tl + "</span>"; break;
-        case "medium":  topicLabelHTML += "<span class='topic-label imp-medium'>" + tl + "</span>"; break;
-        case "small":   topicLabelHTML += "<span class='topic-label imp-small'>" + tl + "</span>"; break;
-        case "none":    topicLabelHTML += "<span class='topic-label imp-none'>" + tl + "</span>"; break;
-        default:        topicLabelHTML += "<span class='topic-label'>" + tl + "</span>"; break;
-    }
-    if(label.fullFlow == '1')
-        topicLabelHTML += "&#128068; ";
-    return topicLabelHTML;
-}
+    let label = LABELS[tl];
+    if(label === undefined)
+        label = {};
+    label.name = tl;
+    return labelEditor.generateLabel(label, customImp);
+};
 
 window.generateTopicDisplay = function(data, fancy = true)
 {
@@ -934,6 +915,11 @@ function load()
         loadTasks();
     });
 
+}
+
+window.openLabelEditor = function()
+{
+    labelEditor.openList(LABELS);
 }
 
 window.hwplanner_main = function()

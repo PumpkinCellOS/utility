@@ -346,27 +346,62 @@ function cmd_get_request_log($json, $uid)
     $conn->close();
 }
 
-// TODO:
-
 // add-label
 // Args:
-//  name - The label display name.
-//  imp - none,small,medium,big,verybig.
-//  fullFlow - Is the Full Flow flag set, see pma description.
-//  id - The resulting label ID.
+//  uid - The user ID (from cache).
+// Returns: The label ID.
+function cmd_add_label($uid)
+{
+    $conn = pcu_cmd_connect_db($json, "hwplanner");
+    if(!$conn)
+        return;
+
+    $result = $conn->query("INSERT INTO labels (userId) VALUES ($uid) RETURNING id");
+    if(!$result)
+        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+    return $result->fetch_assoc()["id"];
+}
 
 // modify-label
 // Args:
 //  id - The label ID.
-//  name - The label display name.
-//  imp - none,small,medium,big,verybig.
-//  fullFlow - Is the Full Flow flag set, see pma description.
+//  uid - The user ID.
+//  data - User-specified data (fields as in DB)
+function cmd_modify_label($id, $uid, $data)
+{
+    $conn = pcu_cmd_connect_db($json, "hwplanner");
+    if(!$conn)
+        return;
+
+    $name = $conn->real_escape_string($data["name"]);
+    $imp = $conn->real_escape_string($data["imp"]);
+    $fullFlow = $conn->real_escape_string($data["fullFlow"]);
+    $preparationTime = $conn->real_escape_string($data["preparationTime"]);
+    $evaluationTime = $conn->real_escape_string($data["evaluationTime"]);
+
+    if(!$conn->query("UPDATE labels
+        SET imp='$imp',fullFlow='$fullFlow',name='$name',preparationTime='$preparationTime',evaluationTime='$evaluationTime'
+        WHERE id='$id' AND userId='$uid'")
+    )
+        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+}
 
 // remove-label
 // Args:
 //  id - The label ID.
-//  name - The label display name.
+//  uid - The user ID.
+function cmd_remove_label($id, $uid)
+{
+    $conn = pcu_cmd_connect_db($json, "hwplanner");
+    if(!$conn)
+        return;
 
+    $id = $conn->real_escape_string($id);
+    if(!$conn->query("DELETE FROM labels WHERE id='$id' AND userId='$uid'"))
+        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+}
+
+// TODO:
 // remove-log
 // Args:
 //  id - The log entry ID
