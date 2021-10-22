@@ -7,7 +7,7 @@
 //     callback: Function(), the onclick event handler (for buttons)
 //     value: string, the preset value
 //     placeholder: string, <as in input element>
-//     displayName: string, the display name of field (only used by radiogroup)
+//     displayName: string, the display name of field that will be placed after it (as <label for>)
 //     options: [, the options for `select` type
 //       {
 //         displayName: string, the displayed name
@@ -124,6 +124,17 @@ function tlfOpenForm(fields, callback, config)
             }
             else
             {
+                function addLabel(appendSpacing)
+                {
+                    // FIXME: This sadly uses global ids, consider shadow roots or sth
+                    const id = "tlfopenform-field-" + field.name;
+                    widget.id = id;
+                    let label = document.createElement("label");
+                    label.setAttribute("for", id);
+                    label.innerHTML = field.displayName + (appendSpacing ? ":&nbsp;" : "");
+                    fullScreenForm.appendChild(label);
+                }
+
                 var widget = document.createElement("input");
                 widget.type = field.type ?? "text";
                 widget.name = field.name ?? widget.type;
@@ -140,7 +151,15 @@ function tlfOpenForm(fields, callback, config)
                     else if(field.onclick == "close")
                         widget.onclick = function() { fullScreenForm.parentNode.removeChild(fullScreenForm); };
                 }
+
+                if(field.type != "checkbox" && field.displayName !== undefined)
+                    addLabel(true);
+
                 fullScreenForm.appendChild(widget);
+
+                if(field.type == "checkbox" && field.displayName !== undefined)
+                    addLabel(false);
+
                 fullScreenForm.appendChild(document.createElement("br"));
             }
         }
