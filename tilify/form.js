@@ -199,7 +199,8 @@ function tlfOpenForm(fields, callback, config)
             fullScreenForm.appendChild(cancel);
         }
         
-        document.body.insertBefore(fullScreenForm, document.body.firstChild);
+        // FIXME: This assumes page layout like on PCU. Make this layout-agnostic.
+        document.body.insertBefore(fullScreenForm, document.getElementsByTagName("header")[0]);
     }
     catch(e)
     {
