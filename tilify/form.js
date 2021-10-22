@@ -128,6 +128,8 @@ function tlfOpenForm(fields, callback, config)
                 widget.type = field.type ?? "text";
                 widget.name = field.name ?? widget.type;
                 widget.value = field.value ?? "";
+                if(field.type == "checkbox")
+                    widget.checked = field.value != 0;
                 widget.placeholder = field.placeholder ?? "";
                 if(field.callback)
                     widget.onclick = field.callback;
