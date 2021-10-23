@@ -1,8 +1,8 @@
 var data = document.getElementById("data");
 
 var dataTable = new TlfDataTable();
-dataTable.addField("test", "Test", function(data) { return this.text(data) });
-dataTable.addField("test2", "Test2", function(data) { return this.anchor(data, data) });
+dataTable.addField("Test", function(data) { return this.text(data.test) });
+dataTable.addField("Test2", function(data) { return this.anchor(data.test2, data.test2) });
 dataTable.addEntry({ test: "111", test2: "222" });
 
 data.appendChild(dataTable.generate());

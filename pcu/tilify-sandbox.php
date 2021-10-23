@@ -23,6 +23,8 @@ $generator->start_content();
     <a is="tlf-button-tile">test3</a>
     <a is="tlf-button-tile">test4</a>
 </div>
+<tlf-background-tile>
+test
 <tlf-combobox>
     <option value="1">option1</option>
     <option value="2">option2</option>
@@ -37,14 +39,12 @@ $generator->start_content();
     <option value="3">option3</option>
     <option value="4">option4</option>
 </tlf-combobox>
-<tlf-background-tile>
-test
 <div id="data">
 
 </div>
 </tlf-background-tile>
 <tlf-background-tile padding="big">
-    <h3>H3 in BPBT</h3>
+    <h3>H3 in Background Tile (Big Padding)</h3>
     <p>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
