@@ -18,13 +18,20 @@ $generator->start_content();
 <div id="controls" class="app-list small">
     <a is="tlf-button-tile" style="width: 20%" href="/phpmyadmin">phpMyAdmin</a>
 </div>
-<div class="background-tile">
-    <div class="background-tile-padding">
-        <input id="username-box" type="text" oninput="updateUserList(this.value)" placeholder="Type to search users..."></input>
-        <div id="user-data" class="data background-tile">
+<tlf-background-tile>
+    <tlf-tab-view>
+        <div name="Users">
+            <input id="username-box" type="text" oninput="updateUserList(this.value)" placeholder="Type to search users..."></input>
+            <div id="user-data" class="data">
+            </div>
         </div>
-    </div>
-</div>
+        <div name="Domains">
+            <input id="username-box" type="text" oninput="updateDomainList(this.value)" placeholder="Type to search domains..."></input>
+            <div id="domain-data" class="data">
+            </div>
+        </div>
+    </tlf-tab-view>
+</tlf-background-tile>
 <div class="background-tile">
     <div class="background-tile-padding">
         <div id="version-data">

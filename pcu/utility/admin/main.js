@@ -4,6 +4,7 @@ const loginApi = require("../../user/login").api;
 
 const API_COMMANDS = {
     "search-users": {"method": "GET"},
+    "search-domains": {"method": "GET"},
     "user-info": {"method": "GET"},
     "add-user": {"method": "POST"},
     "remove-user": {"method": "POST"},
@@ -86,42 +87,6 @@ window.UserManagement =
     }
 };
 
-function generateUserData(data)
-{
-    function buttonTD(label, callback)
-    {
-        var td = document.createElement("td");
-        var button = document.createElement("button");
-        button.onclick = function() { callback(data); };
-        button.innerHTML = label;
-        td.appendChild(button);
-        return td;
-    }
-    
-    var tr = document.createElement("tr");
-    tr.userData = data;
-
-    {
-        var tdId = document.createElement("td");
-        tdId.innerHTML = data.id;
-        tr.appendChild(tdId);
-
-        var tdUserName = document.createElement("td");
-        {
-        }
-        tr.appendChild(tdUserName);
-
-        var tdRole = document.createElement("td");
-        tr.appendChild(tdRole);
-
-        var tdDomain = document.createElement("td");
-        tr.appendChild(tdDomain);
-
-        var tdStatus = document.createElement("td");
-        tr.appendChild(tdStatus);
-    }
-}
-
 function generateUserDataTable(data)
 {
     g_dataTable = data.data;
@@ -137,7 +102,8 @@ function generateUserDataTable(data)
         return aUserName;
     });
     dataTable.addField("Role", function(data) { return this.text(g_roles[data.role].displayName); });
-    dataTable.addField("Domain", function(data) { 
+    dataTable.addField("Domain", function(data) {
+        // TODO: Open domain on click
         let elDomain = this.span("Loading...");
         if(data.domain)
         {
@@ -159,15 +125,41 @@ function generateUserDataTable(data)
     dataTable.addControl("Make expired", function(data) { UserManagement.expire(data); });
     dataTable.addControl("Change password", function(data) { UserManagement.changePassword(data); });
     dataTable.addControl("Change role", function(data) { UserManagement.changeRole(data); });
-    dataTable.addControl("Set domain ID", function(data) { UserManagement.setDomain(data); });
+    dataTable.addControl("Set domain ID", function(data) {
+        // TODO: Don't use IDs here...
+        UserManagement.setDomain(data);
+    });
 
     dataTable.entries = g_dataTable;
 
     divData.appendChild(dataTable.generate());
 }
 
+function generateDomainDataTable(data)
+{
+    var divData = document.getElementById("domain-data");
+    divData.innerHTML = "";
+
+    let dataTable = new TlfDataTable();
+    dataTable.addField("ID", function(data) { return this.text(data.id); });
+    dataTable.addField("Name", function(data) {
+        return this.text(data.name);
+    });
+    dataTable.addField("Full name", function(data) {
+        return this.text(data.fullName);
+    });
+    dataTable.addField("Owner name", function(data) {
+        return this.anchor(data.ownerName, `/pcu/user/profile.php?uid=${data.ownerId}`);
+    });
+
+    dataTable.entries = data.data;
+
+    divData.appendChild(dataTable.generate());
+}
+
 window.updateUserList = function(value)
 {
+    // TODO: Searchable tables in tilify??
     if(value.length >= 3)
     {
         api.call("search-users", {q: value}, function(data) {
@@ -178,6 +170,22 @@ window.updateUserList = function(value)
     {
         var divUserData = document.getElementById("user-data");
         divUserData.innerHTML = "<div class='data-table'>...</div>";
+    }
+}
+
+window.updateDomainList = function(value)
+{
+    // TODO: Searchable tables in tilify??
+    if(value.length >= 3)
+    {
+        api.call("search-domains", {q: value}, function(data) {
+            generateDomainDataTable(data);
+        });
+    }
+    else
+    {
+        var divDomainData = document.getElementById("domain-data");
+        divDomainData.innerHTML = "<div class='data-table'>...</div>";
     }
 }
 

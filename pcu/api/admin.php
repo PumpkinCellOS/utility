@@ -11,7 +11,7 @@ $api->register_command("version", function($api) {
 $api->register_command("search-users", function($api) {
     $api->require_method("GET");
     $conn = $api->require_database("pcutil");
-    $query = $api->required_arg("q");
+    $query = $conn->real_escape_string($api->required_arg("q"));
     $json = new stdClass();
     $json->data = array();
     
@@ -33,10 +33,37 @@ $api->register_command("search-users", function($api) {
     }
     return $json;
 });
+$api->register_command("search-domains", function($api) {
+    $api->require_method("GET");
+    $conn = $api->require_database("pcutil");
+    $query = $conn->real_escape_string($api->required_arg("q"));
+    $json = new stdClass();
+    $json->data = array();
+    
+    // Don't lag db server with short queries
+    if(strlen($query) < 3)
+    {
+        $json->message = "Aborted (short query)";
+        return $json;
+    }
+    
+    $result = $conn->query("SELECT name,ownerId,fullName,domains.id,users.userName AS ownerName FROM domains
+        LEFT JOIN users ON domains.ownerId=users.id
+        WHERE name LIKE '%$query%' OR fullName LIKE '%$query%';");
+
+    if($result && $result->num_rows > 0)
+    {
+        while($row = $result->fetch_assoc())
+        {
+            array_push($json->data, $row);
+        }
+    }
+    return $json;
+});
 $api->register_command("user-info", function($api) {
     $api->require_method("GET");
     $conn = $api->require_database("pcutil");
-    $id = $api->required_arg("id");
+    $id = $conn->real_escape_string($api->required_arg("id"));
     $json = new stdClass();
     $json->data = array();
     $result = $conn->query("SELECT * FROM users WHERE id='$id'");
