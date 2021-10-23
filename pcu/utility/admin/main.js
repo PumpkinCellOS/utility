@@ -108,42 +108,18 @@ function generateUserData(data)
 
         var tdUserName = document.createElement("td");
         {
-            var aUserName = document.createElement("a");
-            aUserName.innerHTML = data.userName;
-            aUserName.href = `/pcu/user/profile.php?uid=${data.id}`;
-            aUserName.style.color = g_roles[data.role].color;
-            tdUserName.appendChild(aUserName);
         }
         tr.appendChild(tdUserName);
 
         var tdRole = document.createElement("td");
-        tdRole.innerHTML = g_roles[data.role].displayName;
         tr.appendChild(tdRole);
 
         var tdDomain = document.createElement("td");
-        if(data.domain)
-        {
-            tdDomain.innerText = "Loading...";
-            // TODO: Cache it
-            loginApi.call("get-domain-info", {id: data.domain}, function(domainData) {
-                tdDomain.innerText = `${domainData.name}${domainData.ownerId == data.id ? " (owner)" : ""}`;
-            });
-        }
-        else
-            tdDomain.innerText = "None";
         tr.appendChild(tdDomain);
 
         var tdStatus = document.createElement("td");
-        tdStatus.innerHTML = getStatus(data).join(", ");
         tr.appendChild(tdStatus);
-
-        tr.appendChild(buttonTD("Remove", function(data) { UserManagement.remove(data); }));
-        tr.appendChild(buttonTD("Make expired", function(data) { UserManagement.expire(data); }));
-        tr.appendChild(buttonTD("Change password", function(data) { UserManagement.changePassword(data); }));
-        tr.appendChild(buttonTD("Change role", function(data) { UserManagement.changeRole(data); }));
-        tr.appendChild(buttonTD("Set domain ID", function(data) { UserManagement.setDomain(data); }));
     }
-    return tr;
 }
 
 function generateUserDataTable(data)
@@ -153,26 +129,41 @@ function generateUserDataTable(data)
     var divData = document.getElementById("user-data");
     divData.innerHTML = "";
 
-    var dataTable = document.createElement("table");
-    dataTable.className = "data-table";
+    let dataTable = new TlfDataTable();
+    dataTable.addField("ID", function(data) { return this.text(data.id); });
+    dataTable.addField("User name", function(data) {
+        var aUserName = this.anchor(data.userName, `/pcu/user/profile.php?uid=${data.id}`);
+        aUserName.style.color = g_roles[data.role].color;
+        return aUserName;
+    });
+    dataTable.addField("Role", function(data) { return this.text(g_roles[data.role].displayName); });
+    dataTable.addField("Domain", function(data) { 
+        let elDomain = this.span("Loading...");
+        if(data.domain)
+        {
+            elDomain.innerText = "Loading...";
+            // TODO: Cache it
+            loginApi.call("get-domain-info", {id: data.domain}, function(domainData) {
+                elDomain.innerText = `${domainData.name}${domainData.ownerId == data.id ? " (owner)" : ""}`;
+            });
+        }
+        else
+            elDomain.innerText = "None";
+        return elDomain;
+    });
+    dataTable.addField("Status", function(data) {
+        return this.text(getStatus(data).join(", "));
+    });
 
-    var thead = document.createElement("thead");
-    var tr = document.createElement("tr");
+    dataTable.addControl("Remove", function(data) { UserManagement.remove(data); });
+    dataTable.addControl("Make expired", function(data) { UserManagement.expire(data); });
+    dataTable.addControl("Change password", function(data) { UserManagement.changePassword(data); });
+    dataTable.addControl("Change role", function(data) { UserManagement.changeRole(data); });
+    dataTable.addControl("Set domain ID", function(data) { UserManagement.setDomain(data); });
 
-    tr.innerHTML += "<td>ID</td><td>User name</td><td>Role</td><td>Domain</td><td>Status</td>";
+    dataTable.entries = g_dataTable;
 
-    thead.appendChild(tr);
-    dataTable.appendChild(thead);
-    
-    var tbody = document.createElement("tbody");
-
-    for(var user of data.data)
-    {
-        tbody.appendChild(generateUserData(user));
-    }
-    
-    dataTable.appendChild(tbody);
-    divData.appendChild(dataTable);
+    divData.appendChild(dataTable.generate());
 }
 
 window.updateUserList = function(value)
