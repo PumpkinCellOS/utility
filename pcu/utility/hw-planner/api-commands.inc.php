@@ -50,10 +50,11 @@ function cmd_add_hw($json, $uid, $data)
     $_topic =        $conn->real_escape_string($data["topic"]);
     $_topicLabel =   $conn->real_escape_string($data["topicLabel"]);
     $_description =  $conn->real_escape_string($data["description"]);
-    $_optional =     ($data->optional == "true" ? "1" : "0");
+    $_optional =      ($data["optional"] == "true" ? "1" : "0");
+    $_shareToDomain = ($data["shareToDomain"] == "true" ? "1" : "0");
     
-    if(!$conn->query("insert into hws (sub,type,addTime,untilTime,untilTimeT,topicFormat,topic,topicLabel,description,optional,userId) values
-            ('$_sub', '$_type', NOW(), '$_untilTime', '$_untilTimeT', '$_topicFormat', '$_topic', '$_topicLabel', '$_description', '$_optional', '$uid')"))
+    if(!$conn->query("insert into hws (sub,type,addTime,untilTime,untilTimeT,topicFormat,topic,topicLabel,description,optional,shareToDomain,userId) values
+            ('$_sub', '$_type', NOW(), '$_untilTime', '$_untilTimeT', '$_topicFormat', '$_topic', '$_topicLabel', '$_description', '$_optional', '$_shareToDomain', '$uid')"))
     {
         pcu_cmd_error($json, "Query failed: " . mysqli_errno($conn) . ": " . mysqli_error($conn));
         return;
