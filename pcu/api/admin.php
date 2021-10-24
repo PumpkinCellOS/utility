@@ -77,14 +77,26 @@ $api->register_command("user-info", function($api) {
     }
     return $json;
 });
-$api->register_unimplemented_command("add-user");
+$api->register_command("add-user", function($api) {
+    $api->require_method("POST");
+    $conn = $api->require_database("pcutil");
+    $userName = $conn->real_escape_string($api->required_arg("userName"));
+    $role = $conn->real_escape_string($api->required_arg("role"));
+    $password = hash('sha256', $api->required_arg("password"));
+    $result = $conn->query("INSERT INTO users (userName, role, password)
+        VALUES('$userName', '$role', '$password')");
+    if(!$result)
+        pcu_cmd_fatal("Query failed: " . $conn->error);
+});
+
+$api->register_unimplemented_command("add-domain");
 $api->register_unimplemented_command("remove-user");
 
 $api->register_command("change-password-user", function($api) {
     $api->require_method("POST");
     $conn = $api->require_database("pcutil");
     $uid = $conn->real_escape_string($api->required_arg("uid"));
-    $password = hash('sha256', $conn->real_escape_string($api->required_arg("password")));
+    $password = hash('sha256', $api->required_arg("password"));
     $result = $conn->query("UPDATE users SET password='$password' WHERE id='$uid'");
     if(!$result)
         pcu_cmd_fatal("Query failed");

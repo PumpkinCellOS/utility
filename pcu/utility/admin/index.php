@@ -22,11 +22,13 @@ $generator->start_content();
     <tlf-tab-view>
         <div name="Users">
             <input id="username-box" type="text" oninput="updateUserList(this.value)" placeholder="Type to search users..."></input>
+            <button onclick="createUserForm()">Create user</button>
             <div id="user-data" class="data">
             </div>
         </div>
         <div name="Domains">
-            <input id="username-box" type="text" oninput="updateDomainList(this.value)" placeholder="Type to search domains..."></input>
+            <input id="domainname-box" type="text" oninput="updateDomainList(this.value)" placeholder="Type to search domains..."></input>
+            <button onclick="createDomainForm()">Create domain</button>
             <div id="domain-data" class="data">
             </div>
         </div>

@@ -1,23 +1,8 @@
 window.g_dataTable = {};
 
 const loginApi = require("../../user/login").api;
-
-const API_COMMANDS = {
-    "search-users": {"method": "GET"},
-    "search-domains": {"method": "GET"},
-    "user-info": {"method": "GET"},
-    "add-user": {"method": "POST"},
-    "remove-user": {"method": "POST"},
-    "change-password-user": {"method": "POST"},
-    "expire-password-user": {"method": "POST"},
-    "change-role-user": {"method": "POST"},
-    "set-domain-user": {"method": "POST"},
-    "version": {"method": "GET"}
-};
-
-const api = new TlfAPI({ endpoint: "/api/admin.php", calls: API_COMMANDS, onerror: function(data, msg) {
-    tlfNotification(msg, TlfNotificationType.Error);
-}});
+const createForms = require("./forms.js");
+const api = require("./api.js");
 
 function findUser(uid)
 {
@@ -40,18 +25,8 @@ function getStatus(data)
     return arr;
 }
 
-var g_rolesOptions = null;
-var g_roles = null;
-
-function generateRolesOptions(data)
-{
-    g_rolesOptions = [];
-    for(let i in data)
-    {
-        g_rolesOptions.push({value: i, displayName: data[i].displayName});
-    }
-    g_roles = data;
-}
+window.g_rolesOptions = null;
+window.g_roles = null;
 
 window.UserManagement = 
 {
@@ -192,7 +167,7 @@ window.updateDomainList = function(value)
 function load()
 {
     loginApi.call("get-roles", {}, function(data) {
-        generateRolesOptions(data);
+        createForms.generateRolesOptions(data);
     });
     api.call("version", {}, function(data) {
         var divVersionData = document.getElementById("version-data");
