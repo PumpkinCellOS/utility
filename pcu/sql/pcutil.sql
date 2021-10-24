@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 19, 2021 at 04:31 PM
+-- Generation Time: Oct 24, 2021 at 02:17 PM
 -- Server version: 10.6.4-MariaDB
 -- PHP Version: 8.0.11
 
@@ -92,10 +92,9 @@ CREATE TABLE `users` (
   `userName` tinytext NOT NULL,
   `email` text DEFAULT NULL COMMENT 'The e-mail address (optional)',
   `role` enum('member','owner','admin','default','trusted','moderator') NOT NULL DEFAULT 'default',
-  `password` tinytext NOT NULL,
+  `password` tinytext DEFAULT NULL,
   `passwordExpired` tinyint(1) NOT NULL DEFAULT 0,
   `createTime` datetime NOT NULL DEFAULT current_timestamp(),
-  `properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`properties`)),
   `public` tinyint(1) NOT NULL DEFAULT 0,
   `emailVerificationToken` varchar(256) DEFAULT NULL,
   `domain` int(11) DEFAULT NULL
@@ -131,7 +130,8 @@ ALTER TABLE `userAttributes`
 -- Indexes for table `userAttributesDefs`
 --
 ALTER TABLE `userAttributesDefs`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `users`
