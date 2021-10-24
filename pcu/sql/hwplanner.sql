@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 21, 2021 at 05:51 PM
+-- Generation Time: Oct 24, 2021 at 03:15 PM
 -- Server version: 10.6.4-MariaDB
 -- PHP Version: 8.0.11
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `hws` (
   `tid` int(11) NOT NULL COMMENT 'Unique ID.',
   `userId` int(11) DEFAULT NULL COMMENT 'Idenftifies user who can see the HW.',
+  `shareToDomain` tinyint(1) NOT NULL COMMENT 'Whether HW should be displayed for all users in a domain. Other users won''t be able to edit it.',
   `sub` varchar(3) NOT NULL COMMENT '3-letter Subject Identifier',
   `type` varchar(1) NOT NULL COMMENT '[DEPRECATED] Type: small/big task/test',
   `addTime` datetime DEFAULT NULL COMMENT 'Creation time',

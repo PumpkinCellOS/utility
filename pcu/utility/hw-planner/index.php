@@ -23,6 +23,7 @@ $generator->start_pre_content();
                     <select name="topicLabel" onchange="updateTopicDisplay()">
                     </select><br>
                     <input type="checkbox" name="topicFormat" oninput="updateTopicDisplay()"><label for="topicFormat">{field.isExerciseList}</label><br>
+                    <input type="checkbox" name="shareToDomain"></input><label for="shareToDomain">{field.shareToDomain}</label><br>
                     <label for="untilTime">{field.turnInTime}</label><br>
                     <input type="date" name="untilDate" oninput="updateTopicDisplay()"><br>
                     <input type="time" step="60" name="untilTime" oninput="updateTopicDisplay()"><br>
@@ -85,6 +86,7 @@ $generator->start_pre_content();
             <h4>{field.topic.name}</h4>
             <input type="checkbox" name="exercise-list"/><label>{field.isExerciseList}</label><br>
             <input type="checkbox" name="optional"/><label>{field.optional}</label><br>
+            <input type="checkbox" name="share-to-domain"/><label>{field.shareToDomain} (TODO)</label><br>
             <input type="checkbox" name="description"/><label>{field.description.has}</label><br>
             <h4>{field.topicLabel}</h4>
             <input type="checkbox" name="label-"/><label>{todo}</label><br>

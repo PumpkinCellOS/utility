@@ -92,7 +92,10 @@ function cmd_get_data($json, $uid, $query)
     if(!$conn)
         return;
     
-    $sql = "select * from hws where userId='$uid'";
+    // Select users which own the HW or users which are in HW owner's domain (for shareToDomain HWs) 
+    $sql = "SELECT hwplanner.hws.*,hwplanner.hws.userId AS ownerId,pcutil.users.userName AS ownerName FROM hwplanner.hws
+	    INNER JOIN pcutil.users ON hwplanner.hws.userId = pcutil.users.id
+        WHERE userId='$uid' OR (hwplanner.hws.shareToDomain = '1' AND pcutil.users.domain = (SELECT domain FROM pcutil.users WHERE id='$uid'));";
     $result = $conn->query($sql);
     if(!$result)
     {
@@ -105,22 +108,7 @@ function cmd_get_data($json, $uid, $query)
     if($result && $result->num_rows > 0)
     {
         while($row = $result->fetch_assoc())
-        {
-            $object = new stdClass();
-            $object->tid =          $row["tid"];
-            $object->sub =          $row["sub"];
-            $object->type =         $row["type"];
-            $object->addTime =      $row["addTime"];
-            $object->untilTime =    $row["untilTime"];
-            $object->untilTimeT =   $row["untilTimeT"];
-            $object->topicFormat =  $row["topicFormat"];
-            $object->topic =        $row["topic"];
-            $object->topicLabel =   $row["topicLabel"];
-            $object->status =       $row["status"];
-            $object->description =  $row["description"];
-            $object->optional =     $row["optional"];
-            $data[$row["tid"]] = $object;
-        }
+            $data[$row["tid"]] = $row;
     }
 
     $json->data = $data;
@@ -151,24 +139,25 @@ function cmd_modify_hw($json, $uid, $data)
     if(!$conn)
         return;
     
-    $tid =           $conn->real_escape_string($data["tid"]);
-    $_sub =          $conn->real_escape_string($data["sub"]);
-    $_type =         $conn->real_escape_string($data["type"]);
-    $_untilTime =    $conn->real_escape_string($data["untilTime"]);
-    $_untilTimeT =   $conn->real_escape_string($data["untilTimeT"]);
-    $_topicFormat =  $conn->real_escape_string($data["topicFormat"]);
-    $_topic =        $conn->real_escape_string($data["topic"]);
-    $_topicLabel =   $conn->real_escape_string($data["topicLabel"]);
-    $_status =       $conn->real_escape_string($data["status"]);
-    $_description =  $conn->real_escape_string($data["description"]);
-    $_optional =     ($data->optional == "true" ? "1" : "0");
+    $tid =            $conn->real_escape_string($data["tid"]);
+    $_sub =           $conn->real_escape_string($data["sub"]);
+    $_type =          $conn->real_escape_string($data["type"]);
+    $_untilTime =     $conn->real_escape_string($data["untilTime"]);
+    $_untilTimeT =    $conn->real_escape_string($data["untilTimeT"]);
+    $_topicFormat =   $conn->real_escape_string($data["topicFormat"]);
+    $_topic =         $conn->real_escape_string($data["topic"]);
+    $_topicLabel =    $conn->real_escape_string($data["topicLabel"]);
+    $_status =        $conn->real_escape_string($data["status"]);
+    $_description =   $conn->real_escape_string($data["description"]);
+    $_shareToDomain = ($data["shareToDomain"] == "true" ? "1" : "0");
+    $_optional =      ($data["optional"] == "true" ? "1" : "0");
     
     if(!$conn->query("update hws set
             sub='$_sub', type='$_type', untilTime='$_untilTime', untilTimeT='$_untilTimeT', topicFormat='$_topicFormat', 
             topic='$_topic', topicLabel='$_topicLabel', status='$_status', description='$_description',
-            optional='$_optional' where tid='$tid' and userId='$uid'"))
+            shareToDomain='$_shareToDomain', optional='$_optional' where tid='$tid' and userId='$uid'"))
     {
-        cmd_error($json, "{error.sql}(" . mysqli_errno($conn) . "," . mysqli_error($conn) . ")");
+        pcu_cmd_fatal("{error.sql}(" . mysqli_errno($conn) . "," . mysqli_error($conn) . ")", 500);
         return;
     }
     $json->message2 = "This is an old way...";
@@ -183,6 +172,7 @@ function cmd_modify_hw($json, $uid, $data)
         "status" => $_status,
         "description" => $_description,
         "optional" => $_optional,
+        "shareToDomain" => $_shareToDomain,
     ));
     
     $conn->close();

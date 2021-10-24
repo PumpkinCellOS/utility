@@ -327,6 +327,7 @@ function generateTurnInTime(data)
 
 function generateEntry(data)
 {
+    // TODO: Generate it in DOM way (or with TlfDataTable)
     var html = "";
     
     // TID (hidden)
@@ -339,7 +340,7 @@ function generateEntry(data)
     html += generateTopicDisplay(data);
     html += "<td>" + generateTurnInTime(data) + "<br><span class='description'>" + data.untilTime + " <b>" + data.untilTimeT + "</b></span> </td>";
     
-    var evalTime = LABELS[data.topicLabel].evaluationTime;
+    var evalTime = LABELS[data.topicLabel]?.evaluationTime ?? 0;
     var evalDays = Math.ceil((new Date() - new Date(data.untilTime)) / 86400000);
     var evalDaysStr = (evalDays > evalTime && statusIsEvaluating(data.status))
         ? "<span class='status-n'>&#128394;&nbsp;" + L("status.e") + "</span><br><span class='description'>(" + L("status.expiredAfter", evalTime) + ")</span>" 
@@ -347,26 +348,18 @@ function generateEntry(data)
 
     html += "<td>" + evalDaysStr + "</td>";
     
-    html += `<td><button class='modify-button' onclick='modifyEntry(this.parentNode.parentNode.firstChild.innerText)'>${L("controls.modify")}</button>`;
+    html += `<td>`;
+    console.log(data.userId);
+    if(PCU_USER_DATA.id == data.userId)
+        html += `<button class='modify-button' onclick='modifyEntry(this.parentNode.parentNode.firstChild.innerText)'>${L("controls.modify")}</button>`;
+    
+    // TODO: Sync labels
+    // TODO: Separate status for every user
+    if(data.shareToDomain == '1')
+        html += `<span title="Shared in a domain" class="help">&#127760;&nbsp;${PCU_USER_DATA.id == data.userId ? '' : data.ownerName}</span>` // Globe with Meridians
     html += "</td>";
     
     return html;
-}
-
-function loadFormData(form)
-{
-    var data = {};
-    data.tid =         form["tid"].value;
-    data.sub =         form["sub"].value;
-    data.untilTime =   form["untilDate"].value
-    data.untilTimeT =  form["untilTime"].value
-    data.topicFormat = form["topicFormat"].checked ? "N" : "R";
-    data.topic =       form["topic"].value;
-    data.topicLabel =  form["topicLabel"].value;
-    data.status =      form["status"].value;
-    data.optional =    form["optional"].checked;
-    data.description = form["description"].value;
-    return data;
 }
 
 window.updateTopicDisplay = function()
@@ -435,6 +428,23 @@ window.closeTopicEditor = function()
     editor.style.display = "none";
 }
 
+function loadFormData(form)
+{
+    var data = {};
+    data.tid =           form["tid"].value;
+    data.sub =           form["sub"].value;
+    data.untilTime =     form["untilDate"].value
+    data.untilTimeT =    form["untilTime"].value
+    data.topicFormat =   form["topicFormat"].checked ? "N" : "R";
+    data.topic =         form["topic"].value;
+    data.topicLabel =    form["topicLabel"].value;
+    data.status =        form["status"].value;
+    data.optional =      form["optional"].checked;
+    data.shareToDomain = form["shareToDomain"].checked;
+    data.description =   form["description"].value;
+    return data;
+}
+
 function loadEntryToForm(form, tid)
 {
     var entry = g_hws[tid];
@@ -446,6 +456,7 @@ function loadEntryToForm(form, tid)
     form["topicLabel"].value =  entry.topicLabel;
     form["status"].value =      entry.status;
     form["optional"].checked =  (entry.optional == 1);
+    form["shareToDomain"].checked = (entry.shareToDomain == 1);
     form["description"].value = entry.description;
 }
 
@@ -528,6 +539,7 @@ window.submitFilters = function(form)
     data.added.value = form["added"].value;
     
     data.exercise_list = form["exercise-list"].checked;
+    // TODO: Share to domain
     data.optional = form["optional"].checked;
     data.description = form["description"].checked;
     

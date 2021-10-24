@@ -92,7 +92,8 @@ en_US : {
         },
         topicLabel: "Label (task type)",
         turnInTime: "Turn-in time",
-        status: "Status"
+        status: "Status",
+        shareToDomain: "Share to domain"
     },
     controls: {
         addObject: "Add object",
@@ -213,7 +214,8 @@ pl_PL : {
             placeholder: "Temat"
         },
         topicLabel: "Etykieta (typ zadania)",
-        turnInTime: "Zwrot"
+        turnInTime: "Zwrot",
+        shareToDomain: "Udostępnij w domenie"
     },
     controls: {
         addObject: "Dodaj obiekt",
