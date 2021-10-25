@@ -263,7 +263,7 @@ window.statusIsEvaluating = function(status)
 window.shouldDisplayAsterisk = function(data, daysLeft)
 {
     var notDone = !statusIsDone(data.status) && !statusIsEvaluating(data.status);
-    return notDone && daysLeft < LABELS[data.topicLabel].preparationTime / 2;
+    return notDone && daysLeft < LABELS[data.topicLabel]?.preparationTime / 2;
 }
 
 function generateTurnInTime(data)
