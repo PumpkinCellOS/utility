@@ -26,6 +26,12 @@ class TlfDataTable
     {
         var dataTable = document.createElement("div");
         dataTable.className = "data-table";
+        if(this.entries.length == 0)
+        {
+            // TODO: Custom message
+            dataTable.innerHTML = "No data";
+            return dataTable;
+        }
         
         var table = document.createElement("table");
 
@@ -36,7 +42,6 @@ class TlfDataTable
             th.innerHTML = field.header;
             thead.appendChild(th);
         }
-        var tbody = document.createElement("tbody");
         for(const entry of this.entries)
         {
             var tr = document.createElement("tr");
