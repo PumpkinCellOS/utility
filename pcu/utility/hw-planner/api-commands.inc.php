@@ -366,7 +366,7 @@ function cmd_modify_label($id, $uid, $data)
 
     $name = $conn->real_escape_string($data["name"]);
     $imp = $conn->real_escape_string($data["imp"]);
-    $fullFlow = $conn->real_escape_string($data["fullFlow"]);
+    $fullFlow = ($data["fullFlow"] == "true" ? "1" : "0");
     $preparationTime = $conn->real_escape_string($data["preparationTime"]);
     $evaluationTime = $conn->real_escape_string($data["evaluationTime"]);
 
