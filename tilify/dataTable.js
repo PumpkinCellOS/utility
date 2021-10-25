@@ -32,9 +32,9 @@ class TlfDataTable
         var thead = document.createElement("thead");
         for(var field of this.fields)
         {
-            var td = document.createElement("td");
-            td.innerHTML = field.header;
-            thead.appendChild(td);
+            var th = document.createElement("th");
+            th.innerHTML = field.header;
+            thead.appendChild(th);
         }
         var tbody = document.createElement("tbody");
         for(const entry of this.entries)
