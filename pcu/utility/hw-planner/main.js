@@ -34,6 +34,7 @@ const API_COMMANDS = {
 function errorLoading(response, msg)
 {
     tlfNotification(msg, TlfNotificationType.Error);
+    document.getElementById("data").innerText = msg;
 }
 
 var api = new TlfAPI( { endpoint: "/u/hw-planner/api.php", calls: API_COMMANDS, onerror: errorLoading } );
