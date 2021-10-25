@@ -194,7 +194,12 @@ function tlfOpenForm(fields, callback, config)
                         }
                     }
                     else
-                        args[field.name] = fullScreenForm[field.name].value;
+                    {
+                        if(field.type == "checkbox")
+                            args[field.name] = fullScreenForm[field.name].checked;
+                        else
+                            args[field.name] = fullScreenForm[field.name].value;
+                    }
                 }
             }
             
