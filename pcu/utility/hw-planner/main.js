@@ -901,7 +901,6 @@ function load()
     function loadTasks()
     {
         // Load tasks
-        api.call("version", {}, function(data) { g_serverVersion = data.version; } );
         api.call("get-labels", {}, loadLabels);
         
         var inv = setInterval(function()
