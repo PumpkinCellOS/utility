@@ -145,8 +145,10 @@ const utilityEntries = [
         {"icon": "#128394", "units": 1, "color": "#653939", "hovercolor": "#754949", "displayName": "HW Planner", "path": "/pcu/u/hw-planner"},
         <?php if($userData["domain"] != "") { ?>
             {"icon": "", "units": 1, "color": "#704444", "hovercolor": "#805454", "displayName": "Lesson Table", "path": "/pcu/u/lss-tlt-gen"},
-            // TODO: Display it only for domain owners
-            {"icon": "", "units": 1, "color": "#447044", "hovercolor": "#548054", "displayName": "DSD Editor", "path": "/pcu/u/dsd-editor"},
+            // TODO: Use nice inner joins instead of this
+            <?php if(pcu_get_current_domain_data(pcu_cmd_connect_db($json, "pcutil"))["ownerId"] == $userData["id"]) { ?>
+                {"icon": "", "units": 1, "color": "#447044", "hovercolor": "#548054", "displayName": "DSD Editor", "path": "/pcu/u/dsd-editor"},
+            <?php } ?>
         <?php } ?>
         <?php if(!pcu_role_less($userData["role"], "member")) { ?>
             {"icon": "", "units": 1, "color": "#4a758c", "hovercolor": "#5a859c", "state": "alpha", "displayName": "Support", "path": "/pcu/u/support"},
