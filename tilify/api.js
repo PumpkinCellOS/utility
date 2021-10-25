@@ -21,7 +21,7 @@ class TlfAPI {
         // HACK
         var _this = this;
         xhr.onreadystatechange = function() {
-            if(this.readyState == 4)
+            if(this.readyState == XMLHttpRequest.DONE)
             {
                 try
                 {
