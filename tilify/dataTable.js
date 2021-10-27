@@ -24,7 +24,7 @@ class TlfDataTable
     }
     generate()
     {
-        var dataTable = document.createElement("div");
+        let dataTable = document.createElement("div");
         dataTable.className = "data-table";
         if(this.entries.length == 0)
         {
@@ -33,34 +33,35 @@ class TlfDataTable
             return dataTable;
         }
         
-        var table = document.createElement("table");
+        let table = document.createElement("table");
 
-        var thead = document.createElement("thead");
-        for(var field of this.fields)
+        let thead = document.createElement("thead");
+        for(let field of this.fields)
         {
-            var th = document.createElement("th");
+            let th = document.createElement("th");
             th.innerHTML = field.header;
             thead.appendChild(th);
         }
+        let tbody = document.createElement("tbody");
         for(const entry of this.entries)
         {
-            var tr = document.createElement("tr");
+            let tr = document.createElement("tr");
             for(const field of this.fields)
             {
-                var td = document.createElement("td");
+                let td = document.createElement("td");
                 td.appendChild(field.generator.call({
                     text(str) { return document.createTextNode(str); },
-                    div(str) { var element = document.createElement("div"); element.innerHTML = str; return element; },
-                    span(str) { var element = document.createElement("span"); element.innerHTML = str; return element; },
-                    anchor(label, href) { var element = document.createElement("a"); element.href = href; element.innerHTML = label; return element; },
-                    button(label, onclick) { var element = document.createElement("button"); element.innerHTML = label; element.onclick = onclick; return element;  }
+                    div(str) { let element = document.createElement("div"); element.innerHTML = str; return element; },
+                    span(str) { let element = document.createElement("span"); element.innerHTML = str; return element; },
+                    anchor(label, href) { let element = document.createElement("a"); element.href = href; element.innerHTML = label; return element; },
+                    button(label, onclick) { let element = document.createElement("button"); element.innerHTML = label; element.onclick = onclick; return element;  }
                 }, entry));
                 tr.appendChild(td);
             }
             let tdControls = document.createElement("td");
             for(const control of this.controls)
             {
-                var button = document.createElement("button");
+                let button = document.createElement("button");
                 if(control.predicate && !control.predicate(entry))
                     continue;
                 button.onclick = function() { control.callback(entry) };
