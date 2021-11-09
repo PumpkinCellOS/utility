@@ -163,7 +163,7 @@ function generateCurrentLabelText()
         return inner + "No lesson";
     
     if(freeDay)
-        return inner + "Free day: " + freeDay.reason;
+        return inner + "Day off" + (freeDay.reason ? ": " + freeDay.reason : "");
 
     const time = getLessonTimeRange(g_currentLesson);
     
@@ -290,7 +290,7 @@ function generateBlock(data, hwPlannerData)
     
     var text;
     if(freeDay)
-        text = freeDay.reason;
+        text = freeDay.reason ?? "Day off";
     else
         text = generateBlockText(data, hws);
 
