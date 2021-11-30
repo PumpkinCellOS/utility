@@ -368,6 +368,45 @@ window.updateTopicDisplay = function()
     var obj = document.getElementById("topic-display");
     var data = loadFormData(document.forms["topic-editor"]);
     obj.innerHTML = generateTopicDisplay(data);
+    updateSelectLesson();
+}
+
+window.updateSelectLesson = function()
+{
+    if(!g_lssData)
+        return;
+
+    console.log("updateSelectLesson");
+    // FIXME: Dupe with lss-tlt-gen
+    function getLessonTimeRange(data)
+    {
+        function getUnitDB(data)
+        {
+            return data.range ?? g_lssData.tunit;
+        }
+        return Array.isArray(data.tunit) ? data.tunit : getUnitDB(data)[data.tunit ?? 0];
+    }
+
+    const dateTime = new Date(document.forms["topic-editor"]["untilDate"].value);
+    console.log(document.forms["topic-editor"]["untilDate"].value);
+    const formElement = document.forms["topic-editor"]["selectLesson"];
+    formElement.innerHTML = "";
+    for(const lesson of g_lssData.lessons)
+    {
+        if(lesson.tday == dateTime.getDay() && document.forms["topic-editor"]["sub"].value == lesson.sub)
+        {
+            const option = document.createElement("option");
+            const time = getLessonTimeRange(lesson);
+            const timeStringStart = `${time[0].toString().padStart(2, "0")}:${time[1].toString().padStart(2, "0")}`;
+            const timeStringEnd = `${time[2].toString().padStart(2, "0")}:${time[3].toString().padStart(2, "0")}`;
+            option.value = timeStringStart;
+            option.innerText = `${lesson.sub} ${lesson.class} (${timeStringStart} - ${timeStringEnd}) ${lesson.group ?? ""}`;
+            formElement.appendChild(option);
+        }
+    }
+    formElement.onchange = function() {
+        document.forms["topic-editor"]["untilTime"].value = this.value;
+    };
 }
 
 function validateAndLoadData(form)
@@ -468,7 +507,7 @@ window.openTopicEditor = function(mode, tid)
     var form = editor.firstElementChild;
     form["mode"].value = mode;
     
-    // Subjects combo
+    // Subjects + lesson select combo
     // TODO: Support custom subjects for completeness
     if(g_lssData)
     {
@@ -482,6 +521,9 @@ window.openTopicEditor = function(mode, tid)
             option.value = sub;
             newNode.appendChild(option);
         }
+        newNode.onchange = function() {
+            updateSelectLesson();
+        };
         node.parentNode.replaceChild(newNode, node);
     }
     
@@ -496,6 +538,7 @@ window.openTopicEditor = function(mode, tid)
             form["delete"].style.display = "";
             form["tid"].value = tid;
             loadEntryToForm(form, tid);
+            updateSelectLesson();
             break;
         default:
             console.log("invalid mode " + mode);

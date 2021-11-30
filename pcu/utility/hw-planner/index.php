@@ -27,6 +27,9 @@ $generator->start_pre_content();
                     <label for="untilTime">{field.turnInTime}</label><br>
                     <input type="date" name="untilDate" oninput="updateTopicDisplay()"><br>
                     <input type="time" step="60" name="untilTime" oninput="updateTopicDisplay()"><br>
+                    <label for="untilTime">Select lesson:</label><br>
+                    <select name="selectLesson">
+                    </select><br>
                     <select name="status" onchange="submitModifyStatus(document.forms['topic-editor']['tid'].value, this.value); submitTopicEditor(document.forms['topic-editor']); closeTopicEditor()">
                         <option value="?">{status.f}</option>
                         <option value="N">{status.n}</option>
