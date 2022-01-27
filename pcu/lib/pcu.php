@@ -462,7 +462,8 @@ function pcu_user_define_attribute($conn, $name, $public)
     $name = $conn->real_escape_string($name);
     $public = $conn->real_escape_string($public);
     // FIXME: Handle errors
-    $conn->query("INSERT INTO `userAttributesDefs` (`name`, `public`) VALUES ('$name', '$public')");
+    $conn->query("INSERT INTO `userAttributesDefs` (`name`, `public`) VALUES ('$name', '$public')
+        ON DUPLICATE KEY UPDATE name = '$name', public = '$public'");
 }
 
 function pcu_user_find_attribute_def($conn, $name)
