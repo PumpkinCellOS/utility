@@ -111,7 +111,8 @@ function generateBlockText(data, hwPlannerData)
     function title() {
         // TODO: Some kind of stringifyTimeRange()
         return `${subjectTitle} (${time[0].toString().padStart(2, "0")}:${time[1].toString().padStart(2, "0")} - ${time[2].toString().padStart(2, "0")}:${time[3].toString().padStart(2, "0")})
-${data.group !== undefined ? "\nGroup: " + g_data.groups[data.group] : ""}`;
+${data.group !== undefined ? "\nGroup: " + g_data.groups[data.group] : ""}
+${data.teacher !== undefined ? "\nTeacher: " + (g_data?.teachers?.[data.teacher] ?? data.teacher) : ""}`;
     }
 
     var inner = `<b title="${title()}" style="cursor: help">` + data.sub + "</b>";
