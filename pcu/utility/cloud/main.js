@@ -38,20 +38,6 @@ pcuLoginApi.call("get-attribute", {uid: uid_url, name: "pcu_displayName"}, funct
 if(window.g_currentDir[0] != ".")
     window.g_currentDir.unshift(".");
 
-function byteDisplay(value)
-{
-    if(value < 1024)
-        return (value).toPrecision(3) + " B";
-    else if(value < 1024 * 1024)
-        return (value / 1024).toPrecision(3) + " KiB";
-    else if(value < 1024 * 1024 * 1024)
-        return (value / 1024 / 1024).toPrecision(3) + " MiB";
-    else if(value < 1024 * 1024 * 1024 * 1024)
-        return (value / 1024 / 1024 / 1024).toPrecision(3) + " GiB";
-    else
-        return (value / 1024 / 1024 / 1024 / 1024).toPrecision(3) + " TiB";
-}
-
 function fileListing(callback)
 {
     api.call("list-files", {currentDir: g_currentDir.join("/"), uid: uid_url}, callback);
@@ -60,7 +46,7 @@ function fileListing(callback)
         api.call("get-account-quota", {}, function(data) {
             var percent = data.used * 100 / data.quota;
             var element = document.getElementById("quota-string");
-            element.innerHTML = `${byteDisplay(data.used)} of ${byteDisplay(data.quota)} (${Math.round(percent, 2)}%)`;
+            element.innerHTML = `${upload.byteDisplay(data.used)} of ${upload.byteDisplay(data.quota)} (${Math.round(percent, 2)}%)`;
             var r = (100 - percent) / 100 * 120;
             element.style.color = `hsl(${r}, 50%, 50%)`;
         });
@@ -211,7 +197,7 @@ function generateFileEntry(file)
     if(file.isDir && file.name != "..")
         size.innerText = file.size + " items";
     else if(!file.isDir)
-        size.innerText = byteDisplay(file.size);
+        size.innerText = upload.byteDisplay(file.size);
     tr.appendChild(size);
 
     if(uid_url == uid && file.name != "..")
@@ -300,7 +286,8 @@ function setupEvents()
         tlfOpenForm([{name: "dirname", placeholder: "Name"}], (args) => { makeDirectory(args.dirname) }, { title: "Create new directory" });
     });
     document.getElementById("file-submit").addEventListener("click", function() {
-        cloud.uploadFile();
+        // FIXME: Don't use window.reload, properly update file view. Maybe even implement models !!
+        upload.uploadUserSpecifiedFile(g_currentDir.join("/"), eFiles).then(window.reload).catch(()=>{});
     });
     
     if(uid_url != uid)
@@ -314,60 +301,6 @@ window.reload = function()
 }
 
 let eFiles = document.getElementById("files");
-
-window.cloud = {
-    uploadFile: () => {
-        let fileInput = document.createElement("input");
-        fileInput.type = "file";
-        fileInput.multiple = true;
-        fileInput.addEventListener("change", function() {
-            console.log(this);
-            console.log(this.files.length);
-            for(let i = 0; i < this.files.length; i++)
-            {
-                const file = this.files[i];
-
-                let eProgressContainer = document.createElement("div");
-                eProgressContainer.classList.add("progress-container");
-                let eProgressDisplay = document.createElement("div");
-                {
-                    eProgressContainer.appendChild(eProgressDisplay);
-                }
-                let eProgressBarProgress = document.createElement("div");
-                {
-                    let eProgressBar = document.createElement("div");
-                    eProgressBar.classList.add("progress-bar");
-                    {
-                        eProgressBarProgress.classList.add("progress-bar-progress");
-                        eProgressBar.appendChild(eProgressBarProgress);
-                    }
-                    eProgressContainer.appendChild(eProgressBar);
-                }
-                eFiles.appendChild(eProgressContainer);
-
-                const updateProgressDisplay = (offset, size, time) => {
-                    const percent = offset * 100 / size;
-                    const transferSpeed = 8_388_608_000 / time;
-                    eProgressDisplay.innerText = file.name + ": " + Math.round(percent) + "% (" + byteDisplay(transferSpeed) + "/s)";
-                    eProgressBarProgress.style.width = percent + "%";
-                };
-
-                upload(file, g_currentDir.join("/"), function(offset, size, time) {
-                    console.log("Upload progress: " + offset + "/" + size + " in " + time + " ms");
-                    updateProgressDisplay(offset, size, time);
-                }).then(() => {
-                    tlfNotification("Upload finished: " + file.name);
-                    eFiles.removeChild(eProgressContainer);
-                    window.reload();
-                }).catch((e) => {
-                    tlfNotification("Failed to upload file: " + e, TlfNotificationType.Error);
-                    eFiles.removeChild(eProgressContainer);
-                });
-            }
-        });
-        fileInput.click();
-    }
-}
 
 generateActionsContainer();
 setupEvents();
