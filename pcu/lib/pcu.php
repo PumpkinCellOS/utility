@@ -436,7 +436,10 @@ function pcu_validate_relative_path($path)
     }
 }
 
-function pcu_download_file($fileName)
+// Create a download response. Doesn't validate arguments for user access.
+// $options:
+//  - m - Detect mime type using item instead of enforcing application/octet-stream
+function pcu_download_file($fileName, $options)
 {
     $fileSize = filesize($fileName);
     $basename = basename($fileName);
@@ -447,7 +450,10 @@ function pcu_download_file($fileName)
 
     header("Content-Disposition: inline; filename=\"${basename}\"");
     header("Content-Length: ${fileSize}");
-    pcu_page_type("application/octet-stream");
+    if(str_contains($options, 'm'))
+        pcu_page_type(mime_content_type($fileName));
+    else
+        pcu_page_type("application/octet-stream");
 
     $fd = @fopen($fileName, "r");
     while(!@feof($fd))

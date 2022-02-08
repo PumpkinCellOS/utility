@@ -16,6 +16,7 @@ if(!pcu_is_logged_in())
 
 $uid = $_GET["u"];
 $name = $_GET["f"];
+$options = $_GET["o"];
 pcu_validate_relative_path($name);
 
 if($name == "" || $uid == "")
@@ -41,6 +42,6 @@ if($userData["id"] != $uid && !$shared)
     pcu_cmd_fatal("Access denied for user " . $userData["userName"] . ". Ask file owner for sharing it." . json_encode($result), 403);
 
 $fileName = "$PCU_CLOUD/files/$uid/$name";
-pcu_download_file($fileName);
+pcu_download_file($fileName, $options);
 
 ?>
