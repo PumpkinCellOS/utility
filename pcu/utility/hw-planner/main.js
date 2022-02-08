@@ -9,6 +9,8 @@ const EXEStringify = require("./exe-stringify.js");
 const LANG = require("./languages.js");
 const filters = require("./filters.js");
 const labelEditor = require("./label-editor.js");
+const upload = require("../cloud/upload.js");
+const { fromPairs } = require("lodash");
 
 I18n.LANG = LANG.pl_PL;
 I18n.FALLBACK_LANG = LANG.en_US;
@@ -532,12 +534,17 @@ window.openTopicEditor = function(mode, tid)
         case "add":
             form["status"].style.display = "none";
             form["delete"].style.display = "none";
+            // FIXME: Support uploading files for new assignments
+            document.getElementById("topic-editor-file-submit").style.display = "none";
             break;
         case "modify":
             form["status"].style.display = "";
             form["delete"].style.display = "";
+            // FIXME: Support uploading files for new assignments
+            document.getElementById("topic-editor-file-submit").style.display = "";
             form["tid"].value = tid;
             loadEntryToForm(form, tid);
+            reloadTopicEditorFileList(tid);
             updateSelectLesson();
             break;
         default:
@@ -939,8 +946,48 @@ function finishLoading()
 {
 }
 
+function reloadTopicEditorFileList(tid)
+{
+    const directory = `.hwplanner/t${tid}`;
+    tlfApiCall("GET", "/u/cloud/api.php", "list-files", {currentDir: directory, uid: PCU_USER_DATA.id}, function(data) {
+        const element = document.getElementById("topic-editor-file-list");
+        element.innerHTML = "";
+        for(const file of data)
+        {
+            console.log(file);
+            const entry = document.createElement("div");
+
+            const a = document.createElement("a");
+            a.innerHTML = `${file.name} (${upload.byteDisplay(file.size)})`;
+            a.href = file.link + "&o=m";
+            a.target = "_blank";
+            a.classList.add("topic-editor-download-link");
+            entry.appendChild(a);
+
+            element.appendChild(entry);
+        }
+    });
+}
+
 function load()
 {
+    document.getElementById("topic-editor-file-submit").addEventListener("click", function() {
+        // FIXME: There should be a global way to upload internal data without showing them to Cloud GUI?
+        // FIXME: Support uploading files for new assignments
+        // FIXME: tlfApiCall should use promises
+        const tid = this.form["tid"].value;
+        const directory = `.hwplanner/t${tid}`;
+        const createTIDDirectory = ()=> {
+            const uploadFile = ()=> {
+                upload.uploadUserSpecifiedFile(directory, document.getElementById("topic-editor-upload-container")).then(function(fileList) {
+                    reloadTopicEditorFileList(tid);
+                }).catch(()=>{});
+            };
+            tlfApiCall("POST", "/u/cloud/api.php", "make-directory", {name: directory}, uploadFile, uploadFile);
+        };
+        tlfApiCall("POST", "/u/cloud/api.php", "make-directory", {name: ".hwplanner"}, createTIDDirectory, createTIDDirectory);
+    });
+
     function loadTasks()
     {
         // Load tasks

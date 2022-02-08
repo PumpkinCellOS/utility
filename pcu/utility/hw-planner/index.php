@@ -42,6 +42,11 @@ $generator->start_pre_content();
                     <div id="topic-display" class="topic"></div><br>
                 </div><div class="column">
                     <textarea name="description" placeholder="{field.description.placeholder}" style="display: block;"></textarea><br>
+                    <div style="text-align: left">
+                        <input type="button" id="topic-editor-file-submit" value="Upload file/image (2 GiB limit)">
+                        <div id="topic-editor-upload-container"></div>
+                        <div id="topic-editor-file-list"></div>
+                    </div>
                 </div>
             </div>
             <div style="text-align: center">
