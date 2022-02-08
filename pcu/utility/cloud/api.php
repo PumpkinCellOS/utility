@@ -25,6 +25,7 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     // actually glob the files
     $out = array();
     $path = cloud_path($targetUid, $currentDir);
+    $currentDir = urlencode($currentDir);
     if(!file_exists($path))
         return $out;
     $listing = glob($path . "/*");
@@ -38,7 +39,6 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
         $object = new stdClass();
         $object->name = $file_bn;
         $object->isDir = is_dir($file);
-        $currentDir = urlencode($currentDir);
         $file_bn = urlencode($file_bn);
         
         if($object->isDir)
