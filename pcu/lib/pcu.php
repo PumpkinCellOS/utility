@@ -439,7 +439,7 @@ function pcu_validate_relative_path($path)
 // Create a download response. Doesn't validate arguments for user access.
 // $options:
 //  - m - Detect mime type using item instead of enforcing application/octet-stream
-function pcu_download_file($fileName, $options)
+function pcu_download_file($fileName, $options = "")
 {
     $fileSize = filesize($fileName);
     $basename = basename($fileName);
