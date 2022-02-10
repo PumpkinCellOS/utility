@@ -18,12 +18,21 @@ $generator->start_pre_content();
                     <input type="text" name="sub" placeholder="{field.subject.placeholder}" oninput="updateTopicDisplay()"></input><br>
                     <label for="topic">{field.topic.name}</label><br>
                     <input type="text" name="topic" placeholder="{field.topic.placeholder}" oninput="updateTopicDisplay()"></input><br>
-                    <input type="checkbox" name="optional" oninput="updateTopicDisplay()"></input><label for="optional">{field.optional}</label><br>
+                    <label>
+                        <input type="checkbox" name="optional" oninput="updateTopicDisplay()"></input>
+                        {field.optional}
+                    </label><br>
                     <label for="topicLabel">{field.topicLabel}</label><br>
                     <select name="topicLabel" onchange="updateTopicDisplay()">
                     </select><br>
-                    <input type="checkbox" name="topicFormat" oninput="updateTopicDisplay()"><label for="topicFormat">{field.isExerciseList}</label><br>
-                    <input type="checkbox" name="shareToDomain"></input><label for="shareToDomain">{field.shareToDomain}</label><br>
+                    <label>
+                        <input type="checkbox" name="topicFormat" oninput="updateTopicDisplay()">
+                        {field.isExerciseList}
+                    </label><br>
+                    <label>
+                        <input type="checkbox" name="shareToDomain"></input>
+                        {field.shareToDomain}
+                    </label><br>
                     <label for="untilTime">{field.turnInTime}</label><br>
                     <input type="date" name="untilDate" oninput="updateTopicDisplay()"><br>
                     <input type="time" step="60" name="untilTime" oninput="updateTopicDisplay()"><br>
