@@ -362,6 +362,12 @@ function generateEntry(data)
     // TODO: Separate status for every user
     if(data.shareToDomain == '1')
         html += `<span title="Shared in a domain" class="help">&#127760;&nbsp;${PCU_USER_DATA.id == data.userId ? '' : data.ownerName}</span>` // Globe with Meridians
+    
+    if(data.hasFilesOrLinks == true)
+    {
+        // FIXME: Find better icon
+        html += `<span title="Has files/links attached" class="help">&#128452;&nbsp;</span>` // File Cabinet
+    }
     html += "</td>";
     
     return html;
@@ -538,12 +544,15 @@ window.openTopicEditor = function(mode, tid)
             form["delete"].style.display = "none";
             // FIXME: Support uploading files for new assignments
             document.getElementById("topic-editor-file-submit").style.display = "none";
+            document.getElementById("topic-editor-attach-link").style.display = "none";
+            document.getElementById("topic-editor-file-list").innerHTML = "";
             break;
         case "modify":
             form["status"].style.display = "";
             form["delete"].style.display = "";
             // FIXME: Support uploading files for new assignments
             document.getElementById("topic-editor-file-submit").style.display = "";
+            document.getElementById("topic-editor-attach-link").style.display = "";
             form["tid"].value = tid;
             loadEntryToForm(form, tid);
             reloadTopicEditorFileList(tid);

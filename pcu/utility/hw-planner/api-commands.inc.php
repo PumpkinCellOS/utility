@@ -1,5 +1,7 @@
 <?php
 
+require_once("../cloud/util.php");
+
 function hwplanner_add_request_log($conn, int $uid, string $command, array $args)
 {
     $args = $conn->real_escape_string(json_encode($args));
@@ -81,6 +83,20 @@ function hwplanner_get_hw($conn, int $uid, int $tid)
     return $row;
 }
 
+function hwplanner_tid_has_files_or_links($conn, $tid)
+{
+    // files?
+    $files = cloud_list_files(pcu_current_uid(), ".hwplanner/t${tid}");
+    if(sizeof($files) > 0)
+        return true;
+    
+    // links?
+    $_tid = $conn->real_escape_string($tid);
+    if(!($query = $conn->query("SELECT link FROM links WHERE tid='$_tid'")))
+        return null;
+    return $query->num_rows > 0;
+}
+
 function cmd_get_data($json, $uid, $query)
 {
     if(!isset($query))
@@ -109,7 +125,10 @@ function cmd_get_data($json, $uid, $query)
     if($result && $result->num_rows > 0)
     {
         while($row = $result->fetch_assoc())
+        {
+            $row["hasFilesOrLinks"] = hwplanner_tid_has_files_or_links($conn, $row["tid"]);
             $data[$row["tid"]] = $row;
+        }
     }
 
     $json->data = $data;
