@@ -23,15 +23,12 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     pcu_validate_relative_path($currentDir);
     
     // actually glob the files
-    $out = array();
-    $path = cloud_path($targetUid, $currentDir);
+    $listing = cloud_list_files($uid, $currentDir);
     $currentDir = urlencode($currentDir);
-    if(!file_exists($path))
-        return $out;
-    $listing = glob($path . "/*");
     
     $conn = $api->require_database("pcu-cloud");
     
+    $out = [];
     foreach($listing as $file)
     {
         $file_bn = basename($file);

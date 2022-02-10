@@ -17,6 +17,14 @@ function account_quota($role)
         return 1099511627776; // 1 TiB for members+
 }
 
+function cloud_list_files($uid, $dir)
+{
+    $path = cloud_path($uid, $dir);
+    if(!file_exists($path))
+        return [];
+    return glob($path . "/*");
+}
+
 function do_share_file($conn, $name, $targetUid, $remove, $inherit)
 {
     // TODO: Error handling
