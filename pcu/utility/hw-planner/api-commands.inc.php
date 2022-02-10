@@ -397,8 +397,47 @@ function cmd_remove_label($id, $uid)
 // Args:
 //  id - The log entry ID
 
+// TODO:
 // clear-log
 // Args:
 //  <none>
+
+// link-links: List links (URLs) attached to an assignment
+// Args:
+//  tid - Topic ID
+function cmd_list_links($json, $tid, $uid)
+{
+    $conn = pcu_cmd_connect_db($json, "hwplanner");
+    if(!$conn)
+        return;
+    $_tid = $conn->real_escape_string($tid);
+    if(!($query = $conn->query("SELECT link FROM links INNER JOIN hws ON hws.tid=links.tid WHERE hws.userId='$uid' AND hws.tid='$_tid'")))
+        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+    $result = [];
+    while($row = $query->fetch_assoc())
+        array_push($result, $row);
+    $json->data = $result;
+}
+
+// add-link: Attach a link (URL) to an assignment
+// Args:
+//  tid - Topic ID
+//  link - The link URL
+function cmd_add_link($json, $tid, $link, $uid)
+{
+    $conn = pcu_cmd_connect_db($json, "hwplanner");
+    if(!$conn)
+        return;
+
+    $_tid = $conn->real_escape_string($tid);
+    $_link = $conn->real_escape_string($link);
+    
+    $hw = hwplanner_get_hw($conn, $uid, $_tid);
+    if(is_null($hw))
+        pcu_cmd_fatal("Invalid assignment", 400);
+
+    if(!$conn->query("INSERT INTO links (tid, link) VALUES ('$_tid', '$_link')"))
+        pcu_cmd_fatal("Query failed: " . $conn->error, 500);
+}
 
 ?>

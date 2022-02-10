@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 24, 2021 at 03:15 PM
--- Server version: 10.6.4-MariaDB
--- PHP Version: 8.0.11
+-- Generation Time: Feb 10, 2022 at 12:04 PM
+-- Server version: 10.6.5-MariaDB
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -63,6 +63,18 @@ CREATE TABLE `labels` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `links`
+--
+
+CREATE TABLE `links` (
+  `linkId` int(11) NOT NULL,
+  `tid` int(11) NOT NULL,
+  `link` varchar(2048) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `requestLog`
 --
 
@@ -105,6 +117,12 @@ ALTER TABLE `labels`
   ADD KEY `userId` (`userId`);
 
 --
+-- Indexes for table `links`
+--
+ALTER TABLE `links`
+  ADD PRIMARY KEY (`linkId`);
+
+--
 -- Indexes for table `requestLog`
 --
 ALTER TABLE `requestLog`
@@ -133,6 +151,12 @@ ALTER TABLE `hws`
 --
 ALTER TABLE `labels`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The unique label ID.';
+
+--
+-- AUTO_INCREMENT for table `links`
+--
+ALTER TABLE `links`
+  MODIFY `linkId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `requestLog`

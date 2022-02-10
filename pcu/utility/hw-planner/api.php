@@ -69,6 +69,16 @@ $api->register_command("remove-label", function($api) use($uid) {
     $api->require_method("POST");
     cmd_remove_label($api->required_arg("id"), $uid);
 });
+$api->register_command("list-links", function($api) use($json, $uid) {
+    $api->require_method("GET");
+    cmd_list_links($json, $api->required_arg("tid"), $uid);
+    return $json;
+});
+$api->register_command("add-link", function($api) use($json, $uid) {
+    $api->require_method("POST");
+    cmd_add_link($json, $api->required_arg("tid"), $api->required_arg("link"), $uid);
+    return $json;
+});
 $api->register_command("version", function($api) use($json, $uid) {
     $api->require_method("GET");
     return $json;

@@ -30,6 +30,8 @@ const API_COMMANDS = {
     "add-label": {"method": "POST"},
     "modify-label": {"method": "POST"},
     "remove-label": {"method": "POST"},
+    "list-links": {"method": "GET"},
+    "add-link": {"method": "POST"},
     "version": {"method": "GET"}
 };
 
@@ -949,23 +951,33 @@ function finishLoading()
 function reloadTopicEditorFileList(tid)
 {
     const directory = `.hwplanner/t${tid}`;
-    tlfApiCall("GET", "/u/cloud/api.php", "list-files", {currentDir: directory, uid: PCU_USER_DATA.id}, function(data) {
-        const element = document.getElementById("topic-editor-file-list");
-        element.innerHTML = "";
-        for(const file of data)
-        {
-            console.log(file);
-            const entry = document.createElement("div");
+    tlfApiCall("GET", "/u/cloud/api.php", "list-files", {currentDir: directory, uid: PCU_USER_DATA.id}, function(cloudFiles) {
+        api.call("list-links", {tid: tid}, function(data) {
+            const element = document.getElementById("topic-editor-file-list");
+            element.innerHTML = "";
 
-            const a = document.createElement("a");
-            a.innerHTML = `${file.name} (${upload.byteDisplay(file.size)})`;
-            a.href = file.link + "&o=m";
-            a.target = "_blank";
-            a.classList.add("topic-editor-download-link");
-            entry.appendChild(a);
+            function addEntry(name, link, size)
+            {
+                const entry = document.createElement("div");
+    
+                const a = document.createElement("a");
+                let str = `${name}`;
+                if(size)
+                    str += ` (${upload.byteDisplay(size)})`;
+                a.innerHTML = str;
+                a.href = link;
+                a.target = "_blank";
+                a.classList.add("topic-editor-download-link");
+                entry.appendChild(a);
+    
+                element.appendChild(entry);
+            }
 
-            element.appendChild(entry);
-        }
+            for(const file of cloudFiles)
+                addEntry(file.name, file.link + "&o=m", file.size);
+            for(const link of data.data)
+                addEntry(link.link, link.link, null);
+        });
     });
 }
 
@@ -986,6 +998,14 @@ function load()
             tlfApiCall("POST", "/u/cloud/api.php", "make-directory", {name: directory}, uploadFile, uploadFile);
         };
         tlfApiCall("POST", "/u/cloud/api.php", "make-directory", {name: ".hwplanner"}, createTIDDirectory, createTIDDirectory);
+    });
+    document.getElementById("topic-editor-attach-link").addEventListener("click", function() {
+        const tid = this.form["tid"].value;
+        tlfOpenForm([{type: "text", name: "link", displayName: "Link"}], function(data) {
+            api.call("add-link", {link: data.link, tid: tid}, function() {
+                reloadTopicEditorFileList(tid);
+            });
+        }, {title: "Attach a link"});
     });
 
     function loadTasks()
