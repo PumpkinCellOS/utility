@@ -3,8 +3,6 @@
     Sppmacd (c) 2020
 */
 
-const { identity } = require("lodash");
-
 module.exports = {
     whitespace : function(c) { return /\s/.test(c) },
     digit : function(c) { return /\d/.test(c) },
