@@ -34,7 +34,7 @@ div.app-list {
 }
 
 div.app-list.small {
-    height: 45px;
+    min-height: 45px;
 }
 
 a.resizable-tile:hover {
@@ -61,9 +61,11 @@ a.resizable-tile:hover {
     cursor: pointer;
     display: flex;
     font-weight: bold;
-    height: calc(100% - 10px);
+    height: 40px;
     justify-content: center;
     margin: 5px;
+    min-width: fit-content;
+    padding: 5px 5px;
     transition: transform 0.05s, background-color 0.05s;
 }
 
@@ -108,8 +110,14 @@ div.background-tile-padding {
 div.background-tile-big-padding {
     display: inline-block;
     margin: 20px 20% 20px 20%;
-    text-align: justify;
     width: calc(60% - 40px);
+}
+
+@media (max-width: 660px) {
+    div.background-tile-big-padding {
+        margin: 20px;
+        width: initial;
+    }
 }
 
 .fullscreen-form {

@@ -64,6 +64,23 @@ h1 {
     }
 }
 
+#logo-mobile {
+    display: none;
+    margin-left: 20px;
+}
+
+@media (max-width: 660px) {
+    #logo {
+        display: none;
+    }
+    #logo-mobile {
+        display: initial;
+    }
+    .hide-on-mobile {
+        display: none;
+    }
+}
+
 h2 {
     background-color: #444448;
     border: 2px solid #333337;

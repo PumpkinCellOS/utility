@@ -58,6 +58,7 @@ class PCUGenerator
             <!-- TODO: Use custom elements -->
             <header>
                 <a href="<?php echo $this->index_link; ?>" class="title-link header-element">
+                    <img id="logo-mobile" src="/res/pumpkin.png" style="height: 50px;"/>
                     <img id="logo" src="/res/pumpkin2-beta.png" style="height: 50px; margin-left: 30px;"/>
                 </a>
                 <h1 class="header-element">
@@ -95,7 +96,15 @@ class PCUGenerator
                         <!-- TODO: Use custom elements -->
                         <div id="footer-wrapper">
                             <div id="footer">
-                                ©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;2020-2021&nbsp;&#8226;&nbsp;<a href="/terms.php#use">Terms</a>&nbsp;&#8226;&nbsp;<a href="/terms.php#privacy">Privacy</a>&nbsp;&#8226;&nbsp;<a href="https://github.com/PumpkinCellOS/utility">GitHub</a>&nbsp;&#8226;&nbsp;<b>Last update:&nbsp;</b><?php echo date("F d Y H:i:s.", getlastmod()); ?>
+                                ©&nbsp;<a href="https://github.com/sppmacd">PumpkinCell</a>&nbsp;<span class="hide-on-mobile"
+                                >2020-2022&nbsp;</span>&#8226;&nbsp;
+                                <a href="/terms.php#use">Terms</a>&nbsp;&#8226;&nbsp;
+                                <a href="/terms.php#privacy">Privacy</a>&nbsp;&#8226;&nbsp;
+                                <a href="https://github.com/PumpkinCellOS/utility">GitHub</a>
+                                <span class="hide-on-mobile">&nbsp;&#8226;&nbsp;
+                                    <b>Last update:&nbsp;</b>
+                                    <?php echo date("F d Y H:i:s.", getlastmod()); ?>
+                                </span>
                             </div>
                         </div>
                     </div>
