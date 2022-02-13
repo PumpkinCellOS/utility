@@ -27,7 +27,7 @@ function insertAttribute(name, config = { editOnTop: false, editName: "Edit" })
             {
                 var edit = document.createElement("span");
                 edit.classList.add("property-edit-icon");
-                edit.innerText = ` 🖊 ${config.editName ?? "Edit"}`;
+                edit.innerHTML = ` 🖊&nbsp;${config.editName?.replace(/\s/g, "&nbsp;") ?? "Edit"}`;
                 edit.title = `Edit ${name}`;
 
                 edit.onclick = function() {
