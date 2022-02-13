@@ -3,6 +3,8 @@
     Sppmacd (c) 2020
 */
 
+const { identity } = require("lodash");
+
 module.exports = {
     whitespace : function(c) { return /\s/.test(c) },
     digit : function(c) { return /\d/.test(c) },
@@ -331,6 +333,8 @@ module.exports = {
         var type;
         var rangedTV;
         var type = parser.peek();
+        if(!type)
+            return null;
         if(type.type == this.TOKEN_VALUE)
         {
             //console.log("parseRangedTypeValue :)");
