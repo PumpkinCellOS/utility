@@ -112,6 +112,33 @@ div.background-tile-big-padding {
     width: calc(60% - 40px);
 }
 
+.fullscreen-form {
+    background-color: rgba(0, 0, 0, 0.7);
+    display: block;
+    height: 100%;
+    left: 0;
+    overflow: auto;
+    position: fixed;
+    text-align: center; /* FIXME: Get rid of it */
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.tlf-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.tlf-form > form {
+    margin-top: 50px;
+    max-height: 600px;
+}
+
+.tlf-form-submit-buttons {
+    margin: 20px 0;
+}
+
 .data {
     font-size: 12pt;
     overflow-y: auto;
@@ -182,4 +209,20 @@ tlf-tab-view {
 
 .tlf-tab-bar > .tlf-selected {
     background-color: #77777f;
+}
+
+/* TreeView */
+
+.tlf-tree-view-branch {
+    margin-left: 30px;
+    overflow-y: hidden;
+}
+
+.tlf-tree-view-collapse-button {
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    margin-right: 5px;
+    font-size: 110%;
+    width: 20px;
 }

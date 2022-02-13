@@ -42,8 +42,12 @@ function tlfOpenForm(fields, callback, config)
             callback = function() {};
         }
         
+        var container = document.createElement("div");
+        container.classList.add("fullscreen-form");
+        container.classList.add("tlf-form");
+
         var fullScreenForm = document.createElement("form");
-        fullScreenForm.classList.add("fullscreen-form");
+        container.appendChild(fullScreenForm);
         
         var title = document.createElement("h3");
         title.innerHTML = config.title ?? "Form";
@@ -126,13 +130,9 @@ function tlfOpenForm(fields, callback, config)
             {
                 function addLabel(appendSpacing)
                 {
-                    // FIXME: This sadly uses global ids, consider shadow roots or sth
-                    const id = "tlfopenform-field-" + field.name;
-                    widget.id = id;
                     let label = document.createElement("label");
-                    label.setAttribute("for", id);
                     label.innerHTML = field.displayName + (appendSpacing ? ":&nbsp;" : "");
-                    fullScreenForm.appendChild(label);
+                    return label;
                 }
 
                 var widget = document.createElement("input");
@@ -152,14 +152,21 @@ function tlfOpenForm(fields, callback, config)
                         widget.onclick = function() { fullScreenForm.parentNode.removeChild(fullScreenForm); };
                 }
 
-                if(field.type != "checkbox" && field.displayName !== undefined)
-                    addLabel(true);
+                let label = null;
 
-                fullScreenForm.appendChild(widget);
+                if(field.displayName !== undefined)
+                    label = addLabel(field.type != "checkbox");
 
-                if(field.type == "checkbox" && field.displayName !== undefined)
-                    addLabel(false);
-
+                if(label)
+                {
+                    if(field.type == "checkbox")
+                        label.insertBefore(widget, label.firstChild);
+                    else
+                        label.appendChild(widget);
+                    fullScreenForm.appendChild(label);
+                }
+                else
+                    fullScreenForm.appendChild(widget);
                 fullScreenForm.appendChild(document.createElement("br"));
             }
         }
@@ -168,12 +175,16 @@ function tlfOpenForm(fields, callback, config)
             callback: callback,
             
             close: function() {
-                this.element.parentNode.removeChild(this.element);
+                this.container.parentNode.removeChild(this.container);
             },
             
-            element: fullScreenForm
+            element: fullScreenForm,
+            container: container
         };
         
+        let submitButtons = document.createElement("div");
+        submitButtons.classList.add("tlf-form-submit-buttons");
+
         var submit = document.createElement("input");
         submit.type = "submit";
         submit.value = config.submitName ?? "Ok";
@@ -211,7 +222,7 @@ function tlfOpenForm(fields, callback, config)
             formObject.close();
             return false;
         }
-        fullScreenForm.appendChild(submit);
+        submitButtons.appendChild(submit);
         
         if(!config.noCancel)
         {
@@ -222,16 +233,18 @@ function tlfOpenForm(fields, callback, config)
                 formObject.close();
                 return false;
             }
-            fullScreenForm.appendChild(cancel);
+            submitButtons.appendChild(cancel);
         }
+
+        fullScreenForm.appendChild(submitButtons);
         
         // FIXME: This assumes page layout like on PCU. Make this layout-agnostic.
-        document.body.insertBefore(fullScreenForm, document.getElementsByTagName("header")[0]);
+        document.body.insertBefore(container, document.getElementsByTagName("header")[0]);
     }
     catch(e)
     {
         console.log(e);
-        fullScreenForm.parentNode.removeChild(fullScreenForm);
+        container.parentNode.removeChild(container);
     }
 }
 

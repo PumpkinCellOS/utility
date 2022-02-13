@@ -66,19 +66,6 @@ input[type="submit"], input[type="button"] {
     width: 300px;
 }
 
-.fullscreen-form {
-    background-color: rgba(0, 0, 0, 0.7);
-    display: block;
-    height: 100%;
-    left: 0;
-    overflow: auto;
-    position: fixed;
-    text-align: center;
-    top: 0;
-    width: 100%;
-    z-index: 1;
-}
-
 textarea {
     height: 300px;
     width: 75%;
