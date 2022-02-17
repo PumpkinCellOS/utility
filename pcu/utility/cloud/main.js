@@ -88,7 +88,7 @@ function shareFile(file, targetUid)
     api.call("file-share", {file: `${g_currentDir.join("/")}/${file.name}`, uid: targetUid, remove: false}, function() {
         reload();
         tlfOpenForm([{ type: "label", value: "Anyone can see this file using that link:"},
-                   { type: "link", value: "http://" + document.location.hostname + file.link }], null,
+                   { type: "link", value: document.location.origin + file.link }], null,
                    { title: "Share", noCancel: true });
     }, (msg) => {tlfNotification(msg.message, TlfNotificationType.Error)});
 }
