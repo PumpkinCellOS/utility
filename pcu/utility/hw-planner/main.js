@@ -10,7 +10,6 @@ const LANG = require("./languages.js");
 const filters = require("./filters.js");
 const labelEditor = require("./label-editor.js");
 const upload = require("../cloud/upload.js");
-const { fromPairs } = require("lodash");
 
 I18n.LANG = LANG.pl_PL;
 I18n.FALLBACK_LANG = LANG.en_US;
