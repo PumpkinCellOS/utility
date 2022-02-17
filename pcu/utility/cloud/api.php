@@ -23,8 +23,8 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
     pcu_validate_relative_path($currentDir);
     
     // actually glob the files
-    $listing = cloud_list_files($uid, $currentDir);
-    $currentDir = urlencode($currentDir);
+    $listing = cloud_list_files($targetUid, $currentDir);
+    $currentDir_encoded = urlencode($currentDir);
     
     $conn = $api->require_database("pcu-cloud");
     
@@ -36,22 +36,22 @@ $api->register_command("list-files", function($api) use($uid, $PCU_CLOUD) {
         $object = new stdClass();
         $object->name = $file_bn;
         $object->isDir = is_dir($file);
-        $file_bn = urlencode($file_bn);
+        $file_bn_encoded = urlencode($file_bn);
         
         if($object->isDir)
         {
-            $link = "/pcu/u/cloud/?u=$targetUid&cd=$currentDir/$file_bn";
+            $link = "/pcu/u/cloud/?u=$targetUid&cd=$currentDir_encoded%2F$file_bn_encoded";
             $object->size = iterator_count(new FilesystemIterator($file, FilesystemIterator::SKIP_DOTS));
         }
         else
         {
-            $link = "/pcu/u/cloud/download.php?u=$targetUid&f=$currentDir/$file_bn";
+            $link = "/pcu/u/cloud/download.php?u=$targetUid&f=$currentDir_encoded%2F$file_bn_encoded";
             $object->size = filesize($file);
         }
         $object->link = $link;
         
         $object->sharedFor = array();
-        
+
         $result = $conn->query("SELECT targetUid FROM shares WHERE uid='$targetUid' AND file='$currentDir/$file_bn'");
         if($result && $result->num_rows > 0)
         {
